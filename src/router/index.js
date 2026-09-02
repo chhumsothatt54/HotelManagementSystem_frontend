@@ -5,6 +5,7 @@ import ManagerView from '@/views/customer/ManagerView.vue'
 import SmeyView from '@/views/SmeyView.vue'
 import TheaView from '@/views/TheaView.vue'
 import green from '@/views/green.vue'
+import booking from '@/views/booking.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,6 +34,11 @@ const router = createRouter({
       path:'/green',
       name: 'green',
       component: green
+    },
+    {
+      path:'/booking',
+      name: 'booking',
+      component: booking
     },
     {
       path: '/theara',
