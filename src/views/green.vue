@@ -672,20 +672,24 @@ const reviews = ref([
     }
 ])
 </script>
-
 <style scoped>
 :root {
-  --navy: #0B2E6B;
-  --blue: #1E4DB7;
-  --blue-light: #EAF1FF;
-  --sky: #4C8DFF;
-  --ink: #111827;
-  --muted: #6B7280;
-  --footer-bg: #0B2E6B;
-  --line: #E4E9F2;
-  --bg-soft: #F5F8FC;
-  --gold: #F5A623;
-  --radius: 14px;
+  --navy: #063B32;
+  --blue: #087F68;
+  --blue-light: #E8F6F2;
+  --sky: #39A98A;
+
+  --ink: #17231F;
+  --muted: #6B7772;
+
+  --footer-bg: #F5F7F6;
+
+  --line: #E1E9E5;
+  --bg-soft: #F4F8F6;
+
+  --gold: #F4B942;
+
+  --radius: 12px;
 }
 
 * {
@@ -715,78 +719,81 @@ a {
   text-decoration: none;
 }
 
-/* =========================
+/* ========================================
    BUTTONS
-========================= */
+======================================== */
 
 .btn-primary-brand {
-  background: var(--blue);
-  border: 1px solid var(--blue);
+  background: #087F68;
+  border: 1px solid #087F68;
   color: #fff;
   font-weight: 600;
-  transition: background 0.15s ease, transform 0.15s ease;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 .btn-primary-brand:hover {
-  background: #153A8C;
-  border-color: #153A8C;
+  background: #063B32;
+  border-color: #063B32;
   color: #fff;
   transform: translateY(-1px);
 }
 
 .btn-outline-brand {
   background: #fff;
-  border: 1px solid var(--line);
-  color: var(--ink);
+  border: 1px solid #D7E5E0;
+  color: #063B32;
   font-weight: 600;
-  transition: all 0.15s ease;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 .btn-outline-brand:hover {
-  border-color: var(--blue);
-  color: var(--blue);
-  background: var(--blue-light);
+  background: #E8F6F2;
+  border-color: #087F68;
+  color: #087F68;
 }
 
-/* =========================
+/* ========================================
    NAVBAR
-========================= */
+======================================== */
 
 .navbar {
   background: #fff !important;
+  border-bottom: 1px solid #EEF2F0;
 }
 
 .navbar-brand-custom {
   font-family: 'Fraunces', serif;
   font-weight: 600;
   font-size: 1.35rem;
-  color: var(--navy);
+  color: #063B32;
 }
 
 .navbar-brand-custom .dot {
-  color: var(--blue);
+  color: #087F68;
 }
 
 .nav-custom .nav-link {
-  color: var(--muted);
+  color: #17231F;
   font-weight: 500;
   font-size: 0.95rem;
   padding: 0.4rem 0.9rem;
-  transition: color 0.15s ease;
+  transition: color 0.2s ease;
 }
 
 .nav-custom .nav-link:hover {
-  color: var(--blue);
+  color: #087F68;
 }
 
 .nav-custom .nav-link.active {
-  color: var(--navy);
+  color: #087F68;
   font-weight: 600;
 }
 
-/* =========================
-   ICONS / PROFILE
-========================= */
+/* ========================================
+   ICON BUTTON
+======================================== */
 
 .icon-btn {
   width: 38px;
@@ -795,16 +802,16 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--muted);
+  color: #6B7772;
   background: transparent;
   border: none;
   position: relative;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .icon-btn:hover {
-  background: var(--bg-soft);
-  color: var(--blue);
+  background: #E8F6F2;
+  color: #087F68;
 }
 
 .badge-dot {
@@ -814,9 +821,13 @@ a {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--blue);
+  background: #087F68;
   border: 2px solid #fff;
 }
+
+/* ========================================
+   PROFILE
+======================================== */
 
 .avatar-chip {
   display: flex;
@@ -824,7 +835,7 @@ a {
   gap: 0.5rem;
   padding: 0.3rem 0.7rem 0.3rem 0.3rem;
   border-radius: 999px;
-  border: 1px solid var(--line);
+  border: 1px solid #E1E9E5;
   background: #fff;
 }
 
@@ -832,7 +843,7 @@ a {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: var(--blue);
+  background: #087F68;
   color: #fff;
   display: flex;
   align-items: center;
@@ -841,29 +852,31 @@ a {
   font-weight: 700;
 }
 
-/* =========================
+/* ========================================
    HERO
-========================= */
+======================================== */
 
 .hero {
   position: relative;
+
   background:
     linear-gradient(
-      180deg,
-      rgba(11, 37, 69, 0.72) 0%,
-      rgba(11, 37, 69, 0.55) 45%,
-      rgba(11, 37, 69, 0.78) 100%
+      90deg,
+      rgba(232, 246, 242, 0.96) 0%,
+      rgba(232, 246, 242, 0.88) 30%,
+      rgba(232, 246, 242, 0.25) 60%,
+      rgba(6, 59, 50, 0.25) 100%
     ),
     url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?q=80&w=1600&auto=format&fit=crop')
     center / cover no-repeat;
 
   padding: 5.5rem 1rem 8rem;
   text-align: center;
-  color: #fff;
+  color: #063B32;
 }
 
 .hero .eyebrow {
-  color: #BFD4FF;
+  color: #087F68;
   font-weight: 600;
   font-size: 0.85rem;
   letter-spacing: 0.02em;
@@ -873,26 +886,30 @@ a {
   font-size: clamp(2.1rem, 4.2vw, 3.4rem);
   font-weight: 600;
   margin: 0.6rem 0 0.8rem;
+  color: #063B32;
 }
 
 .hero p {
   max-width: 560px;
   margin: 0 auto;
-  color: #DCE6F7;
+  color: #52635D;
   font-size: 1.02rem;
 }
 
-/* =========================
-   SEARCH BAR
-========================= */
+/* ========================================
+   SEARCH CARD
+======================================== */
 
 .search-card {
   max-width: 1040px;
   margin: -4.5rem auto 0;
   background: #fff;
-  border-radius: 16px;
-  border: 1px solid var(--line);
-  box-shadow: 0 20px 45px -18px rgba(11, 37, 69, 0.28);
+  border-radius: 18px;
+  border: 1px solid #E1E9E5;
+
+  box-shadow:
+    0 12px 30px rgba(6, 59, 50, 0.10);
+
   padding: 1.4rem;
   position: relative;
   z-index: 5;
@@ -901,28 +918,30 @@ a {
 .search-field label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--muted);
+  color: #6B7772;
   margin-bottom: 0.25rem;
   display: block;
 }
 
 .search-field .form-control,
 .search-field .form-select {
-  border: 1px solid var(--line);
+  border: 1px solid #E1E9E5;
   padding: 0.55rem 0.7rem;
   font-size: 0.92rem;
   border-radius: 8px;
+  color: #17231F;
+  background: #fff;
 }
 
 .search-field .form-control:focus,
 .search-field .form-select:focus {
-  border-color: var(--blue);
-  box-shadow: 0 0 0 3px var(--blue-light);
+  border-color: #087F68;
+  box-shadow: 0 0 0 3px #E8F6F2;
 }
 
-/* =========================
+/* ========================================
    SECTIONS
-========================= */
+======================================== */
 
 section {
   padding: 4rem 0;
@@ -931,18 +950,18 @@ section {
 .section-title {
   font-size: 1.6rem;
   font-weight: 600;
-  color: var(--navy);
+  color: #063B32;
   margin-bottom: 0.25rem;
 }
 
 .section-sub {
-  color: var(--muted);
+  color: #6B7772;
   font-size: 0.95rem;
 }
 
-/* =========================
+/* ========================================
    DESTINATIONS
-========================= */
+======================================== */
 
 .dest-card {
   position: relative;
@@ -951,7 +970,9 @@ section {
   aspect-ratio: 3 / 3.6;
   cursor: pointer;
   isolation: isolate;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .dest-card img {
@@ -963,7 +984,7 @@ section {
 
 .dest-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 15px 30px rgba(11, 37, 69, 0.18);
+  box-shadow: 0 14px 30px rgba(6, 59, 50, 0.15);
 }
 
 .dest-card:hover img {
@@ -974,11 +995,13 @@ section {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(11, 37, 69, 0) 40%,
-    rgba(11, 37, 69, 0.75) 100%
-  );
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(6, 59, 50, 0) 40%,
+      rgba(6, 59, 50, 0.75) 100%
+    );
 }
 
 .dest-card .dest-label {
@@ -996,25 +1019,26 @@ section {
   left: 0.8rem;
   bottom: 0.15rem;
   z-index: 2;
-  color: #D9E4F7;
+  color: #D9EDE6;
   font-size: 0.72rem;
 }
 
 .dest-card.active {
-  outline: 2px solid var(--blue);
+  outline: 2px solid #087F68;
   outline-offset: 3px;
 }
 
-/* =========================
+/* ========================================
    HOTEL CARDS
-========================= */
+======================================== */
 
 .stay-card {
-  border: 1px solid var(--line);
+  border: 1px solid #E1E9E5;
   border-radius: 14px;
   overflow: hidden;
   background: #fff;
   height: 100%;
+
   transition:
     box-shadow 0.2s ease,
     transform 0.2s ease,
@@ -1022,16 +1046,16 @@ section {
 }
 
 .stay-card:hover {
-  box-shadow: 0 18px 34px -20px rgba(11, 37, 69, 0.35);
+  border-color: #B8D9CE;
+  box-shadow: 0 12px 28px rgba(6, 59, 50, 0.12);
   transform: translateY(-3px);
-  border-color: #C8D5EA;
 }
 
 .stay-img-wrap {
   position: relative;
   aspect-ratio: 16 / 11;
   overflow: hidden;
-  background: var(--bg-soft);
+  background: #F4F8F6;
 }
 
 .stay-img-wrap img {
@@ -1045,47 +1069,67 @@ section {
   transform: scale(1.03);
 }
 
+/* ========================================
+   HOTEL TAG
+======================================== */
+
 .stay-tag {
   position: absolute;
   top: 0.7rem;
   left: 0.7rem;
-  background: var(--blue);
+
+  background: #087F68;
   color: #fff;
+
   padding: 0.25rem 0.6rem;
   border-radius: 999px;
-  font-size: 0.75rem;
+
+  font-size: 0.72rem;
   font-weight: 600;
 }
 
 .stay-tag.discount {
-  background: var(--blue);
+  background: #087F68;
 }
+
+/* ========================================
+   FAVORITE
+======================================== */
 
 .stay-fav {
   position: absolute;
   top: 0.6rem;
   right: 0.6rem;
+
   width: 32px;
   height: 32px;
+
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
+
+  background: rgba(255, 255, 255, 0.94);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   border: none;
-  color: var(--muted);
-  font-size: 1.1rem;
-  transition: all 0.15s ease;
+  color: #6B7772;
+
+  transition: all 0.2s ease;
 }
 
 .stay-fav:hover {
-  color: var(--blue);
+  color: #087F68;
   transform: scale(1.05);
 }
 
 .stay-fav.active {
-  color: #E24C6D;
+  color: #D65A6A;
 }
+
+/* ========================================
+   HOTEL CONTENT
+======================================== */
 
 .stay-body {
   padding: 1rem 1.1rem 1.1rem;
@@ -1094,12 +1138,12 @@ section {
 .stay-name {
   font-weight: 700;
   font-size: 1.02rem;
-  color: var(--navy);
+  color: #063B32;
   margin-bottom: 0.15rem;
 }
 
 .stay-loc {
-  color: var(--muted);
+  color: #6B7772;
   font-size: 0.82rem;
   margin-bottom: 0.55rem;
 }
@@ -1108,9 +1152,11 @@ section {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
+
   font-size: 0.82rem;
   font-weight: 600;
-  color: var(--navy);
+
+  color: #063B32;
 }
 
 .stay-amenities {
@@ -1122,88 +1168,98 @@ section {
 
 .amenity-pill {
   font-size: 0.72rem;
-  color: var(--muted);
-  background: var(--bg-soft);
+  color: #6B7772;
+  background: #F4F8F6;
+
   padding: 0.22rem 0.55rem;
   border-radius: 999px;
 }
 
 .price-strike {
-  color: var(--muted);
+  color: #6B7772;
   text-decoration: line-through;
   font-size: 0.82rem;
 }
 
 .price-now {
-  color: var(--navy);
+  color: #063B32;
   font-weight: 700;
   font-size: 1.15rem;
 }
 
 .price-unit {
-  color: var(--muted);
+  color: #6B7772;
   font-size: 0.8rem;
 }
 
-/* =========================
+/* ========================================
    FEATURES
-========================= */
+======================================== */
 
 .features-strip {
-  background: var(--bg-soft);
+  background: #F4F8F6;
 }
 
 .feature-item .feature-icon {
   width: 46px;
   height: 46px;
+
   border-radius: 12px;
-  background: var(--blue-light);
-  color: var(--blue);
+
+  background: #E8F6F2;
+  color: #087F68;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   margin-bottom: 0.9rem;
-  font-size: 1.25rem;
 }
 
 .feature-item h6 {
   font-weight: 700;
-  color: var(--navy);
+  color: #063B32;
 }
 
 .feature-item p {
-  color: var(--muted);
+  color: #6B7772;
   font-size: 0.88rem;
   margin: 0;
 }
 
-/* =========================
+/* ========================================
    REVIEWS
-========================= */
+======================================== */
 
 .review-card {
-  border: 1px solid var(--line);
+  border: 1px solid #E1E9E5;
   border-radius: 14px;
+
   padding: 1.4rem;
+
   height: 100%;
   background: #fff;
-  transition: all 0.2s ease;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .review-card:hover {
-  border-color: #C8D5EA;
-  box-shadow: 0 15px 30px rgba(11, 37, 69, 0.08);
   transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 25px rgba(6, 59, 50, 0.08);
 }
 
 .review-stars {
-  color: var(--gold);
+  color: #F4B942;
   font-size: 0.85rem;
   letter-spacing: 1px;
 }
 
 .review-text {
-  color: var(--ink);
+  color: #17231F;
   font-size: 0.92rem;
   margin: 0.7rem 0 1rem;
 }
@@ -1211,11 +1267,15 @@ section {
 .review-avatar {
   width: 34px;
   height: 34px;
+
   border-radius: 50%;
-  background: var(--blue);
+
+  background: #087F68;
   color: #fff;
+
   font-weight: 600;
   font-size: 0.86rem;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1223,88 +1283,114 @@ section {
 
 .review-name {
   font-weight: 600;
-  color: var(--navy);
+  color: #063B32;
 }
 
 .review-loc {
   font-size: 0.78rem;
-  color: var(--muted);
+  color: #6B7772;
 }
 
-/* =========================
+/* ========================================
+   NEWSLETTER
+======================================== */
+
+.newsletter {
+  background: #087F68;
+  color: #fff;
+  border-radius: 14px;
+}
+
+.newsletter-input {
+  background: #fff;
+  border: 1px solid #fff;
+  color: #17231F;
+  border-radius: 8px;
+}
+
+.newsletter-input:focus {
+  background: #fff;
+  color: #17231F;
+  border-color: #fff;
+
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+.newsletter-input::placeholder {
+  color: #8A9691;
+}
+
+/* ========================================
    FOOTER
-========================= */
+======================================== */
 
 footer {
-  background: var(--footer-bg);
-  background-color: #0B2E6B;
-  color: #8F99AB;
+  background: #F5F7F6;
+  color: #6B7772;
   padding: 3.2rem 0 1.4rem;
+
+  border-top: 1px solid #E1E9E5;
 }
 
 footer h6 {
-  color: #fff;
+  color: #063B32;
+
   font-weight: 700;
   font-size: 0.82rem;
+
   letter-spacing: 0.03em;
   text-transform: uppercase;
+
   margin-bottom: 1rem;
 }
 
 footer a {
-  color: var(--sky);
+  color: #087F68;
+
   font-size: 0.88rem;
   display: block;
+
   margin-bottom: 0.55rem;
+
   font-weight: 500;
-  transition: color 0.15s ease;
+
+  transition: color 0.2s ease;
 }
 
 footer a:hover {
-  color: #fff;
+  color: #063B32;
 }
 
 footer .foot-brand {
   font-family: 'Fraunces', serif;
-  color: #fff;
+
+  color: #063B32;
+
   font-size: 1.25rem;
   font-weight: 600;
 }
 
 footer p.desc {
   font-size: 0.86rem;
-  color: #9FB1D1;
+  color: #6B7772;
+
   max-width: 280px;
 }
 
-.newsletter-input {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #fff;
-}
-
-.newsletter-input:focus {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--sky);
-  color: #fff;
-  box-shadow: 0 0 0 3px rgba(76, 141, 255, 0.15);
-}
-
-.newsletter-input::placeholder {
-  color: #8FA3C7;
-}
-
 .footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid #E1E9E5;
+
   margin-top: 2.2rem;
   padding-top: 1.2rem;
+
   font-size: 0.78rem;
-  color: #A2AAB9;
+  color: #8A9691;
 }
 
-/* =========================
-   MOBILE
-========================= */
+/* ========================================
+   RESPONSIVE
+======================================== */
 
 @media (max-width: 767px) {
   .search-card {
