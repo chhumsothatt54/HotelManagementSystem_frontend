@@ -1,5 +1,5 @@
 <template>
-  <div class="forgot-page">
+  <div class="reset-page">
 
     <!-- LEFT -->
     <section class="showcase">
@@ -7,7 +7,10 @@
 
       <div class="showcase-content">
 
-        <router-link to="/login" class="brand">
+        <router-link
+          to="/login"
+          class="brand"
+        >
           <div class="brand-icon">
             <i class="bi bi-building"></i>
           </div>
@@ -16,18 +19,22 @@
         </router-link>
 
         <div class="showcase-center">
-          <span>NEED HELP?</span>
+
+          <span>
+            ALMOST THERE
+          </span>
 
           <h1>
-            Get back to
+            Create a new
             <br />
-            <strong>your account.</strong>
+            <strong>password.</strong>
           </h1>
 
           <p>
-            Don't worry. Enter your email and we'll
-            send you a verification code to reset your password.
+            Choose a strong password to keep
+            your StayNest account secure.
           </p>
+
         </div>
 
       </div>
@@ -46,29 +53,28 @@
           <span>StayNest</span>
         </div>
 
-        <router-link
-          to="/login"
-          class="back-link"
-        >
-          <i class="bi bi-arrow-left"></i>
-          Back to login
-        </router-link>
-
         <div class="icon">
-          <i class="bi bi-lock"></i>
+          <i class="bi bi-shield-lock"></i>
         </div>
 
         <div class="header">
-          <span>RESET PASSWORD</span>
 
-          <h2>Forgot your password?</h2>
+          <span>
+            RESET PASSWORD
+          </span>
+
+          <h2>
+            Set a new password
+          </h2>
 
           <p>
-            Enter the email address associated with your
-            account and we'll send you a 6-digit OTP.
+            Create a new password for
+            <strong>{{ email }}</strong>
           </p>
+
         </div>
 
+        <!-- ERROR -->
         <div
           v-if="error"
           class="error-alert"
@@ -77,41 +83,139 @@
           {{ error }}
         </div>
 
+        <!-- PASSWORD -->
         <div class="form-group">
-          <label>Email address</label>
+
+          <label>
+            New password
+          </label>
+
+          <div class="input-wrapper">
+
+            <i class="bi bi-lock input-icon"></i>
+
+            <input
+              v-model="password"
+              :type="
+                showPassword
+                  ? 'text'
+                  : 'password'
+              "
+              placeholder="Enter new password"
+            />
+
+            <button
+              type="button"
+              class="toggle"
+              @click="
+                showPassword =
+                  !showPassword
+              "
+            >
+              <i
+                :class="
+                  showPassword
+                    ? 'bi bi-eye-slash'
+                    : 'bi bi-eye'
+                "
+              ></i>
+            </button>
+
+          </div>
+
+          <div
+            v-if="password"
+            class="strength"
+          >
+            <span
+              v-for="i in 4"
+              :key="i"
+              :class="{
+                active:
+                  strength >= i
+              }"
+            ></span>
+
+            <small>
+              {{ strengthText }}
+            </small>
+          </div>
+
+        </div>
+
+        <!-- CONFIRM -->
+        <div class="form-group">
+
+          <label>
+            Confirm new password
+          </label>
 
           <div
             class="input-wrapper"
-            :class="{ error: emailError }"
+            :class="{
+              error:
+                confirmError
+            }"
           >
-            <i class="bi bi-envelope input-icon"></i>
+
+            <i
+              class="bi bi-shield-lock input-icon"
+            ></i>
 
             <input
-              v-model="email"
-              type="email"
-              placeholder="you@example.com"
-              @keyup.enter="sendOtp"
+              v-model="confirmPassword"
+              :type="
+                showConfirm
+                  ? 'text'
+                  : 'password'
+              "
+              placeholder="Repeat new password"
             />
+
+            <button
+              type="button"
+              class="toggle"
+              @click="
+                showConfirm =
+                  !showConfirm
+              "
+            >
+              <i
+                :class="
+                  showConfirm
+                    ? 'bi bi-eye-slash'
+                    : 'bi bi-eye'
+                "
+              ></i>
+            </button>
+
           </div>
 
-          <small v-if="emailError">
-            {{ emailError }}
+          <small
+            v-if="confirmError"
+            class="field-error"
+          >
+            {{ confirmError }}
           </small>
+
         </div>
 
         <button
           class="submit-button"
           :disabled="loading"
-          @click="sendOtp"
+          @click="resetPassword"
         >
           <span v-if="!loading">
-            Send OTP
-            <i class="bi bi-arrow-right"></i>
+            Reset Password
+            <i class="bi bi-check2"></i>
           </span>
 
-          <span v-else class="loading">
+          <span
+            v-else
+            class="loading"
+          >
             <span class="spinner"></span>
-            Sending OTP...
+            Updating...
           </span>
         </button>
 
@@ -123,15 +227,6 @@
           </router-link>
         </div>
 
-        <div class="test-info">
-          <i class="bi bi-info-circle"></i>
-
-          <span>
-            Testing mode: OTP will be
-            <strong>123456</strong>
-          </span>
-        </div>
-
       </div>
 
     </section>
@@ -139,103 +234,171 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {
+  computed,
+  onMounted,
+  ref
+} from 'vue'
+
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
 const email = ref('')
-const emailError = ref('')
-const error = ref('')
+
+const password = ref('')
+const confirmPassword = ref('')
+
+const showPassword = ref(false)
+const showConfirm = ref(false)
+
 const loading = ref(false)
+
+const error = ref('')
+const confirmError = ref('')
 
 /*
 |--------------------------------------------------------------------------
-| Fake users
+| Check OTP verification
 |--------------------------------------------------------------------------
 */
 
-const fakeUsers = [
-  {
-    id: 1,
-    name: 'Chan Dara',
-    email: 'chandara@gmail.com',
-    password: '12345678',
-    role: 'customer',
-    status: 'active'
-  },
+onMounted(() => {
+  const verified =
+    sessionStorage.getItem(
+      'staynest_otp_verified'
+    )
 
-  {
-    id: 2,
-    name: 'Sokha Manager',
-    email: 'sokha@example.com',
-    password: '12345678',
-    role: 'manager',
-    status: 'active'
+  email.value =
+    sessionStorage.getItem(
+      'staynest_otp_email'
+    ) || ''
+
+  if (
+    verified !== 'true' ||
+    !email.value
+  ) {
+    router.replace(
+      '/forgot-password'
+    )
   }
-]
+})
 
-const sendOtp = async () => {
-  emailError.value = ''
+/*
+|--------------------------------------------------------------------------
+| Password Strength
+|--------------------------------------------------------------------------
+*/
+
+const strength = computed(() => {
+  let score = 0
+
+  if (password.value.length >= 8) {
+    score++
+  }
+
+  if (/[A-Z]/.test(password.value)) {
+    score++
+  }
+
+  if (/[0-9]/.test(password.value)) {
+    score++
+  }
+
+  if (/[^A-Za-z0-9]/.test(password.value)) {
+    score++
+  }
+
+  return score
+})
+
+const strengthText = computed(() => {
+  if (strength.value === 1) {
+    return 'Weak'
+  }
+
+  if (strength.value === 2) {
+    return 'Medium'
+  }
+
+  if (strength.value === 3) {
+    return 'Good'
+  }
+
+  if (strength.value === 4) {
+    return 'Strong'
+  }
+
+  return ''
+})
+
+/*
+|--------------------------------------------------------------------------
+| Reset Password
+|--------------------------------------------------------------------------
+*/
+
+const resetPassword = async () => {
   error.value = ''
+  confirmError.value = ''
 
-  if (!email.value.trim()) {
-    emailError.value =
-      'Please enter your email.'
+  if (password.value.length < 8) {
+    error.value =
+      'Password must be at least 8 characters.'
     return
   }
 
   if (
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-      email.value
-    )
+    password.value !==
+    confirmPassword.value
   ) {
-    emailError.value =
-      'Please enter a valid email.'
-    return
-  }
-
-  const user = fakeUsers.find(
-    item =>
-      item.email.toLowerCase() ===
-      email.value.trim().toLowerCase()
-  )
-
-  if (!user) {
-    error.value =
-      'No account was found with this email.'
+    confirmError.value =
+      'Passwords do not match.'
     return
   }
 
   loading.value = true
 
-  await delay(900)
+  await delay(1000)
 
   /*
-   * Store the email so InputOtp.vue knows
-   * which account is being verified.
+   * Fake password update
    */
-  sessionStorage.setItem(
-    'staynest_otp_flow',
-    'forgot-password'
-  )
-
-  sessionStorage.setItem(
-    'staynest_otp_email',
-    user.email
+  localStorage.setItem(
+    `staynest_password_${email.value}`,
+    password.value
   )
 
   /*
-   * Fake OTP
+   * Clear reset session
    */
-  sessionStorage.setItem(
-    'staynest_reset_otp',
-    '123456'
+  sessionStorage.removeItem(
+    'staynest_otp_verified'
+  )
+
+  sessionStorage.removeItem(
+    'staynest_reset_otp'
+  )
+
+  sessionStorage.removeItem(
+    'staynest_otp_flow'
+  )
+
+  sessionStorage.removeItem(
+    'staynest_otp_email'
   )
 
   loading.value = false
 
-  router.push('/input-otp')
+  /*
+   * Go to login
+   */
+  router.push({
+    path: '/login',
+    query: {
+      reset: 'success'
+    }
+  })
 }
 
 const delay = ms =>
@@ -255,7 +418,7 @@ const delay = ms =>
   --bg-soft:#F4F8F6;
 }
 
-.forgot-page {
+.reset-page {
   width:100%;
   height:100vh;
 
@@ -283,7 +446,7 @@ const delay = ms =>
       rgba(6,59,50,.95),
       rgba(8,127,104,.72)
     ),
-    url("https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=85")
+    url("https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=85")
       center/cover;
 }
 
@@ -294,7 +457,7 @@ const delay = ms =>
   background:
     linear-gradient(
       180deg,
-      rgba(6,59,50,.25),
+      rgba(6,59,50,.3),
       rgba(6,59,50,.9)
     );
 }
@@ -405,25 +568,6 @@ const delay = ms =>
   display:none;
 }
 
-.back-link {
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-
-  margin-bottom:28px;
-
-  color:var(--muted);
-
-  font-size:12px;
-  font-weight:650;
-
-  text-decoration:none;
-}
-
-.back-link:hover {
-  color:var(--blue);
-}
-
 .icon {
   width:65px;
   height:65px;
@@ -470,6 +614,14 @@ const delay = ms =>
 
   font-size:14px;
   line-height:1.6;
+}
+
+.header strong {
+  color:var(--ink);
+}
+
+.form-group {
+  margin-bottom:19px;
 }
 
 .form-group label {
@@ -525,7 +677,51 @@ const delay = ms =>
   font-size:13px;
 }
 
-.form-group small {
+.toggle {
+  width:42px;
+  height:100%;
+
+  border:0;
+  background:transparent;
+
+  color:#899590;
+
+  cursor:pointer;
+}
+
+.strength {
+  display:flex;
+  align-items:center;
+  gap:4px;
+
+  margin-top:7px;
+}
+
+.strength span {
+  height:3px;
+
+  flex:1;
+
+  border-radius:4px;
+
+  background:#E5EBE8;
+}
+
+.strength span.active {
+  background:var(--blue);
+}
+
+.strength small {
+  width:45px;
+
+  color:var(--muted);
+
+  font-size:9px;
+
+  text-align:right;
+}
+
+.field-error {
   display:block;
 
   margin-top:5px;
@@ -556,7 +752,7 @@ const delay = ms =>
   width:100%;
   height:49px;
 
-  margin-top:20px;
+  margin-top:5px;
 
   border:0;
   border-radius:10px;
@@ -581,8 +777,8 @@ const delay = ms =>
 
 .loading {
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   gap:8px;
 }
 
@@ -622,33 +818,8 @@ const delay = ms =>
   text-decoration:none;
 }
 
-.test-info {
-  display:flex;
-  justify-content:center;
-  gap:7px;
-
-  margin-top:25px;
-  padding:10px;
-
-  border-radius:8px;
-
-  background:var(--bg-soft);
-
-  color:var(--muted);
-
-  font-size:10px;
-}
-
-.test-info i {
-  color:var(--blue);
-}
-
-.test-info strong {
-  color:var(--blue);
-}
-
 @media(max-width:850px) {
-  .forgot-page {
+  .reset-page {
     grid-template-columns:1fr;
 
     height:auto;
