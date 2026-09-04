@@ -65,17 +65,21 @@
               {{ unreadCount }}
             </span>
           </button>
-          
+
         </div>
       </nav>
 
       <div class="am-sidebar-footer">
-        <button type="button" class="am-manager-mini">
-          <div class="am-avatar">A</div>
+        <button
+          type="button"
+          class="am-manager-mini"
+          @click="setView('profile')"
+        >
+          <div class="am-avatar">{{ initials(adminProfile.firstName + ' ' + adminProfile.lastName) }}</div>
 
           <div class="am-manager-info">
-            <strong>Platform Admin</strong>
-            <span>Administrator</span>
+            <strong>{{ adminProfile.firstName }} {{ adminProfile.lastName }}</strong>
+            <span>{{ adminProfile.role }}</span>
           </div>
 
           <i class="bi bi-chevron-right"></i>
@@ -111,20 +115,154 @@
             <span v-if="unreadCount" class="am-notification-dot"></span>
           </button>
 
-          <div class="am-user">
-            <div class="am-avatar">A</div>
+          <button type="button" class="am-user" @click="setView('profile')">
+            <div class="am-avatar">{{ initials(adminProfile.firstName + ' ' + adminProfile.lastName) }}</div>
 
             <div class="am-user-info">
-              <strong>Platform Admin</strong>
-              <span>Administrator</span>
+              <strong>{{ adminProfile.firstName }} {{ adminProfile.lastName }}</strong>
+              <span>{{ adminProfile.role }}</span>
             </div>
 
             <i class="bi bi-chevron-down"></i>
-          </div>
+          </button>
         </div>
       </header>
 
       <section class="am-content">
+
+        <!-- ================= MY PROFILE ================= -->
+        <div v-if="activeView === 'profile'">
+
+          <div class="am-section-heading">
+            <div>
+              <span class="am-eyebrow">ACCOUNT</span>
+              <h2>My Profile</h2>
+              <p>Manage your personal information and account settings.</p>
+            </div>
+
+            <button
+              type="button"
+              class="am-primary-button"
+              @click="saveAdminProfile"
+            >
+              <i class="bi bi-check-lg"></i>
+              Save Changes
+            </button>
+          </div>
+
+          <div class="am-profile-grid">
+
+            <!-- Left: profile summary card -->
+            <div class="am-card am-profile-side">
+              <div class="am-profile-avatar">
+                {{ initials(adminProfile.firstName + ' ' + adminProfile.lastName) }}
+              </div>
+
+              <h3 class="am-profile-name">
+                {{ adminProfile.firstName }} {{ adminProfile.lastName }}
+              </h3>
+
+              <span class="am-profile-role">{{ adminProfile.role }}</span>
+
+              <div class="am-profile-divider"></div>
+
+              <div class="am-profile-org">
+                <i class="bi bi-shield-lock"></i>
+                <span>StayLink Platform</span>
+              </div>
+            </div>
+
+            <!-- Right: personal information form -->
+            <div class="am-card">
+              <div class="am-card-header">
+                <div>
+                  <h3>Personal Information</h3>
+                  <p>Update your account information.</p>
+                </div>
+              </div>
+
+              <div class="am-form-grid">
+                <div class="am-form-group">
+                  <label>First Name</label>
+                  <input
+                    v-model="adminProfile.firstName"
+                    type="text"
+                    class="am-input"
+                  />
+                </div>
+
+                <div class="am-form-group">
+                  <label>Last Name</label>
+                  <input
+                    v-model="adminProfile.lastName"
+                    type="text"
+                    class="am-input"
+                  />
+                </div>
+
+                <div class="am-form-group">
+                  <label>Email</label>
+                  <input
+                    v-model="adminProfile.email"
+                    type="email"
+                    class="am-input"
+                  />
+                </div>
+
+                <div class="am-form-group">
+                  <label>Phone</label>
+                  <input
+                    v-model="adminProfile.phone"
+                    type="text"
+                    class="am-input"
+                  />
+                </div>
+
+                <div class="am-form-group full">
+                  <label>Role</label>
+                  <input
+                    :value="adminProfile.role"
+                    type="text"
+                    class="am-input"
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security -->
+          <div class="am-card am-profile-security">
+            <div class="am-card-header">
+              <div>
+                <h3>Security</h3>
+                <p>Update your password.</p>
+              </div>
+            </div>
+
+            <div class="am-form-grid">
+              <div class="am-form-group">
+                <label>New Password</label>
+                <input
+                  v-model="adminProfile.newPassword"
+                  type="password"
+                  class="am-input"
+                  placeholder="••••••••"
+                />
+              </div>
+
+              <div class="am-form-group">
+                <label>Confirm Password</label>
+                <input
+                  v-model="adminProfile.confirmPassword"
+                  type="password"
+                  class="am-input"
+                  placeholder="••••••••"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- ================= DASHBOARD ================= -->
         <div v-if="activeView === 'dashboard'">
@@ -489,7 +627,7 @@
           </div>
         </div>
 
-        
+
 
         <!-- ================= ROOM TYPES ================= -->
         <div v-if="activeView === 'roomTypes'">
@@ -1365,6 +1503,17 @@ const activeView = ref("dashboard");
 
 const navGroups = [
   {
+    title: "Account",
+    items: [
+      {
+        key: "profile",
+        label: "My Profile",
+        description: "Manage your admin account",
+        icon: "bi bi-person-circle",
+      },
+    ],
+  },
+  {
     title: "Overview",
     items: [
       {
@@ -1500,6 +1649,40 @@ const today = computed(() =>
     day: "numeric",
   })
 );
+
+/* =========================================================
+   ADMIN PROFILE
+========================================================= */
+
+const adminProfile = reactive({
+  firstName: "Platform",
+  lastName: "Admin",
+  email: "admin@staylink.com",
+  phone: "+855 12 000 000",
+  role: "Administrator",
+  newPassword: "",
+  confirmPassword: "",
+});
+
+function saveAdminProfile() {
+  if (!adminProfile.firstName || !adminProfile.email) {
+    alert("Please provide at least a first name and email.");
+    return;
+  }
+
+  if (
+    adminProfile.newPassword &&
+    adminProfile.newPassword !== adminProfile.confirmPassword
+  ) {
+    alert("Passwords do not match.");
+    return;
+  }
+
+  adminProfile.newPassword = "";
+  adminProfile.confirmPassword = "";
+
+  alert("Profile updated successfully.");
+}
 
 /* =========================================================
    USERS
@@ -2309,10 +2492,20 @@ function exportOccupancy() {
   display: flex;
   align-items: center;
   gap: 9px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 9px;
+}
+
+.am-user:hover {
+  background: var(--bg-soft);
 }
 
 .am-user-info {
   min-width: 130px;
+  text-align: left;
 }
 
 .am-user-info strong {
@@ -2561,6 +2754,75 @@ function exportOccupancy() {
   margin: 5px 0 0;
   color: var(--muted);
   font-size: 11px;
+}
+
+/* =========================================================
+   PROFILE PAGE
+========================================================= */
+
+.am-profile-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 20px;
+}
+
+.am-profile-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 30px 22px;
+}
+
+.am-profile-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: white;
+  display: grid;
+  place-items: center;
+  font-size: 34px;
+  font-weight: 800;
+  box-shadow: 0 10px 24px rgba(8,127,104,.25);
+}
+
+.am-profile-name {
+  margin: 16px 0 2px;
+  font-size: 18px;
+  color: var(--navy);
+}
+
+.am-profile-role {
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.am-profile-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--line);
+  margin: 18px 0;
+}
+
+.am-profile-org {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.am-profile-org i {
+  color: var(--blue);
+}
+
+.am-profile-security {
+  max-width: 100%;
 }
 
 /* =========================================================
@@ -2827,6 +3089,12 @@ function exportOccupancy() {
 .am-input:focus {
   border-color: var(--blue);
   box-shadow: 0 0 0 3px var(--blue-light);
+}
+
+.am-input:disabled {
+  background: var(--bg-soft);
+  color: var(--muted);
+  cursor: not-allowed;
 }
 
 .am-textarea {
@@ -3217,6 +3485,10 @@ function exportOccupancy() {
 
   .am-content {
     padding: 22px;
+  }
+
+  .am-profile-grid {
+    grid-template-columns: 1fr;
   }
 }
 
