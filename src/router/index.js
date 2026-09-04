@@ -7,6 +7,11 @@ import ProfileView from '@/views/customer/ProfileView.vue'
 import BookingdetailView from '@/views/customer/BookingdetailView.vue'
 import DashboardMg from '@/views/DashboardMg.vue'
 import DashboardAdmin from '@/views/DashboardAdmin.vue'
+import RegisterView from '@/views/auth/RegisterView.vue'
+import LoginView from '@/views/auth/LoginView.vue'
+import ForgotPasswordView from '@/views/auth/ForgotPasswordView.vue'
+import InputOtp from '@/views/auth/InputOtp.vue'
+import ResetPasswordView from '@/views/auth/ResetPasswordView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,7 +29,6 @@ const router = createRouter({
     {
       path:'/manager',
       name:'manager',
-<<<<<<< HEAD
       component: DashboardMg
     },
     {
@@ -51,10 +55,6 @@ const router = createRouter({
       path:'/detail/:id',
       name:'detail',
       component: BookingdetailView
-    }
-    
-=======
-      component: ManagerView
     },
     {
       path:'/register',
@@ -91,7 +91,6 @@ const router = createRouter({
       component: ResetPasswordView
     }
 
->>>>>>> origin/smey
   ],
 })
 
