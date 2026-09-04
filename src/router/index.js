@@ -24,6 +24,7 @@ const router = createRouter({
     {
       path:'/manager',
       name:'manager',
+<<<<<<< HEAD
       component: DashboardMg
     },
     {
@@ -52,6 +53,45 @@ const router = createRouter({
       component: BookingdetailView
     }
     
+=======
+      component: ManagerView
+    },
+    {
+      path:'/register',
+      name:'register',
+      component: RegisterView
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView
+    },
+
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterView
+    },
+
+    {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: ForgotPasswordView
+    },
+
+    {
+      path: '/input-otp',
+      name: 'input-otp',
+      component: InputOtp
+    },
+
+    {
+      path: '/reset-password',
+      name: 'reset-password',
+      component: ResetPasswordView
+    }
+
+>>>>>>> origin/smey
   ],
 })
 
