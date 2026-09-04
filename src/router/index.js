@@ -1,7 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import AdminView from '@/views/admin/AdminView.vue'
-import ManagerView from '@/views/manager/ManagerView.vue'
+import BookingView from '@/views/customer/BookingView.vue'
+import AboutView from '@/views/customer/AboutView.vue'
+import ContactView from '@/views/customer/ContactView.vue'
+import ProfileView from '@/views/customer/ProfileView.vue'
+import BookingdetailView from '@/views/customer/BookingdetailView.vue'
+import DashboardMg from '@/views/DashboardMg.vue'
+import DashboardAdmin from '@/views/DashboardAdmin.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,13 +19,39 @@ const router = createRouter({
     {
       path:'/admin',
       name:'admin',
-      component: AdminView
+      component: DashboardAdmin
     },
     {
       path:'/manager',
       name:'manager',
-      component: ManagerView
+      component: DashboardMg
+    },
+    {
+      path:'/booking',
+      name:'booking',
+      component: BookingView
+    },
+    {
+      path:'/about',
+      name:'about',
+      component: AboutView
+    },
+    {
+      path:'/contact',
+      name:'contact',
+      component: ContactView
+    },
+    {
+      path:'/profile',
+      name:'profile',
+      component: ProfileView
+    },
+    {
+      path:'/detail/:id',
+      name:'detail',
+      component: BookingdetailView
     }
+    
   ],
 })
 
