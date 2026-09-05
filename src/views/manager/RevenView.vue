@@ -3,7 +3,7 @@
     <!-- Top bar -->
     <div class="topbar bg-white">
         <div>
-            <h1 class="page-title brand-serif">Hotel Image</h1>
+            <h1 class="page-title brand-serif">Revenue</h1>
             <div class="page-subtitle">Property performance overview</div>
         </div>
         <div class="d-flex align-items-center gap-3">
@@ -23,7 +23,7 @@
         <!-- Weekly revenue -->
         <div class="panel-card">
             <div class="d-flex justify-content-between align-items-start mb-4">
-                <h2>Hotel Image</h2>
+                <h2>Revenue</h2>
             </div>
         </div>
 

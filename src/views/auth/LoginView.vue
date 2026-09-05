@@ -1,12 +1,10 @@
 <template>
   <div class="auth-page">
-
     <!-- LEFT SHOWCASE -->
     <section class="auth-showcase">
       <div class="showcase-overlay"></div>
 
       <div class="showcase-content">
-
         <router-link to="/login" class="brand">
           <div class="brand-icon">
             <i class="bi bi-building"></i>
@@ -15,19 +13,14 @@
         </router-link>
 
         <div class="showcase-center">
-          <span class="eyebrow">
-            WELCOME BACK
-          </span>
-
+          <span class="eyebrow">WELCOME BACK</span>
           <h1>
             Your next stay
             <br />
             <span>starts here.</span>
           </h1>
-
           <p>
-            Sign in to discover beautiful hotels,
-            manage your bookings, and enjoy a better stay.
+            Sign in to discover beautiful hotels, manage your bookings, and enjoy a better stay.
           </p>
         </div>
 
@@ -41,21 +34,17 @@
             <i class="bi bi-heart"></i>
             Trusted
           </div>
-
           <div>
             <i class="bi bi-headset"></i>
             24/7 Support
           </div>
         </div>
-
       </div>
     </section>
 
     <!-- RIGHT FORM -->
     <section class="auth-panel">
-
       <div class="auth-container">
-
         <!-- Mobile Logo -->
         <div class="mobile-logo">
           <div class="brand-icon">
@@ -66,42 +55,23 @@
         </div>
 
         <div class="header">
-          <span class="form-eyebrow">
-            SIGN IN
-          </span>
+          <span class="form-eyebrow">SIGN IN</span>
 
           <h2>Welcome back</h2>
 
-          <p>
-            Enter your details to access your account.
-          </p>
+          <p>Enter your details to access your account.</p>
         </div>
-
-        <!-- ERROR -->
-        <div
-          v-if="loginError"
-          class="alert-error"
-        >
+        <div v-if="loginError" class="alert-error">
           <i class="bi bi-exclamation-circle"></i>
           {{ loginError }}
         </div>
-
-        <!-- EMAIL -->
         <div class="form-group">
           <label>Email address</label>
 
-          <div
-            class="input-wrapper"
-            :class="{ error: errors.email }"
-          >
+          <div class="input-wrapper" :class="{ error: errors.email }">
             <i class="bi bi-envelope input-icon"></i>
 
-            <input
-              v-model="form.email"
-              type="email"
-              placeholder="you@example.com"
-              @keyup.enter="login"
-            />
+            <input v-model="form.email" type="email" placeholder="you@example.com" />
           </div>
 
           <small v-if="errors.email">
@@ -109,42 +79,17 @@
           </small>
         </div>
 
-        <!-- PASSWORD -->
         <div class="form-group">
           <div class="password-label">
             <label>Password</label>
 
-            <router-link to="/forgot-password">
-              Forgot password?
-            </router-link>
+            <router-link to="/forgot-password">Forgot password?</router-link>
           </div>
 
-          <div
-            class="input-wrapper"
-            :class="{ error: errors.password }"
-          >
+          <div class="input-wrapper" :class="{ error: errors.password }">
             <i class="bi bi-lock input-icon"></i>
 
-            <input
-              v-model="form.password"
-              :type="showPassword ? 'text' : 'password'"
-              placeholder="Enter your password"
-              @keyup.enter="login"
-            />
-
-            <button
-              type="button"
-              class="password-toggle"
-              @click="showPassword = !showPassword"
-            >
-              <i
-                :class="
-                  showPassword
-                    ? 'bi bi-eye-slash'
-                    : 'bi bi-eye'
-                "
-              ></i>
-            </button>
+            <input v-model="form.password" type="text" placeholder="Enter your password" />
           </div>
 
           <small v-if="errors.password">
@@ -152,208 +97,117 @@
           </small>
         </div>
 
-        <!-- REMEMBER -->
-        <label class="remember">
-          <input
-            v-model="rememberMe"
-            type="checkbox"
-          />
-
-          <span class="checkbox">
-            <i
-              v-if="rememberMe"
-              class="bi bi-check"
-            ></i>
-          </span>
-
-          Remember me
-        </label>
-
         <!-- LOGIN -->
-        <button
-          class="submit-button"
-          :disabled="loading"
-          @click="login"
-        >
-          <span v-if="!loading">
-            Sign In
-            <i class="bi bi-arrow-right"></i>
-          </span>
-
-          <span
-            v-else
-            class="loading"
-          >
-            <span class="spinner"></span>
-            Signing in...
-          </span>
+        <button type="submit" class="submit-button" @click="login">
+          Login
         </button>
 
         <!-- REGISTER -->
         <div class="bottom-link">
           Don't have an account?
 
-          <router-link to="/register">
-            Create account
-          </router-link>
+          <router-link to="/register">Create account</router-link>
         </div>
-
-        <!-- TEST ACCOUNT -->
-        <div class="test-account">
-          <div class="test-title">
-            <i class="bi bi-info-circle"></i>
-            Test account
-          </div>
-
-          <div>
-            Email:
-            <strong>chandara@gmail.com</strong>
-          </div>
-
-          <div>
-            Password:
-            <strong>12345678</strong>
-          </div>
-        </div>
-
       </div>
-
     </section>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
 
-const router = useRouter()
+const router = useRouter();
+const auth = useAuthStore();
+
 
 const form = ref({
-  email: '',
-  password: ''
-})
+  email: "",
+  password: ""
+});
 
-const rememberMe = ref(false)
-const showPassword = ref(false)
-const loading = ref(false)
-const loginError = ref('')
 
 const errors = ref({
-  email: '',
-  password: ''
-})
+  email: "",
+  password: ""
+});
 
-/*
-|--------------------------------------------------------------------------
-| Fake Users
-|--------------------------------------------------------------------------
-*/
 
-const fakeUsers = [
-  {
-    id: 1,
-    name: 'Chan Dara',
-    email: 'chandara@gmail.com',
-    password: '12345678',
-    role: 'customer',
-    status: 'active'
-  },
+const loginError = ref("");
+const loading = ref(false);
 
-  {
-    id: 2,
-    name: 'Sokha Manager',
-    email: 'sokha@example.com',
-    password: '12345678',
-    role: 'manager',
-    status: 'active'
-  }
-]
 
-const validate = () => {
-  errors.value = {
-    email: '',
-    password: ''
-  }
+function validateForm() {
 
-  loginError.value = ''
+  let isValid = true;
 
-  let valid = true
+  errors.value.email = "";
+  errors.value.password = "";
+  loginError.value = "";
 
   if (!form.value.email.trim()) {
-    errors.value.email =
-      'Please enter your email.'
-    valid = false
-  }
-
-  if (!form.value.password) {
-    errors.value.password =
-      'Please enter your password.'
-    valid = false
-  }
-
-  return valid
-}
-
-const login = async () => {
-  if (!validate()) {
-    return
-  }
-
-  loading.value = true
-
-  await delay(900)
-
-  const user = fakeUsers.find(
-    item =>
-      item.email.toLowerCase() ===
-        form.value.email
-          .trim()
-          .toLowerCase() &&
-      item.password === form.value.password
-  )
-
-  if (!user) {
-    loading.value = false
-
-    loginError.value =
-      'Invalid email or password.'
-
-    return
-  }
-
-  if (user.status !== 'active') {
-    loading.value = false
-
-    loginError.value =
-      'Your account has not been verified yet.'
-
-    return
-  }
-
-  /*
-   * Fake login session
-   */
-  localStorage.setItem(
-    'staynest_user',
-    JSON.stringify(user)
-  )
-
-  loading.value = false
-
-  /*
-   * Change this later to your real dashboard/home route.
-   */
-  if (user.role === 'manager') {
-    router.push('/admin')
+    errors.value.email = "Email is required";
+    isValid = false;
   } else {
-    router.push('/')
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.value.email.trim())) {
+
+      errors.value.email = "Email is invalid!";
+      isValid = false;
+    }
   }
+  if (!form.value.password) {
+    errors.value.password = "Password is required";
+    isValid = false;
+  } else if (form.value.password.length < 6) {
+    errors.value.password =
+      "Password must be at least 6 characters long";
+    isValid = false;
+
+  }
+
+
+  return isValid;
+
 }
 
-const delay = ms =>
-  new Promise(resolve =>
-    setTimeout(resolve, ms)
-  )
+async function login() {
+
+  if (!validateForm()) return;
+
+  loading.value = true;
+
+  try {
+
+    console.log("FORM DATA:", {
+      email: form.value.email,
+      password: form.value.password
+    });
+
+    await auth.login(
+      form.value.email.trim(),
+      form.value.password
+    );
+
+    router.push(auth.getRoleDashboard());
+
+  } catch (err) {
+
+    console.log("Login Error:", err);
+
+    loginError.value =
+      err.response?.data?.message ||
+      err.message ||
+      "Email or Password incorrect";
+
+  } finally {
+
+    loading.value = false;
+
+  }
+
+}
 </script>
 
 <style scoped>
@@ -394,13 +248,10 @@ const delay = ms =>
   height: 100vh;
 
   background:
-    linear-gradient(
-      135deg,
+    linear-gradient(135deg,
       rgba(6, 59, 50, .95),
-      rgba(8, 127, 104, .72)
-    ),
-    url("https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=85")
-      center / cover no-repeat;
+      rgba(8, 127, 104, .72)),
+    url("https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=85") center / cover no-repeat;
 }
 
 .showcase-overlay {
@@ -408,11 +259,9 @@ const delay = ms =>
   inset: 0;
 
   background:
-    linear-gradient(
-      180deg,
+    linear-gradient(180deg,
       rgba(6, 59, 50, .3),
-      rgba(6, 59, 50, .9)
-    );
+      rgba(6, 59, 50, .9));
 }
 
 .showcase-content {
@@ -450,7 +299,7 @@ const delay = ms =>
 
   border-radius: 11px;
 
-  background: rgba(255,255,255,.16);
+  background: rgba(255, 255, 255, .16);
 
   color: white;
 }
@@ -462,7 +311,7 @@ const delay = ms =>
 }
 
 .eyebrow {
-  color: rgba(255,255,255,.75);
+  color: rgba(255, 255, 255, .75);
 
   font-size: 11px;
   font-weight: 800;
@@ -475,7 +324,7 @@ const delay = ms =>
 
   color: white;
 
-  font-size: clamp(42px,4vw,64px);
+  font-size: clamp(42px, 4vw, 64px);
   line-height: 1.05;
 
   letter-spacing: -2.5px;
@@ -490,7 +339,7 @@ const delay = ms =>
 
   margin-top: 24px;
 
-  color: rgba(255,255,255,.78);
+  color: rgba(255, 255, 255, .78);
 
   font-size: 15px;
   line-height: 1.7;
@@ -500,7 +349,7 @@ const delay = ms =>
   display: flex;
   gap: 24px;
 
-  color: rgba(255,255,255,.8);
+  color: rgba(255, 255, 255, .8);
 
   font-size: 12px;
 }
@@ -620,7 +469,7 @@ const delay = ms =>
   border-color: var(--blue);
 
   box-shadow:
-    0 0 0 3px rgba(8,127,104,.09);
+    0 0 0 3px rgba(8, 127, 104, .09);
 }
 
 .input-wrapper.error {
@@ -702,7 +551,7 @@ const delay = ms =>
   font-size: 10px;
 }
 
-.remember input:checked + .checkbox {
+.remember input:checked+.checkbox {
   background: var(--blue);
   border-color: var(--blue);
 }
@@ -746,7 +595,7 @@ const delay = ms =>
   width: 15px;
   height: 15px;
 
-  border: 2px solid rgba(255,255,255,.4);
+  border: 2px solid rgba(255, 255, 255, .4);
   border-top-color: white;
 
   border-radius: 50%;

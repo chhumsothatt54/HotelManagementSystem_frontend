@@ -44,9 +44,9 @@
             <span class="badge-dot"></span>
           </button>
 
-          <RouterLink to="/profile" class="avatar-chip">
+          <RouterLink to="/login" class="avatar-chip">
             <div class="avatar-circle">S</div>
-            <span class="fw-semibold small">Sokha</span>
+            <span class="fw-semibold small">Login</span>
           </RouterLink>
         </div>
       </div>

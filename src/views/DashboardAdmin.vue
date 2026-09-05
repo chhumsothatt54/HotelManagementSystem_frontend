@@ -1,421 +1,623 @@
 <template>
-  <div class="d-flex vh-100 overflow-hidden bg-light">
-    <aside 
-      class="bg-dark text-white d-flex flex-column flex-shrink-0 p-3 shadow" 
-      :class="{ 'sidebar-collapsed': isSidebarCollapsed }"
-      style="width: 260px; transition: width 0.2s ease;"
-    >
-      <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none px-2">
-        <i class="bi bi-building-gear fs-4 me-2 text-warning"></i>
-        <span class="fs-5 fw-bold" v-if="!isSidebarCollapsed">GrandAdmin</span>
-      </a>
-      <hr class="border-secondary">
+    <main>
 
-      <ul class="nav nav-pills flex-column mb-auto overflow-y-auto custom-scrollbar pe-1">
-        <li class="nav-item">
-          <button 
-            class="nav-link w-100 text-start d-flex align-items-center" 
-            :class="{ active: currentView === 'dashboard' }"
-            @click="currentView = 'dashboard'"
-          >
-            <i class="bi bi-speedometer2 me-2"></i>
-            <span>Dashboard</span>
-          </button>
-        </li>
 
-        <li class="nav-item mt-2">
-          <small class="text-uppercase text-muted px-2 fs-7 fw-bold">User Access</small>
-        </li>
-        <li>
-          <button 
-            class="nav-link w-100 text-start d-flex align-items-center" 
-            :class="{ active: currentView === 'users' }"
-            @click="currentView = 'users'"
-          >
-            <i class="bi bi-people me-2"></i>
-            <span>Manage Users</span>
-          </button>
-        </li>
-        <li>
-          <button 
-            class="nav-link w-100 text-start d-flex align-items-center" 
-            :class="{ active: currentView === 'managers' }"
-            @click="currentView = 'managers'"
-          >
-            <i class="bi bi-person-badge me-2"></i>
-            <span>Hotel Managers</span>
-          </button>
-        </li>
 
-        <li class="nav-item mt-2">
-          <small class="text-uppercase text-muted px-2 fs-7 fw-bold">Inventory</small>
-        </li>
-        <li>
-          <button 
-            class="nav-link w-100 text-start d-flex align-items-center" 
-            :class="{ active: currentView === 'hotels' }"
-            @click="currentView = 'hotels'"
-          >
-            <i class="bi bi-building me-2"></i>
-            <span>Manage Hotels</span>
-          </button>
-        </li>
-        <li>
-          <button 
-            class="nav-link w-100 text-start d-flex align-items-center" 
-            :class="{ active: currentView === 'room-types' }"
-            @click="currentView = 'room-types'"
-          >
-            <i class="bi bi-tags me-2"></i>
-            <span>Room Types</span>
-          </button>
-        </li>
-        <li>
-          <button 
-            class="nav-link w-100 text-start d-flex align-items-center" 
-            :class="{ active: currentView === 'rooms' }"
-            @click="currentView = 'rooms'"
-          >
-            <i class="bi bi-door-open me-2"></i>
-            <span>Manage Rooms</span>
-          </button>
-        </li>
-        <li>
-          <button 
-            class="nav-link w-100 text-start d-flex align-items-center" 
-            :class="{ active: currentView === 'amenities' }"
-            @click="currentView = 'amenities'"
-          >
-            <i class="bi bi-stars me-2"></i>
-            <span>Manage Amenities</span>
-          </button>
-        </li>
+        <!-- ===================== SIDEBAR ===================== -->
+         <SidebarView/>
 
-        <li class="nav-item mt-2">
-          <small class="text-uppercase text-muted px-2 fs-7 fw-bold">Operations</small>
-        </li>
-        <li>
-          <button 
-            class="nav-link w-100 text-start d-flex align-items-center" 
-            :class="{ active: currentView === 'bookings' }"
-            @click="currentView = 'bookings'"
-          >
-            <i class="bi bi-calendar-check me-2"></i>
-            <span>Bookings</span>
-          </button>
-        </li>
-        <li>
-          <button 
-            class="nav-link w-100 text-start d-flex align-items-center" 
-            :class="{ active: currentView === 'payments' }"
-            @click="currentView = 'payments'"
-          >
-            <i class="bi bi-credit-card me-2"></i>
-            <span>Payments</span>
-          </button>
-        </li>
-        <li>
-          <button 
-            class="nav-link w-100 text-start d-flex align-items-center" 
-            :class="{ active: currentView === 'reviews' }"
-            @click="currentView = 'reviews'"
-          >
-            <i class="bi bi-star me-2"></i>
-            <span>Reviews</span>
-          </button>
-        </li>
 
-        <li class="nav-item mt-2">
-          <small class="text-uppercase text-muted px-2 fs-7 fw-bold">Reports</small>
-        </li>
-        <li>
-          <button 
-            class="nav-link w-100 text-start d-flex align-items-center" 
-            :class="{ active: currentView === 'revenue' }"
-            @click="currentView = 'revenue'"
-          >
-            <i class="bi bi-graph-up-arrow me-2"></i>
-            <span>Revenue Reports</span>
-          </button>
-        </li>
-        <li>
-          <button 
-            class="nav-link w-100 text-start d-flex align-items-center" 
-            :class="{ active: currentView === 'occupancy' }"
-            @click="currentView = 'occupancy'"
-          >
-            <i class="bi bi-pie-chart me-2"></i>
-            <span>Occupancy Reports</span>
-          </button>
-        </li>
+        <!-- ===================== MAIN ===================== -->
+        <main id="main">
+            <div class="page-content">
+                <RouterView/>
 
-        <li class="nav-item mt-2">
-          <small class="text-uppercase text-muted px-2 fs-7 fw-bold">System</small>
-        </li>
-        <li>
-          <button 
-            class="nav-link w-100 text-start d-flex align-items-center" 
-            :class="{ active: currentView === 'notifications' }"
-            @click="currentView = 'notifications'"
-          >
-            <i class="bi bi-bell me-2"></i>
-            <span>Notifications</span>
-            <span class="badge bg-danger rounded-pill ms-auto" v-if="unreadNotificationsCount > 0">
-              {{ unreadNotificationsCount }}
-            </span>
-          </button>
-        </li>
-        <li>
-          <button 
-            class="nav-link w-100 text-start d-flex align-items-center" 
-            :class="{ active: currentView === 'audit-logs' }"
-            @click="currentView = 'audit-logs'"
-          >
-            <i class="bi bi-journal-text me-2"></i>
-            <span>Audit Logs</span>
-          </button>
-        </li>
-      </ul>
-
-      <hr class="border-secondary">
-      
-      <div class="dropdown">
-        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="https://via.placeholder.com/32" alt="Admin" width="32" height="32" class="rounded-circle me-2">
-          <strong>System Admin</strong>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-          <li><a class="dropdown-item" href="#">Profile</a></li>
-          <li><a class="dropdown-item" href="#">Settings</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item text-danger" href="#">Sign out</a></li>
-        </ul>
-      </div>
-    </aside>
-
-    <div class="d-flex flex-column flex-grow-1 h-100 overflow-hidden">
-      
-      <header class="navbar navbar-expand-lg navbar-white bg-white border-bottom px-4 py-2 shadow-sm">
-        <div class="container-fluid p-0">
-          <span class="navbar-brand text-muted fs-6 mb-0">
-            Hotel Management System / <strong class="text-dark">{{ activePageTitle }}</strong>
-          </span>
-
-          <div class="d-flex align-items-center gap-3">
-            <form class="d-none d-md-flex" role="search">
-              <input class="form-control form-control-sm me-2" type="search" placeholder="Search..." aria-label="Search">
-            </form>
-
-            <button class="btn btn-outline-secondary btn-sm position-relative" @click="currentView = 'notifications'">
-              <i class="bi bi-bell"></i>
-              <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                <span class="visually-hidden">New alerts</span>
-              </span>
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <main class="flex-grow-1 overflow-y-auto p-4">
-        
-        <section v-if="currentView === 'dashboard'">
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="h4 mb-0 fw-bold">System Overview</h2>
-            <button class="btn btn-sm btn-primary">
-              <i class="bi bi-download me-1"></i> Export Summary
-            </button>
-          </div>
-
-          <div class="row g-3 mb-4">
-            <div class="col-12 col-sm-6 col-xl-3">
-              <div class="card border-0 shadow-sm">
-                <div class="card-body d-flex align-items-center">
-                  <div class="bg-primary-subtle text-primary p-3 rounded-circle me-3">
-                    <i class="bi bi-building fs-4"></i>
-                  </div>
-                  <div>
-                    <h6 class="card-subtitle text-muted mb-1">Total Hotels</h6>
-                    <h3 class="card-title mb-0 fw-bold">24</h3>
-                  </div>
-                </div>
-              </div>
             </div>
-
-            <div class="col-12 col-sm-6 col-xl-3">
-              <div class="card border-0 shadow-sm">
-                <div class="card-body d-flex align-items-center">
-                  <div class="bg-success-subtle text-success p-3 rounded-circle me-3">
-                    <i class="bi bi-calendar-check fs-4"></i>
-                  </div>
-                  <div>
-                    <h6 class="card-subtitle text-muted mb-1">Active Bookings</h6>
-                    <h3 class="card-title mb-0 fw-bold">1,420</h3>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-sm-6 col-xl-3">
-              <div class="card border-0 shadow-sm">
-                <div class="card-body d-flex align-items-center">
-                  <div class="bg-warning-subtle text-warning p-3 rounded-circle me-3">
-                    <i class="bi bi-currency-dollar fs-4"></i>
-                  </div>
-                  <div>
-                    <h6 class="card-subtitle text-muted mb-1">Total Revenue</h6>
-                    <h3 class="card-title mb-0 fw-bold">$128,450</h3>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-sm-6 col-xl-3">
-              <div class="card border-0 shadow-sm">
-                <div class="card-body d-flex align-items-center">
-                  <div class="bg-info-subtle text-info p-3 rounded-circle me-3">
-                    <i class="bi bi-door-open fs-4"></i>
-                  </div>
-                  <div>
-                    <h6 class="card-subtitle text-muted mb-1">Avg Occupancy</h6>
-                    <h3 class="card-title mb-0 fw-bold">82%</h3>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
-              <h5 class="card-title mb-0 fw-bold">Recent System Bookings</h5>
-              <button class="btn btn-sm btn-outline-primary" @click="currentView = 'bookings'">View All</button>
-            </div>
-            <div class="table-responsive">
-              <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                  <tr>
-                    <th>Booking ID</th>
-                    <th>Guest</th>
-                    <th>Hotel Name</th>
-                    <th>Room Type</th>
-                    <th>Status</th>
-                    <th>Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>#BK-9021</td>
-                    <td>Jane Doe</td>
-                    <td>Grand Hyatt Phnom Penh</td>
-                    <td>Deluxe Suite</td>
-                    <td><span class="badge bg-success">Confirmed</span></td>
-                    <td>$450.00</td>
-                  </tr>
-                  <tr>
-                    <td>#BK-9022</td>
-                    <td>John Smith</td>
-                    <td>Marriott Siem Reap</td>
-                    <td>Standard King</td>
-                    <td><span class="badge bg-warning text-dark">Pending</span></td>
-                    <td>$210.00</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <section v-else>
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-              <h2 class="h4 mb-1 fw-bold">{{ activePageTitle }}</h2>
-              <p class="text-muted small mb-0">Manage system settings and records for {{ activePageTitle.toLowerCase() }}.</p>
-            </div>
-            <button class="btn btn-primary btn-sm">
-              <i class="bi bi-plus-lg me-1"></i> Add New Record
-            </button>
-          </div>
-
-          <div class="card border-0 shadow-sm p-4">
-            <div class="d-flex justify-content-between mb-3">
-              <div class="input-group input-group-sm w-25">
-                <input type="text" class="form-control" placeholder="Search records...">
-                <button class="btn btn-outline-secondary" type="button"><i class="bi bi-search"></i></button>
-              </div>
-              <div class="btn-group btn-group-sm" role="group">
-                <button type="button" class="btn btn-outline-secondary">Filter</button>
-                <button type="button" class="btn btn-outline-secondary">Export</button>
-              </div>
-            </div>
-
-            <div class="table-responsive">
-              <table class="table table-hover align-middle">
-                <thead class="table-light">
-                  <tr>
-                    <th><input type="checkbox" class="form-check-input"></th>
-                    <th>ID</th>
-                    <th>Name / Details</th>
-                    <th>Created At</th>
-                    <th>Status</th>
-                    <th class="text-end">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><input type="checkbox" class="form-check-input"></td>
-                    <td>#001</td>
-                    <td>Sample {{ activePageTitle }} Entry</td>
-                    <td>Sep 02, 2026</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                    <td class="text-end">
-                      <button class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></button>
-                      <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-      </main>
-    </div>
-  </div>
+        </main>
+    </main>
 </template>
+
 <script setup>
-import { ref, computed } from 'vue'
+import SidebarView from '@/components/layout/admin/SidebarView.vue';
 
-// --- Navigation & View State ---
-const currentView = ref('dashboard')
-const isSidebarCollapsed = ref(false)
-
-// Mock notification counter
-const unreadNotificationsCount = ref(3)
-
-// --- View Title Mapping ---
-const viewTitles = {
-  'dashboard': 'Dashboard Overview',
-  'users': 'Manage Users',
-  'managers': 'Manage Hotel Managers',
-  'hotels': 'Manage Hotels',
-  'room-types': 'Manage Room Types',
-  'rooms': 'Manage Rooms',
-  'amenities': 'Manage Amenities',
-  'bookings': 'Manage Bookings',
-  'payments': 'Manage Payments',
-  'reviews': 'Manage Reviews',
-  'revenue': 'Revenue Reports',
-  'occupancy': 'Occupancy Reports',
-  'notifications': 'Manage Notifications',
-  'audit-logs': 'View Audit Logs'
-}
-
-// Compute current page title dynamically
-const activePageTitle = computed(() => {
-  return viewTitles[currentView.value] || 'Dashboard'
-})
-
-// Toggle sidebar collapse state
-const toggleSidebar = () => {
-  isSidebarCollapsed.value = !isSidebarCollapsed.value
-}
 </script>
+
+<style>
+
+.brand-serif {
+    font-family: Georgia, 'Times New Roman', serif;
+}
+
+/* ===== Sidebar ===== */
+#sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--sidebar-bg);
+    color: #cfe3df;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 1rem;
+    overflow: hidden;
+    transition: width .2s ease, padding .2s ease;
+    z-index: 20;
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 0.25rem;
+}
+
+.sidebar-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+.brand-box {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .5rem .25rem 1.25rem .25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    margin-bottom: 1rem;
+}
+
+.brand-logo {
+    width: 42px;
+    height: 42px;
+    background: #9db98f;
+    color: #0c3b34;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.brand-title {
+    color: #fff;
+    font-weight: 700;
+    font-size: .98rem;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.brand-sub {
+    color: #9fb6b0;
+    font-size: .78rem;
+    white-space: nowrap;
+}
+
+#sidebar.collapsed .brand-text,
+#sidebar.collapsed .link-text,
+#sidebar.collapsed .nav-section-label {
+    display: none;
+}
+
+#sidebar.collapsed .brand-box {
+    justify-content: center;
+}
+
+#sidebar.collapsed .sidebar-link {
+    justify-content: center;
+}
+
+.sidebar-toggle {
+    position: absolute;
+    top: 22px;
+    right: -13px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--card-border);
+    background: #fff;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .78rem;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .12);
+    z-index: 25;
+}
+
+.sidebar-toggle:hover {
+    background: var(--accent-light);
+    color: #062420;
+}
+
+.nav-section-label {
+    font-size: .68rem;
+    letter-spacing: .06em;
+    color: #6f8a83;
+    font-weight: 600;
+    margin: 1.1rem .5rem .4rem .5rem;
+    white-space: nowrap;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    padding: .55rem .7rem;
+    border-radius: 8px;
+    color: #cfe3df;
+    text-decoration: none;
+    font-size: .88rem;
+    margin-bottom: .15rem;
+    transition: background .15s ease, color .15s ease;
+    white-space: nowrap;
+}
+
+.sidebar-link i {
+    font-size: 1rem;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, .06);
+    color: #fff;
+}
+
+.sidebar-link.active {
+    background: var(--accent-light);
+    color: #062420;
+    font-weight: 600;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, .08);
+}
+
+.sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .5rem .4rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#sidebar.collapsed .sidebar-user {
+    justify-content: center;
+}
+
+.sidebar-user:hover {
+    background: rgba(255, 255, 255, .06);
+}
+
+.avatar-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    color: #062420;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: .85rem;
+    flex-shrink: 0;
+}
+
+.sidebar-user .name {
+    color: #fff;
+    font-size: .85rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.sidebar-user .role {
+    color: #9fb6b0;
+    font-size: .72rem;
+}
+
+/* ===== Main ===== */
+#main {
+    margin-left: var(--sidebar-width);
+    padding: 0 2rem 3rem 2rem;
+    transition: margin-left .2s ease;
+}
+
+#main.expanded {
+    margin-left: var(--sidebar-width-collapsed);
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: fixed;
+    top: 0;
+    left: var(--sidebar-width);
+    right: 0;
+    z-index: 15;
+    min-height: var(--topbar-height);
+    padding: 1.25rem 2rem;
+    background: var(--page-bg);
+    border-bottom: 1px solid var(--card-border);
+    transition: left .2s ease;
+}
+
+#main.expanded .topbar {
+    left: var(--sidebar-width-collapsed);
+}
+
+/* Push page content down so it starts below the fixed topbar */
+.page-content {
+    padding-top: calc(var(--topbar-height) + 1.5rem);
+}
+
+.page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.page-subtitle {
+    color: var(--text-muted);
+    font-size: .9rem;
+}
+
+.icon-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--card-border);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: #3a4644;
+}
+
+.icon-btn .dot {
+    position: absolute;
+    top: 8px;
+    right: 9px;
+    width: 7px;
+    height: 7px;
+    background: var(--accent-light);
+    border-radius: 50%;
+}
+
+.user-chip {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .3rem .5rem;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.user-chip .avatar-circle {
+    background: var(--accent);
+    color: #fff;
+}
+
+.user-chip .name {
+    font-size: .85rem;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.user-chip .sub {
+    font-size: .72rem;
+    color: var(--text-muted);
+}
+
+.eyebrow {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: .75rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.welcome-heading {
+    font-family: Georgia, serif;
+    font-size: 2rem;
+    margin: .2rem 0 .35rem 0;
+}
+
+.welcome-sub {
+    color: var(--text-muted);
+    font-size: .92rem;
+}
+
+.date-pill {
+    border: 1px solid var(--card-border);
+    background: #fff;
+    border-radius: 10px;
+    padding: .55rem 1rem;
+    font-size: .88rem;
+    font-weight: 600;
+    color: #28322f;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    white-space: nowrap;
+}
+
+/* Cards */
+.stat-card,
+.panel-card {
+    background: #fff;
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 1.25rem 1.35rem;
+}
+
+.stat-label {
+    font-size: .86rem;
+    color: #3a4644;
+    font-weight: 500;
+}
+
+.stat-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: #eef2f0;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: .6rem 0 .3rem 0;
+}
+
+.stat-foot {
+    font-size: .78rem;
+    color: var(--text-muted);
+}
+
+.stat-foot.up {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.panel-title {
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: .15rem;
+}
+
+.panel-sub {
+    color: var(--text-muted);
+    font-size: .82rem;
+}
+
+.view-all-link {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: .85rem;
+    text-decoration: none;
+}
+
+.view-all-link:hover {
+    color: var(--accent-light);
+}
+
+table.bookings th {
+    font-size: .7rem;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: #8a9793;
+    font-weight: 600;
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: .6rem;
+}
+
+table.bookings td {
+    vertical-align: middle;
+    padding: .8rem 0;
+    border-bottom: 1px solid #f1f3f2;
+    font-size: .88rem;
+}
+
+table.bookings tr:last-child td {
+    border-bottom: none;
+}
+
+.guest-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e6efec;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: .8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.guest-name {
+    font-weight: 600;
+    font-size: .88rem;
+}
+
+.guest-id {
+    color: #9aa4a1;
+    font-size: .75rem;
+}
+
+.amount-cell {
+    font-weight: 700;
+    text-align: right;
+}
+
+.badge-status {
+    font-size: .72rem;
+    font-weight: 600;
+    padding: .3rem .65rem;
+    border-radius: 999px;
+    display: inline-block;
+}
+
+.badge-pending {
+    background: #fdf1d6;
+    color: #9a6a00;
+}
+
+.badge-confirmed {
+    background: #e3f6ef;
+    color: #0f8a5f;
+}
+
+.badge-checkedin {
+    background: #d9efe9;
+    color: #0c6b56;
+}
+
+.badge-checkedout {
+    background: #eceeed;
+    color: #5c6663;
+}
+
+.badge-cancelled {
+    background: #fbe4e4;
+    color: #c23434;
+}
+
+/* Occupancy donut */
+.donut-wrap {
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    margin: 1rem auto 1.5rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: conic-gradient(var(--accent) 0% 40%, #e7eee9 40% 100%);
+    position: relative;
+}
+
+.donut-wrap::before {
+    content: "";
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.donut-center {
+    position: relative;
+    text-align: center;
+}
+
+.donut-pct {
+    font-size: 1.7rem;
+    font-weight: 700;
+}
+
+.donut-label {
+    font-size: .78rem;
+    color: var(--text-muted);
+}
+
+.legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: .4rem;
+}
+
+/* Weekly revenue bars */
+.chart-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 220px;
+    padding: 0 .5rem;
+}
+
+.bar-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    flex: 1;
+}
+
+.bar-value {
+    font-size: .78rem;
+    color: #5c6663;
+    margin-bottom: .5rem;
+}
+
+.bar-track {
+    width: 28px;
+    height: 150px;
+    background: #e3efeb;
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+}
+
+.bar-fill {
+    width: 100%;
+    background: linear-gradient(180deg, var(--accent-light), var(--accent));
+    border-radius: 6px 6px 0 0;
+}
+
+.bar-day {
+    margin-top: .6rem;
+    font-size: .82rem;
+    color: #3a4644;
+    font-weight: 500;
+}
+
+/* Empty state (used by tables with no rows, e.g. pending approvals) */
+.empty-state {
+    padding: 2.5rem 0;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: .9rem;
+}
+
+@media (max-width: 991px) {
+    #sidebar {
+        position: static;
+        width: 100%;
+        min-height: auto;
+    }
+
+    #main,
+    #main.expanded {
+        margin-left: 0;
+        padding: 1.25rem;
+    }
+
+    .topbar,
+    #main.expanded .topbar {
+        left: 0;
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+}
+</style>
