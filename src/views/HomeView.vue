@@ -408,10 +408,6 @@
 
 
 
-    <!-- FEATURES -->
-
-    <FeatureView />
-
 
 
     <!-- REVIEWS -->
@@ -438,7 +434,6 @@ import { useRouter } from 'vue-router'
 
 import FooterView from '@/components/layout/customer/FooterView.vue'
 
-import FeatureView from '../components/layout/customer/FeatureView.vue'
 
 import ReviewView from '../components/layout/customer/ReviewView.vue'
 

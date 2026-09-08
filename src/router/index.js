@@ -43,6 +43,7 @@ import InputOtp from "@/views/auth/InputOtp.vue";
 import ResetPasswordView from "@/views/auth/ResetPasswordView.vue";
 import HotelMagerView from "@/views/admin/HotelMagerView.vue";
 import HotelView from "@/views/admin/HotelView.vue";
+import ReviewView from "@/views/admin/ReviewView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -67,9 +68,9 @@ const router = createRouter({
       component: InputOtp,
     },
     {
-      path:'/reset-password',
-      name:'resend-password',
-      component: ResetPasswordView
+      path: "/reset-password",
+      name: "resend-password",
+      component: ResetPasswordView,
     },
     {
       path: "/register",
@@ -176,6 +177,96 @@ const router = createRouter({
           path: "user",
           name: "admin-user",
           component: UserView,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"],
+          },
+        },
+        {
+          path: "hotel-manager",
+          name: "hotel-manager",
+          component: HotelMagerView,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"],
+          },
+        },
+        {
+          path: "hotels",
+          name: "hotels",
+          component: HotelView,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"],
+          },
+        },
+        {
+          path: "room-type",
+          name: "room-type",
+          component: RoomTypeView,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"],
+          },
+        },
+        {
+          path: "rooms",
+          name: "rooms",
+          component: RoomView,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"],
+          },
+        },
+        {
+          path: "amenity",
+          name: "amenity",
+          component: AmenityView,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"],
+          },
+        },
+        {
+          path: "booking",
+          name: "booking",
+          component: BookingView,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"],
+          },
+        },
+        {
+          path: "payment",
+          name: "payment",
+          component: PaymentView,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"],
+          },
+        },
+        {
+          path: "review",
+          name: "review",
+          component: ReviewView,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"],
+          },
+        },
+        {
+          path: "revenue",
+          name: "revenue",
+          component: RevenView,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"],
+          },
+        },
+        {
+          path: "occupancy",
+          name: "occupancy",
+          component: OccupancyView,
           meta: {
             requireAuth: true,
             roles: ["admin"],
