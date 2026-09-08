@@ -28,9 +28,9 @@
                 <div class="stat-card h-100">
                     <div class="d-flex justify-content-between align-items-start">
                         <span class="stat-label">Total Users</span>
-                        <span class="stat-icon"><i class="fa-solid fa-users"></i></span>
+                        <span class="stat-icon"><i class="bi bi-people-fill"></i></span>
                     </div>
-                    <div class="stat-value">6</div>
+                    <div class="stat-value">{{ stats.users }}</div>
                     <div class="stat-foot">2 hotel managers</div>
                 </div>
             </div>
@@ -39,9 +39,9 @@
                 <div class="stat-card h-100">
                     <div class="d-flex justify-content-between align-items-start">
                         <span class="stat-label">Total Hotels</span>
-                        <span class="stat-icon"><i class="fa-solid fa-building"></i></span>
+                        <span class="stat-icon"><i class="bi bi-people-fill"></i></span>
                     </div>
-                    <div class="stat-value">2</div>
+                    <div class="stat-value">{{ stats.hotels }}</div>
                     <div class="stat-foot">0 pending approval</div>
                 </div>
             </div>
@@ -50,10 +50,9 @@
                 <div class="stat-card h-100">
                     <div class="d-flex justify-content-between align-items-start">
                         <span class="stat-label">Total Rooms</span>
-                        <span class="stat-icon" style="background:#fdf1d6;color:#9a6a00;"><i
-                                class="fa-solid fa-door-open"></i></span>
+                        <span class="stat-icon" style="background:#fdf1d6;color:#9a6a00;"><i class="bi bi-hospital"></i></span>
                     </div>
-                    <div class="stat-value">4</div>
+                    <div class="stat-value">{{ stats.rooms }}</div>
                     <div class="stat-foot">Across all properties</div>
                 </div>
             </div>
@@ -62,16 +61,29 @@
                 <div class="stat-card h-100">
                     <div class="d-flex justify-content-between align-items-start">
                         <span class="stat-label">Total Bookings</span>
-                        <span class="stat-icon"><i class="fa-regular fa-calendar-check"></i></span>
+                        <span class="stat-icon"><i class="bi bi-bookmark-check"></i></span>
                     </div>
-                    <div class="stat-value">6</div>
+                    <div class="stat-value">{{ stats.bookings }}</div>
                     <div class="stat-foot">1 pending</div>
                 </div>
             </div>
         </div>
 
+        <!-- Stat cards bar chart -->
+        <div class="panel-card mt-3">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <div class="panel-title">Stats overview</div>
+                    <div class="panel-sub">Users, hotels, rooms & bookings compared</div>
+                </div>
+            </div>
+            <div style="position:relative; height:280px;">
+                <canvas ref="statsChartCanvas"></canvas>
+            </div>
+        </div>
+
         <!-- Stat cards row 2 -->
-        <div class="row g-3 mt-1">
+        <!-- <div class="row g-3 mt-1">
             <div class="col-6 col-lg-3">
                 <div class="stat-card h-100">
                     <div class="d-flex justify-content-between align-items-start">
@@ -94,7 +106,7 @@
                     <div class="stat-foot">Awaiting confirmation</div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Pending hotel approvals -->
         <div class="panel-card mt-3">
@@ -136,5 +148,83 @@
 </template>
 
 <script setup>
+    import { useAdminStore } from '@/stores/admin';
+    import { onMounted, onBeforeUnmount, ref, computed, watch, nextTick } from 'vue';
+    import Chart from 'chart.js/auto';
 
+    const admin = useAdminStore();
+    
+    const stats = computed(() => ({
+        users: admin.dashboard?.data?.total_users ?? 0,
+        hotels: admin.dashboard?.data?.total_hotels ?? 0,
+        rooms: admin.dashboard?.data?.total_rooms ?? 0,
+        bookings: admin.dashboard?.data?.total_bookings ?? 0,
+    }));
+
+    const statsChartCanvas = ref(null);
+    let statsChart = null;
+
+    const buildChart = () => {
+        if (!statsChartCanvas.value) return;
+
+        // destroy any previous instance before redrawing (avoids duplicate charts on data refresh)
+        if (statsChart) {
+            statsChart.destroy();
+        }
+        statsChart = new Chart(statsChartCanvas.value, {
+            type: 'bar',
+            data: {
+                labels: ['Users', 'Hotels', 'Rooms', 'Bookings'],
+                datasets: [
+                    {
+                        label: 'Count',
+                        data: [
+                            stats.value.users,
+                            stats.value.hotels,
+                            stats.value.rooms,
+                            stats.value.bookings,
+                        ],
+                        backgroundColor: [
+                            '#4e73df',
+                            '#1cc88a',
+                            '#f6c23e',
+                            '#e74a3b',
+                        ],
+                        borderRadius: 6,
+                        maxBarThickness: 60,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 },
+                    },
+                },
+            },
+        });
+    };
+
+    onMounted(async () => {
+        await admin.getDashboard();
+        await nextTick();
+        buildChart();
+    });
+
+    // redraw the chart whenever the underlying stats change (e.g. after a refetch)
+    watch(stats, () => {
+        buildChart();
+    });
+
+    onBeforeUnmount(() => {
+        if (statsChart) {
+            statsChart.destroy();
+        }
+    });
 </script>

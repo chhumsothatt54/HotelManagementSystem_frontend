@@ -198,9 +198,6 @@
       </div>
     </section>
 
-    <!-- FEATURES -->
-    <FeatureView />
-
     <!-- REVIEWS -->
     <ReviewView />
     <!-- FOOTER -->
@@ -211,7 +208,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 import FooterView from '@/components/layout/customer/FooterView.vue'
-import FeatureView from '../components/layout/customer/FeatureView.vue'
 import ReviewView from '../components/layout/customer/ReviewView.vue'
 import NavbarView from '@/components/layout/customer/NavbarView.vue'
 const search = ref({
@@ -257,52 +253,7 @@ const destinations = ref([
 ])
 
 const stays = ref([
-  {
-    name: 'Riverside Heritage Hotel',
-    location: 'Phnom Penh, Cambodia',
-    rating: 4.7,
-    price: 41,
-    oldPrice: 45,
-    tag: 'Popular',
-    fav: false,
-    amenities: [
-      'Free WiFi',
-      'Pool',
-      'Breakfast Included'
-    ],
-    img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop'
-  },
 
-  {
-    name: 'Temple Grove Boutique',
-    location: 'Siem Reap, Cambodia',
-    rating: 4.9,
-    price: 60,
-    tag: 'Popular',
-    fav: false,
-    amenities: [
-      'Free WiFi',
-      'Pool',
-      'Breakfast Included'
-    ],
-    img: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=800&auto=format&fit=crop'
-  },
-
-  {
-    name: 'Sokha Bay Seaview',
-    location: 'Sihanoukville, Cambodia',
-    rating: 4.4,
-    price: 32,
-    oldPrice: 38,
-    tag: '-15%',
-    fav: false,
-    amenities: [
-      'Beach Access',
-      'Free WiFi',
-      'Restaurant'
-    ],
-    img: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=800&auto=format&fit=crop'
-  },
 
   {
     name: 'Old Market Homestay',

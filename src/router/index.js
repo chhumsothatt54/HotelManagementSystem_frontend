@@ -32,313 +32,338 @@ import RegisterView from "@/views/auth/RegisterView.vue";
 import ForgotPasswordView from "@/views/auth/ForgotPasswordView.vue";
 
 import { useAuthStore } from "@/stores/auth.js";
+import InputOtp from "@/views/auth/InputOtp.vue";
+import ResetPasswordView from "@/views/auth/ResetPasswordView.vue";
+import HotelMagerView from "@/views/admin/HotelMagerView.vue";
+import HotelView from "@/views/admin/HotelView.vue";
 
 const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
 
-
-history: createWebHistory(import.meta.env.BASE_URL),
-
-routes: [
-
+  routes: [
     // =============================
     // Public Routes
     // =============================
 
     {
-        path: "/",
-        name: "home",
-        component: HomeView,
+      path: "/",
+      name: "home",
+      component: HomeView,
     },
-
     {
-        path: "/login",
-        name: "login",
-        component: LoginView,
+      path: "/login",
+      name: "login",
+      component: LoginView,
     },
-
     {
-        path: "/register",
-        name: "register",
-        component: RegisterView,
+      path: "/input-otp",
+      name: "input-otp",
+      component: InputOtp,
     },
-
     {
-        path: "/forgot-password",
-        name: "forgot-password",
-        component: ForgotPasswordView,
+      path:'/reset-password',
+      name:'resend-password',
+      component: ResetPasswordView
     },
-
     {
-        path: "/contact",
-        name: "contact",
-        component: ContactView,
+      path: "/register",
+      name: "register",
+      component: RegisterView,
     },
-
     {
-        path: "/about",
-        name: "about",
-        component: AboutView,
+      path: "/forgot-password",
+      name: "forgot-password",
+      component: ForgotPasswordView,
     },
-
+    {
+      path: "/contact",
+      name: "contact",
+      component: ContactView,
+    },
+    {
+      path: "/about",
+      name: "about",
+      component: AboutView,
+    },
 
     // =============================
     // Demo Routes
     // =============================
 
     {
-        path: "/demomg",
-        name: "demo-manager",
-        component: DemoMg,
+      path: "/demomg",
+      name: "demo-manager",
+      component: DemoMg,
     },
 
     {
-        path: "/demoadmin",
-        name: "demo-admin",
-        component: DemoAdmin,
+      path: "/demoadmin",
+      name: "demo-admin",
+      component: DemoAdmin,
     },
-
 
     // =============================
     // Customer Routes
     // =============================
 
     {
-        path: "/booking",
-        name: "customer-booking",
-        component: BookingView,
-
+      path: "/booking",
+      name: "customer-booking",
+      component: BookingView,
     },
-
 
     // =============================
     // Admin Routes
     // =============================
 
     {
-        path: "/admin",
-
-        component: DashboardAdmin,
-
-        meta: {
+      path: "/admin",
+      component: DashboardAdmin,
+      meta: {
+        requireAuth: true,
+        roles: ["admin"],
+      },
+      children: [
+        {
+          path: "",
+          redirect: {
+            name: "admin-dashboard",
+          },
+        },
+        {
+          path: "dashboard",
+          name: "admin-dashboard",
+          component: DashAdView,
+          meta: {
             requireAuth: true,
             roles: ["admin"],
+          },
         },
-
-        children: [
-
-            {
-                path: "",
-
-                redirect: {
-                    name: "admin-dashboard",
-                },
-            },
-
-            {
-                path: "dashboard",
-
-                name: "admin-dashboard",
-
-                component: DashAdView,
-
-                meta: {
-                    requireAuth: true,
-                    roles: ["admin"],
-                },
-            },
-
-            {
-                path: "user",
-
-                name: "admin-user",
-
-                component: UserView,
-
-                meta: {
-                    requireAuth: true,
-                    roles: ["admin"],
-                },
-            },
-
-        ],
-
+        {
+          path: "user",
+          name: "admin-user",
+          component: UserView,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"],
+          },
+        },
+        {
+          path:'hotel-manager',
+          name:'hotel-manager',
+          component: HotelMagerView,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"],
+          }
+        },
+        {
+          path:'hotels',
+          name:'hotels',
+          component: HotelView,
+          meta: {
+            requireAuth: true,
+            roles: ['admin']
+          }
+        },
+        {
+          path: 'room-type',
+          name: 'room-type',
+          component: RoomTypeView,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"]
+          }
+        },
+        {
+          path:"rooms",
+          name: "rooms",
+          component: RoomView,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"]
+          }
+        },
+        {
+          path:"amenity",
+          name: "amenity",
+          component: AmenityView,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"]
+          }
+        }
+      ],
     },
-
 
     // =============================
     // Manager Routes
     // =============================
 
     {
-        path: "/manager",
+      path: "/manager",
 
-        component: DashboardMg,
+      component: DashboardMg,
 
-        meta: {
-            requireAuth: true,
-            roles: ["hotel_manager"],
+      meta: {
+        requireAuth: true,
+        roles: ["hotel_manager"],
+      },
+
+      children: [
+        {
+          path: "",
+
+          redirect: {
+            name: "manager-dashboard",
+          },
         },
 
-        children: [
+        {
+          path: "dashboard",
 
-            {
-                path: "",
+          name: "manager-dashboard",
 
-                redirect: {
-                    name: "manager-dashboard",
-                },
-            },
+          component: DashMgView,
 
-            {
-                path: "dashboard",
+          meta: {
+            requireAuth: true,
+            roles: ["hotel_manager"],
+          },
+        },
 
-                name: "manager-dashboard",
+        {
+          path: "profile",
 
-                component: DashMgView,
+          name: "manager-profile",
 
-                meta: {
-                    requireAuth: true,
-                    roles: ["hotel_manager"],
-                },
-            },
+          component: ProfileView,
 
-            {
-                path: "profile",
+          meta: {
+            requireAuth: true,
+            roles: ["hotel_manager"],
+          },
+        },
 
-                name: "manager-profile",
+        {
+          path: "hotel-image",
 
-                component: ProfileView,
+          name: "manager-hotel-image",
 
-                meta: {
-                    requireAuth: true,
-                    roles: ["hotel_manager"],
-                },
-            },
+          component: HotelimageView,
 
-            {
-                path: "hotel-image",
+          meta: {
+            requireAuth: true,
+            roles: ["hotel_manager"],
+          },
+        },
 
-                name: "manager-hotel-image",
+        {
+          path: "room",
 
-                component: HotelimageView,
+          name: "manager-room",
 
-                meta: {
-                    requireAuth: true,
-                    roles: ["hotel_manager"],
-                },
-            },
+          component: RoomView,
 
-            {
-                path: "room",
+          meta: {
+            requireAuth: true,
+            roles: ["hotel_manager"],
+          },
+        },
 
-                name: "manager-room",
+        {
+          path: "room-type",
 
-                component: RoomView,
+          name: "manager-room-type",
 
-                meta: {
-                    requireAuth: true,
-                    roles: ["hotel_manager"],
-                },
-            },
+          component: RoomTypeView,
 
-            {
-                path: "room-type",
+          meta: {
+            requireAuth: true,
+            roles: ["hotel_manager"],
+          },
+        },
 
-                name: "manager-room-type",
+        {
+          path: "room-image",
 
-                component: RoomTypeView,
+          name: "manager-room-image",
 
-                meta: {
-                    requireAuth: true,
-                    roles: ["hotel_manager"],
-                },
-            },
+          component: RoomImageView,
 
-            {
-                path: "room-image",
+          meta: {
+            requireAuth: true,
+            roles: ["hotel_manager"],
+          },
+        },
 
-                name: "manager-room-image",
+        {
+          path: "amenity",
 
-                component: RoomImageView,
+          name: "manager-amenity",
 
-                meta: {
-                    requireAuth: true,
-                    roles: ["hotel_manager"],
-                },
-            },
+          component: AmenityView,
 
-            {
-                path: "amenity",
+          meta: {
+            requireAuth: true,
+            roles: ["hotel_manager"],
+          },
+        },
 
-                name: "manager-amenity",
+        {
+          path: "price",
 
-                component: AmenityView,
+          name: "manager-price",
 
-                meta: {
-                    requireAuth: true,
-                    roles: ["hotel_manager"],
-                },
-            },
+          component: PricingView,
 
-            {
-                path: "price",
+          meta: {
+            requireAuth: true,
+            roles: ["hotel_manager"],
+          },
+        },
 
-                name: "manager-price",
+        {
+          path: "booking",
 
-                component: PricingView,
+          name: "manager-booking",
 
-                meta: {
-                    requireAuth: true,
-                    roles: ["hotel_manager"],
-                },
-            },
+          component: BookingsView,
 
-            {
-                path: "booking",
+          meta: {
+            requireAuth: true,
+            roles: ["hotel_manager"],
+          },
+        },
 
-                name: "manager-booking",
+        {
+          path: "revenue",
 
-                component: BookingsView,
+          name: "manager-revenue",
 
-                meta: {
-                    requireAuth: true,
-                    roles: ["hotel_manager"],
-                },
-            },
+          component: RevenView,
 
-            {
-                path: "revenue",
+          meta: {
+            requireAuth: true,
+            roles: ["hotel_manager"],
+          },
+        },
 
-                name: "manager-revenue",
+        {
+          path: "occupancy",
 
-                component: RevenView,
+          name: "manager-occupancy",
 
-                meta: {
-                    requireAuth: true,
-                    roles: ["hotel_manager"],
-                },
-            },
+          component: OccupancyView,
 
-            {
-                path: "occupancy",
-
-                name: "manager-occupancy",
-
-                component: OccupancyView,
-
-                meta: {
-                    requireAuth: true,
-                    roles: ["hotel_manager"],
-                },
-            },
-
-        ],
-
+          meta: {
+            requireAuth: true,
+            roles: ["hotel_manager"],
+          },
+        },
+      ],
     },
-
-],
-
-
+  ],
 });
 
 // ==================================
@@ -346,49 +371,33 @@ routes: [
 // ==================================
 
 router.beforeEach((to, from) => {
+  const auth = useAuthStore();
 
-const auth = useAuthStore();
-
-
-// Check Authentication
-if (to.meta.requireAuth && !auth.isLogin) {
-
+  // Check Authentication
+  if (to.meta.requireAuth && !auth.isLogin) {
     return {
-        name: "login",
+      name: "login",
     };
+  }
 
-}
-
-
-// Check Role
-if (to.meta.roles) {
-
+  // Check Role
+  if (to.meta.roles) {
     const allowedRoles = to.meta.roles;
 
-
     if (!auth.user) {
-
-        return {
-            name: "login",
-        };
-
+      return {
+        name: "login",
+      };
     }
-
 
     if (!allowedRoles.includes(auth.user.role)) {
-
-        return {
-            name: "home",
-        };
-
+      return {
+        name: "home",
+      };
     }
+  }
 
-}
-
-
-return true;
-
-
+  return true;
 });
 
 export default router;

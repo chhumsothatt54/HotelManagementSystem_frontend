@@ -4,32 +4,22 @@
     <!-- LEFT -->
     <section class="showcase">
       <div class="overlay"></div>
-
       <div class="showcase-content">
-
-        <router-link
-          to="/login"
-          class="brand"
-        >
+        <router-link to="/login" class="brand">
           <div class="brand-icon">
             <i class="bi bi-building"></i>
           </div>
-
           <span>StayNest</span>
         </router-link>
-
         <div class="showcase-center">
-
           <span>
             ALMOST THERE
           </span>
-
           <h1>
             Create a new
             <br />
             <strong>password.</strong>
           </h1>
-
           <p>
             Choose a strong password to keep
             your StayNest account secure.
@@ -75,10 +65,7 @@
         </div>
 
         <!-- ERROR -->
-        <div
-          v-if="error"
-          class="error-alert"
-        >
+        <div v-if="error" class="error-alert">
           <i class="bi bi-exclamation-circle"></i>
           {{ error }}
         </div>
@@ -94,52 +81,23 @@
 
             <i class="bi bi-lock input-icon"></i>
 
-            <input
-              v-model="password"
-              :type="
-                showPassword
-                  ? 'text'
-                  : 'password'
-              "
-              placeholder="Enter new password"
-            />
+            <input v-model="password" :type="showPassword
+                ? 'text'
+                : 'password'
+              " placeholder="Enter new password" />
 
-            <button
-              type="button"
-              class="toggle"
-              @click="
-                showPassword =
-                  !showPassword
-              "
-            >
-              <i
-                :class="
-                  showPassword
-                    ? 'bi bi-eye-slash'
-                    : 'bi bi-eye'
-                "
-              ></i>
+            <button type="button" class="toggle" @click="
+              showPassword =
+              !showPassword
+              ">
+              <i :class="showPassword
+                  ? 'bi bi-eye-slash'
+                  : 'bi bi-eye'
+                "></i>
             </button>
 
           </div>
 
-          <div
-            v-if="password"
-            class="strength"
-          >
-            <span
-              v-for="i in 4"
-              :key="i"
-              :class="{
-                active:
-                  strength >= i
-              }"
-            ></span>
-
-            <small>
-              {{ strengthText }}
-            </small>
-          </div>
 
         </div>
 
@@ -150,70 +108,43 @@
             Confirm new password
           </label>
 
-          <div
-            class="input-wrapper"
-            :class="{
-              error:
-                confirmError
-            }"
-          >
+          <div class="input-wrapper" :class="{
+            error:
+              confirmError
+          }">
 
-            <i
-              class="bi bi-shield-lock input-icon"
-            ></i>
+            <i class="bi bi-shield-lock input-icon"></i>
 
-            <input
-              v-model="confirmPassword"
-              :type="
-                showConfirm
-                  ? 'text'
-                  : 'password'
-              "
-              placeholder="Repeat new password"
-            />
+            <input v-model="confirmPassword" :type="showConfirm
+                ? 'text'
+                : 'password'
+              " placeholder="Repeat new password" @keyup.enter="resetPassword" />
 
-            <button
-              type="button"
-              class="toggle"
-              @click="
-                showConfirm =
-                  !showConfirm
-              "
-            >
-              <i
-                :class="
-                  showConfirm
-                    ? 'bi bi-eye-slash'
-                    : 'bi bi-eye'
-                "
-              ></i>
+            <button type="button" class="toggle" @click="
+              showConfirm =
+              !showConfirm
+              ">
+              <i :class="showConfirm
+                  ? 'bi bi-eye-slash'
+                  : 'bi bi-eye'
+                "></i>
             </button>
 
           </div>
 
-          <small
-            v-if="confirmError"
-            class="field-error"
-          >
+          <small v-if="confirmError" class="field-error">
             {{ confirmError }}
           </small>
 
         </div>
 
-        <button
-          class="submit-button"
-          :disabled="loading"
-          @click="resetPassword"
-        >
+        <button class="submit-button" :disabled="loading" @click="resetPassword">
           <span v-if="!loading">
             Reset Password
             <i class="bi bi-check2"></i>
           </span>
 
-          <span
-            v-else
-            class="loading"
-          >
+          <span v-else class="loading">
             <span class="spinner"></span>
             Updating...
           </span>
@@ -234,18 +165,14 @@
 </template>
 
 <script setup>
-import {
-  computed,
-  onMounted,
-  ref
-} from 'vue'
-
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth' // បញ្ចូល Auth Store
 
+const auth = useAuthStore()
 const router = useRouter()
 
 const email = ref('')
-
 const password = ref('')
 const confirmPassword = ref('')
 
@@ -253,7 +180,6 @@ const showPassword = ref(false)
 const showConfirm = ref(false)
 
 const loading = ref(false)
-
 const error = ref('')
 const confirmError = ref('')
 
@@ -262,25 +188,12 @@ const confirmError = ref('')
 | Check OTP verification
 |--------------------------------------------------------------------------
 */
-
 onMounted(() => {
-  const verified =
-    sessionStorage.getItem(
-      'staynest_otp_verified'
-    )
+  const verified = sessionStorage.getItem('staynest_otp_verified')
+  email.value = sessionStorage.getItem('staynest_otp_email') || ''
 
-  email.value =
-    sessionStorage.getItem(
-      'staynest_otp_email'
-    ) || ''
-
-  if (
-    verified !== 'true' ||
-    !email.value
-  ) {
-    router.replace(
-      '/forgot-password'
-    )
+  if (verified !== 'true' || !email.value) {
+    router.replace('/forgot-password')
   }
 })
 
@@ -289,143 +202,86 @@ onMounted(() => {
 | Password Strength
 |--------------------------------------------------------------------------
 */
-
 const strength = computed(() => {
   let score = 0
-
-  if (password.value.length >= 8) {
-    score++
-  }
-
-  if (/[A-Z]/.test(password.value)) {
-    score++
-  }
-
-  if (/[0-9]/.test(password.value)) {
-    score++
-  }
-
-  if (/[^A-Za-z0-9]/.test(password.value)) {
-    score++
-  }
-
+  if (password.value.length >= 8) score++
+  if (/[A-Z]/.test(password.value)) score++
+  if (/[0-9]/.test(password.value)) score++
+  if (/[^A-Za-z0-9]/.test(password.value)) score++
   return score
 })
 
 const strengthText = computed(() => {
-  if (strength.value === 1) {
-    return 'Weak'
-  }
-
-  if (strength.value === 2) {
-    return 'Medium'
-  }
-
-  if (strength.value === 3) {
-    return 'Good'
-  }
-
-  if (strength.value === 4) {
-    return 'Strong'
-  }
-
+  if (strength.value === 1) return 'Weak'
+  if (strength.value === 2) return 'Medium'
+  if (strength.value === 3) return 'Good'
+  if (strength.value === 4) return 'Strong'
   return ''
 })
 
 /*
 |--------------------------------------------------------------------------
-| Reset Password
+| Reset Password (Real API Integration)
 |--------------------------------------------------------------------------
 */
-
 const resetPassword = async () => {
   error.value = ''
   confirmError.value = ''
 
   if (password.value.length < 8) {
-    error.value =
-      'Password must be at least 8 characters.'
+    error.value = 'Password must be at least 8 characters.'
     return
   }
 
-  if (
-    password.value !==
-    confirmPassword.value
-  ) {
-    confirmError.value =
-      'Passwords do not match.'
+  if (password.value !== confirmPassword.value) {
+    confirmError.value = 'Passwords do not match.'
     return
   }
 
   loading.value = true
 
-  await delay(1000)
+  try {
 
-  /*
-   * Fake password update
-   */
-  localStorage.setItem(
-    `staynest_password_${email.value}`,
-    password.value
-  )
-
-  /*
-   * Clear reset session
-   */
-  sessionStorage.removeItem(
-    'staynest_otp_verified'
-  )
-
-  sessionStorage.removeItem(
-    'staynest_reset_otp'
-  )
-
-  sessionStorage.removeItem(
-    'staynest_otp_flow'
-  )
-
-  sessionStorage.removeItem(
-    'staynest_otp_email'
-  )
-
-  loading.value = false
-
-  /*
-   * Go to login
-   */
-  router.push({
-    path: '/login',
-    query: {
-      reset: 'success'
-    }
-  })
+    await auth.resetPassword(
+      email.value,
+      password.value,
+      confirmPassword.value
+    )
+    sessionStorage.removeItem('staynest_otp_verified')
+    sessionStorage.removeItem('staynest_reset_otp')
+    sessionStorage.removeItem('staynest_otp_flow')
+    sessionStorage.removeItem('staynest_otp_email')
+    router.push({
+      path: '/login',
+      query: { reset: 'success' }
+    })
+  } catch (err) {
+    console.error('Reset Password Error:', err)
+    error.value = err.response?.data?.message || err.message || 'Failed to reset password.'
+  } finally {
+    loading.value = false
+  }
 }
-
-const delay = ms =>
-  new Promise(resolve =>
-    setTimeout(resolve, ms)
-  )
 </script>
-
 <style scoped>
 :global(:root) {
-  --navy:#063B32;
-  --blue:#087F68;
-  --blue-light:#E8F6F2;
-  --ink:#17231F;
-  --muted:#6B7772;
-  --line:#E1E9E5;
-  --bg-soft:#F4F8F6;
+  --navy: #063B32;
+  --blue: #087F68;
+  --blue-light: #E8F6F2;
+  --ink: #17231F;
+  --muted: #6B7772;
+  --line: #E1E9E5;
+  --bg-soft: #F4F8F6;
 }
 
 .reset-page {
-  width:100%;
-  height:100vh;
+  width: 100%;
+  height: 100vh;
 
-  display:grid;
-  grid-template-columns:43% 57%;
+  display: grid;
+  grid-template-columns: 43% 57%;
 
-  overflow:hidden;
+  overflow: hidden;
 
   font-family:
     Inter,
@@ -436,430 +292,425 @@ const delay = ms =>
 }
 
 .showcase {
-  position:relative;
+  position: relative;
 
-  height:100vh;
+  height: 100vh;
 
   background:
-    linear-gradient(
-      135deg,
-      rgba(6,59,50,.95),
-      rgba(8,127,104,.72)
-    ),
-    url("https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=85")
-      center/cover;
+    linear-gradient(135deg,
+      rgba(6, 59, 50, .95),
+      rgba(8, 127, 104, .72)),
+    url("https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=85") center/cover;
 }
 
 .overlay {
-  position:absolute;
-  inset:0;
+  position: absolute;
+  inset: 0;
 
   background:
-    linear-gradient(
-      180deg,
-      rgba(6,59,50,.3),
-      rgba(6,59,50,.9)
-    );
+    linear-gradient(180deg,
+      rgba(6, 59, 50, .3),
+      rgba(6, 59, 50, .9));
 }
 
 .showcase-content {
-  position:relative;
-  z-index:2;
+  position: relative;
+  z-index: 2;
 
-  height:100%;
+  height: 100%;
 
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
 
-  padding:48px 52px;
+  padding: 48px 52px;
 }
 
 .brand {
-  display:flex;
-  align-items:center;
-  gap:12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
-  color:white;
+  color: white;
 
-  font-size:24px;
-  font-weight:800;
+  font-size: 24px;
+  font-weight: 800;
 
-  text-decoration:none;
+  text-decoration: none;
 }
 
 .brand-icon {
-  width:42px;
-  height:42px;
+  width: 42px;
+  height: 42px;
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  border-radius:11px;
+  border-radius: 11px;
 
-  background:rgba(255,255,255,.16);
+  background: rgba(255, 255, 255, .16);
 
-  color:white;
+  color: white;
 }
 
 .showcase-center {
-  margin:auto 0;
+  margin: auto 0;
 
-  max-width:500px;
+  max-width: 500px;
 }
 
-.showcase-center > span {
-  color:rgba(255,255,255,.7);
+.showcase-center>span {
+  color: rgba(255, 255, 255, .7);
 
-  font-size:11px;
-  font-weight:800;
+  font-size: 11px;
+  font-weight: 800;
 
-  letter-spacing:1.8px;
+  letter-spacing: 1.8px;
 }
 
 .showcase-center h1 {
-  margin:15px 0;
+  margin: 15px 0;
 
-  color:white;
+  color: white;
 
-  font-size:58px;
-  line-height:1.05;
+  font-size: 58px;
+  line-height: 1.05;
 
-  letter-spacing:-2.5px;
+  letter-spacing: -2.5px;
 }
 
 .showcase-center strong {
-  color:#9BE2CF;
+  color: #9BE2CF;
 }
 
 .showcase-center p {
-  max-width:440px;
+  max-width: 440px;
 
-  color:rgba(255,255,255,.78);
+  color: rgba(255, 255, 255, .78);
 
-  font-size:15px;
-  line-height:1.7;
+  font-size: 15px;
+  line-height: 1.7;
 }
 
 .panel {
-  height:100vh;
+  height: 100vh;
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  padding:30px 55px;
+  padding: 30px 55px;
 
-  overflow:auto;
+  overflow: auto;
 
-  scrollbar-width:none;
+  scrollbar-width: none;
 }
 
 .panel::-webkit-scrollbar {
-  display:none;
+  display: none;
 }
 
 .container {
-  width:100%;
-  max-width:450px;
+  width: 100%;
+  max-width: 450px;
 }
 
 .mobile-logo {
-  display:none;
+  display: none;
 }
 
 .icon {
-  width:65px;
-  height:65px;
+  width: 65px;
+  height: 65px;
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  margin-bottom:20px;
+  margin-bottom: 20px;
 
-  border-radius:18px;
+  border-radius: 18px;
 
-  background:var(--blue-light);
+  background: var(--blue-light);
 
-  color:var(--blue);
+  color: var(--blue);
 
-  font-size:26px;
+  font-size: 26px;
 }
 
-.header > span {
-  color:var(--blue);
+.header>span {
+  color: var(--blue);
 
-  font-size:11px;
-  font-weight:800;
+  font-size: 11px;
+  font-weight: 800;
 
-  letter-spacing:1.7px;
+  letter-spacing: 1.7px;
 }
 
 .header h2 {
-  margin:8px 0;
+  margin: 8px 0;
 
-  color:var(--ink);
+  color: var(--ink);
 
-  font-size:30px;
-  font-weight:800;
+  font-size: 30px;
+  font-weight: 800;
 
-  letter-spacing:-.8px;
+  letter-spacing: -.8px;
 }
 
 .header p {
-  margin-bottom:28px;
+  margin-bottom: 28px;
 
-  color:var(--muted);
+  color: var(--muted);
 
-  font-size:14px;
-  line-height:1.6;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .header strong {
-  color:var(--ink);
+  color: var(--ink);
 }
 
 .form-group {
-  margin-bottom:19px;
+  margin-bottom: 19px;
 }
 
 .form-group label {
-  display:block;
+  display: block;
 
-  margin-bottom:7px;
+  margin-bottom: 7px;
 
-  color:var(--ink);
+  color: var(--ink);
 
-  font-size:12px;
-  font-weight:700;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .input-wrapper {
-  height:49px;
+  height: 49px;
 
-  display:flex;
-  align-items:center;
+  display: flex;
+  align-items: center;
 
-  border:1px solid var(--line);
-  border-radius:10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
 }
 
 .input-wrapper:focus-within {
-  border-color:var(--blue);
+  border-color: var(--blue);
 
   box-shadow:
-    0 0 0 3px rgba(8,127,104,.09);
+    0 0 0 3px rgba(8, 127, 104, .09);
 }
 
 .input-wrapper.error {
-  border-color:#D85D5D;
+  border-color: #D85D5D;
 }
 
 .input-icon {
-  width:45px;
+  width: 45px;
 
-  text-align:center;
+  text-align: center;
 
-  color:#8A9691;
+  color: #8A9691;
 }
 
 .input-wrapper input {
-  flex:1;
+  flex: 1;
 
-  height:100%;
+  height: 100%;
 
-  border:0;
-  outline:0;
+  border: 0;
+  outline: 0;
 
-  color:var(--ink);
+  color: var(--ink);
 
-  font-size:13px;
+  font-size: 13px;
 }
 
 .toggle {
-  width:42px;
-  height:100%;
+  width: 42px;
+  height: 100%;
 
-  border:0;
-  background:transparent;
+  border: 0;
+  background: transparent;
 
-  color:#899590;
+  color: #899590;
 
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .strength {
-  display:flex;
-  align-items:center;
-  gap:4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 
-  margin-top:7px;
+  margin-top: 7px;
 }
 
 .strength span {
-  height:3px;
+  height: 3px;
 
-  flex:1;
+  flex: 1;
 
-  border-radius:4px;
+  border-radius: 4px;
 
-  background:#E5EBE8;
+  background: #E5EBE8;
 }
 
 .strength span.active {
-  background:var(--blue);
+  background: var(--blue);
 }
 
 .strength small {
-  width:45px;
+  width: 45px;
 
-  color:var(--muted);
+  color: var(--muted);
 
-  font-size:9px;
+  font-size: 9px;
 
-  text-align:right;
+  text-align: right;
 }
 
 .field-error {
-  display:block;
+  display: block;
 
-  margin-top:5px;
+  margin-top: 5px;
 
-  color:#D85D5D;
+  color: #D85D5D;
 
-  font-size:11px;
+  font-size: 11px;
 }
 
 .error-alert {
-  display:flex;
-  gap:8px;
-  align-items:center;
+  display: flex;
+  gap: 8px;
+  align-items: center;
 
-  margin-bottom:15px;
-  padding:11px;
+  margin-bottom: 15px;
+  padding: 11px;
 
-  border-radius:8px;
+  border-radius: 8px;
 
-  background:#FFF6F6;
+  background: #FFF6F6;
 
-  color:#B74B4B;
+  color: #B74B4B;
 
-  font-size:11px;
+  font-size: 11px;
 }
 
 .submit-button {
-  width:100%;
-  height:49px;
+  width: 100%;
+  height: 49px;
 
-  margin-top:5px;
+  margin-top: 5px;
 
-  border:0;
-  border-radius:10px;
+  border: 0;
+  border-radius: 10px;
 
-  background:var(--blue);
+  background: var(--blue);
 
-  color:white;
+  color: white;
 
-  font-size:13px;
-  font-weight:750;
+  font-size: 13px;
+  font-weight: 750;
 
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .submit-button:hover:not(:disabled) {
-  background:var(--navy);
+  background: var(--navy);
 }
 
 .submit-button:disabled {
-  opacity:.6;
+  opacity: .6;
 }
 
 .loading {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
 }
 
 .spinner {
-  width:15px;
-  height:15px;
+  width: 15px;
+  height: 15px;
 
-  border:2px solid rgba(255,255,255,.4);
-  border-top-color:white;
+  border: 2px solid rgba(255, 255, 255, .4);
+  border-top-color: white;
 
-  border-radius:50%;
+  border-radius: 50%;
 
-  animation:spin .7s linear infinite;
+  animation: spin .7s linear infinite;
 }
 
 @keyframes spin {
   to {
-    transform:rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
 .bottom-link {
-  margin-top:18px;
+  margin-top: 18px;
 
-  color:var(--muted);
+  color: var(--muted);
 
-  font-size:12px;
+  font-size: 12px;
 
-  text-align:center;
+  text-align: center;
 }
 
 .bottom-link a {
-  color:var(--blue);
+  color: var(--blue);
 
-  font-weight:750;
+  font-weight: 750;
 
-  text-decoration:none;
+  text-decoration: none;
 }
 
 @media(max-width:850px) {
   .reset-page {
-    grid-template-columns:1fr;
+    grid-template-columns: 1fr;
 
-    height:auto;
-    min-height:100vh;
+    height: auto;
+    min-height: 100vh;
   }
 
   .showcase {
-    display:none;
+    display: none;
   }
 
   .panel {
-    min-height:100vh;
-    height:auto;
+    min-height: 100vh;
+    height: auto;
 
-    align-items:flex-start;
+    align-items: flex-start;
 
-    padding:30px 20px 40px;
+    padding: 30px 20px 40px;
   }
 
   .mobile-logo {
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:9px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
 
-    margin-bottom:35px;
+    margin-bottom: 35px;
 
-    color:var(--navy);
+    color: var(--navy);
 
-    font-size:21px;
-    font-weight:800;
+    font-size: 21px;
+    font-weight: 800;
   }
 
   .mobile-logo .brand-icon {
-    width:36px;
-    height:36px;
+    width: 36px;
+    height: 36px;
 
-    background:var(--blue-light);
+    background: var(--blue-light);
 
-    color:var(--blue);
+    color: var(--blue);
   }
 }
 </style>
