@@ -4,17 +4,13 @@
     <!-- LEFT -->
     <section class="showcase">
       <div class="overlay"></div>
-
       <div class="showcase-content">
-
         <router-link to="/login" class="brand">
           <div class="brand-icon">
             <i class="bi bi-building"></i>
           </div>
-
           <span>StayNest</span>
         </router-link>
-
         <div class="showcase-center">
           <span>NEED HELP?</span>
 
@@ -46,10 +42,7 @@
           <span>StayNest</span>
         </div>
 
-        <router-link
-          to="/login"
-          class="back-link"
-        >
+        <router-link to="/login" class="back-link">
           <i class="bi bi-arrow-left"></i>
           Back to login
         </router-link>
@@ -69,10 +62,7 @@
           </p>
         </div>
 
-        <div
-          v-if="error"
-          class="error-alert"
-        >
+        <div v-if="error" class="error-alert">
           <i class="bi bi-exclamation-circle"></i>
           {{ error }}
         </div>
@@ -80,18 +70,10 @@
         <div class="form-group">
           <label>Email address</label>
 
-          <div
-            class="input-wrapper"
-            :class="{ error: emailError }"
-          >
+          <div class="input-wrapper" :class="{ error: emailError }">
             <i class="bi bi-envelope input-icon"></i>
 
-            <input
-              v-model="email"
-              type="email"
-              placeholder="you@example.com"
-              @keyup.enter="sendOtp"
-            />
+            <input v-model="email" type="email" placeholder="you@example.com" @keyup.enter="sendOtp" />
           </div>
 
           <small v-if="emailError">
@@ -99,11 +81,7 @@
           </small>
         </div>
 
-        <button
-          class="submit-button"
-          :disabled="loading"
-          @click="sendOtp"
-        >
+        <button class="submit-button" :disabled="loading" @click="forgotPassword">
           <span v-if="!loading">
             Send OTP
             <i class="bi bi-arrow-right"></i>
@@ -122,16 +100,6 @@
             Sign in
           </router-link>
         </div>
-
-        <div class="test-info">
-          <i class="bi bi-info-circle"></i>
-
-          <span>
-            Testing mode: OTP will be
-            <strong>123456</strong>
-          </span>
-        </div>
-
       </div>
 
     </section>
@@ -141,7 +109,9 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
+const auth = useAuthStore()
 const router = useRouter()
 
 const email = ref('')
@@ -149,120 +119,61 @@ const emailError = ref('')
 const error = ref('')
 const loading = ref(false)
 
-/*
-|--------------------------------------------------------------------------
-| Fake users
-|--------------------------------------------------------------------------
-*/
-
-const fakeUsers = [
-  {
-    id: 1,
-    name: 'Chan Dara',
-    email: 'chandara@gmail.com',
-    password: '12345678',
-    role: 'customer',
-    status: 'active'
-  },
-
-  {
-    id: 2,
-    name: 'Sokha Manager',
-    email: 'sokha@example.com',
-    password: '12345678',
-    role: 'manager',
-    status: 'active'
-  }
-]
-
-const sendOtp = async () => {
+function validate() {
   emailError.value = ''
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const trimmedEmail = email.value.trim()
+
+  if (!trimmedEmail) {
+    emailError.value = 'Email is required'
+    return false
+  }
+
+  if (!emailRegex.test(trimmedEmail)) {
+    emailError.value = 'Please enter a valid email address'
+    return false
+  }
+
+  return true
+}
+
+async function forgotPassword() {
   error.value = ''
 
-  if (!email.value.trim()) {
-    emailError.value =
-      'Please enter your email.'
-    return
-  }
-
-  if (
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-      email.value
-    )
-  ) {
-    emailError.value =
-      'Please enter a valid email.'
-    return
-  }
-
-  const user = fakeUsers.find(
-    item =>
-      item.email.toLowerCase() ===
-      email.value.trim().toLowerCase()
-  )
-
-  if (!user) {
-    error.value =
-      'No account was found with this email.'
-    return
-  }
+  if (!validate()) return
 
   loading.value = true
 
-  await delay(900)
-
-  /*
-   * Store the email so InputOtp.vue knows
-   * which account is being verified.
-   */
-  sessionStorage.setItem(
-    'staynest_otp_flow',
-    'forgot-password'
-  )
-
-  sessionStorage.setItem(
-    'staynest_otp_email',
-    user.email
-  )
-
-  /*
-   * Fake OTP
-   */
-  sessionStorage.setItem(
-    'staynest_reset_otp',
-    '123456'
-  )
-
-  loading.value = false
-
-  router.push('/input-otp')
+  try {
+    const cleanedEmail = email.value.trim()
+    await auth.forgotPassword(cleanedEmail)
+    sessionStorage.setItem('staynest_otp_email', cleanedEmail)
+    sessionStorage.setItem('staynest_otp_flow', 'forgot-password');
+    await router.push({
+      name: 'input-otp',
+      query: { email: cleanedEmail }
+    })
+  } catch (err) {
+    console.error('Forgot Password Error:', err)
+    error.value = err.response?.data?.message || err.message || 'Failed to send OTP.'
+  } finally {
+    loading.value = false
+  }
 }
 
-const delay = ms =>
-  new Promise(resolve =>
-    setTimeout(resolve, ms)
-  )
+const sendOtp = forgotPassword
 </script>
 
 <style scoped>
-:global(:root) {
-  --navy:#063B32;
-  --blue:#087F68;
-  --blue-light:#E8F6F2;
-  --ink:#17231F;
-  --muted:#6B7772;
-  --line:#E1E9E5;
-  --bg-soft:#F4F8F6;
-}
-
 .forgot-page {
-  width:100%;
-  height:100vh;
+  width: 100%;
+  height: 100vh;
 
-  display:grid;
-  grid-template-columns:43% 57%;
+  display: grid;
+  grid-template-columns: 43% 57%;
 
-  overflow:hidden;
+  overflow: hidden;
 
   font-family:
     Inter,
@@ -273,422 +184,417 @@ const delay = ms =>
 }
 
 .showcase {
-  position:relative;
+  position: relative;
 
-  height:100vh;
+  height: 100vh;
 
   background:
-    linear-gradient(
-      135deg,
-      rgba(6,59,50,.95),
-      rgba(8,127,104,.72)
-    ),
-    url("https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=85")
-      center/cover;
+    linear-gradient(135deg,
+      rgba(6, 59, 50, .95),
+      rgba(8, 127, 104, .72)),
+    url("https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=85") center/cover;
 }
 
 .overlay {
-  position:absolute;
-  inset:0;
+  position: absolute;
+  inset: 0;
 
   background:
-    linear-gradient(
-      180deg,
-      rgba(6,59,50,.25),
-      rgba(6,59,50,.9)
-    );
+    linear-gradient(180deg,
+      rgba(6, 59, 50, .25),
+      rgba(6, 59, 50, .9));
 }
 
 .showcase-content {
-  position:relative;
-  z-index:2;
+  position: relative;
+  z-index: 2;
 
-  height:100%;
+  height: 100%;
 
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
 
-  padding:48px 52px;
+  padding: 48px 52px;
 }
 
 .brand {
-  display:flex;
-  align-items:center;
-  gap:12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
-  color:white;
+  color: white;
 
-  font-size:24px;
-  font-weight:800;
+  font-size: 24px;
+  font-weight: 800;
 
-  text-decoration:none;
+  text-decoration: none;
 }
 
 .brand-icon {
-  width:42px;
-  height:42px;
+  width: 42px;
+  height: 42px;
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  border-radius:11px;
+  border-radius: 11px;
 
-  background:rgba(255,255,255,.16);
+  background: rgba(255, 255, 255, .16);
 
-  color:white;
+  color: white;
 }
 
 .showcase-center {
-  margin:auto 0;
+  margin: auto 0;
 
-  max-width:500px;
+  max-width: 500px;
 }
 
-.showcase-center > span {
-  color:rgba(255,255,255,.7);
+.showcase-center>span {
+  color: rgba(255, 255, 255, .7);
 
-  font-size:11px;
-  font-weight:800;
+  font-size: 11px;
+  font-weight: 800;
 
-  letter-spacing:1.8px;
+  letter-spacing: 1.8px;
 }
 
 .showcase-center h1 {
-  margin:15px 0;
+  margin: 15px 0;
 
-  color:white;
+  color: white;
 
-  font-size:58px;
-  line-height:1.05;
+  font-size: 58px;
+  line-height: 1.05;
 
-  letter-spacing:-2.5px;
+  letter-spacing: -2.5px;
 }
 
 .showcase-center strong {
-  color:#9BE2CF;
+  color: #9BE2CF;
 }
 
 .showcase-center p {
-  max-width:440px;
+  max-width: 440px;
 
-  color:rgba(255,255,255,.78);
+  color: rgba(255, 255, 255, .78);
 
-  font-size:15px;
-  line-height:1.7;
+  font-size: 15px;
+  line-height: 1.7;
 }
 
 .panel {
-  height:100vh;
+  height: 100vh;
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  padding:30px 55px;
+  padding: 30px 55px;
 
-  overflow:auto;
+  overflow: auto;
 
-  scrollbar-width:none;
+  scrollbar-width: none;
 }
 
 .panel::-webkit-scrollbar {
-  display:none;
+  display: none;
 }
 
 .container {
-  width:100%;
-  max-width:450px;
+  width: 100%;
+  max-width: 450px;
 }
 
 .mobile-logo {
-  display:none;
+  display: none;
 }
 
 .back-link {
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
 
-  margin-bottom:28px;
+  margin-bottom: 28px;
 
-  color:var(--muted);
+  color: var(--muted);
 
-  font-size:12px;
-  font-weight:650;
+  font-size: 12px;
+  font-weight: 650;
 
-  text-decoration:none;
+  text-decoration: none;
 }
 
 .back-link:hover {
-  color:var(--blue);
+  color: var(--blue);
 }
 
 .icon {
-  width:65px;
-  height:65px;
+  width: 65px;
+  height: 65px;
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  margin-bottom:20px;
+  margin-bottom: 20px;
 
-  border-radius:18px;
+  border-radius: 18px;
 
-  background:var(--blue-light);
+  background: var(--blue-light);
 
-  color:var(--blue);
+  color: var(--blue);
 
-  font-size:26px;
+  font-size: 26px;
 }
 
-.header > span {
-  color:var(--blue);
+.header>span {
+  color: var(--blue);
 
-  font-size:11px;
-  font-weight:800;
+  font-size: 11px;
+  font-weight: 800;
 
-  letter-spacing:1.7px;
+  letter-spacing: 1.7px;
 }
 
 .header h2 {
-  margin:8px 0;
+  margin: 8px 0;
 
-  color:var(--ink);
+  color: var(--ink);
 
-  font-size:30px;
-  font-weight:800;
+  font-size: 30px;
+  font-weight: 800;
 
-  letter-spacing:-.8px;
+  letter-spacing: -.8px;
 }
 
 .header p {
-  margin-bottom:28px;
+  margin-bottom: 28px;
 
-  color:var(--muted);
+  color: var(--muted);
 
-  font-size:14px;
-  line-height:1.6;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .form-group label {
-  display:block;
+  display: block;
 
-  margin-bottom:7px;
+  margin-bottom: 7px;
 
-  color:var(--ink);
+  color: var(--ink);
 
-  font-size:12px;
-  font-weight:700;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .input-wrapper {
-  height:49px;
+  height: 49px;
 
-  display:flex;
-  align-items:center;
+  display: flex;
+  align-items: center;
 
-  border:1px solid var(--line);
-  border-radius:10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
 }
 
 .input-wrapper:focus-within {
-  border-color:var(--blue);
+  border-color: var(--blue);
 
   box-shadow:
-    0 0 0 3px rgba(8,127,104,.09);
+    0 0 0 3px rgba(8, 127, 104, .09);
 }
 
 .input-wrapper.error {
-  border-color:#D85D5D;
+  border-color: #D85D5D;
 }
 
 .input-icon {
-  width:45px;
+  width: 45px;
 
-  text-align:center;
+  text-align: center;
 
-  color:#8A9691;
+  color: #8A9691;
 }
 
 .input-wrapper input {
-  flex:1;
+  flex: 1;
 
-  height:100%;
+  height: 100%;
 
-  border:0;
-  outline:0;
+  border: 0;
+  outline: 0;
 
-  color:var(--ink);
+  color: var(--ink);
 
-  font-size:13px;
+  font-size: 13px;
 }
 
 .form-group small {
-  display:block;
+  display: block;
 
-  margin-top:5px;
+  margin-top: 5px;
 
-  color:#D85D5D;
+  color: #D85D5D;
 
-  font-size:11px;
+  font-size: 11px;
 }
 
 .error-alert {
-  display:flex;
-  gap:8px;
-  align-items:center;
+  display: flex;
+  gap: 8px;
+  align-items: center;
 
-  margin-bottom:15px;
-  padding:11px;
+  margin-bottom: 15px;
+  padding: 11px;
 
-  border-radius:8px;
+  border-radius: 8px;
 
-  background:#FFF6F6;
+  background: #FFF6F6;
 
-  color:#B74B4B;
+  color: #B74B4B;
 
-  font-size:11px;
+  font-size: 11px;
 }
 
 .submit-button {
-  width:100%;
-  height:49px;
+  width: 100%;
+  height: 49px;
 
-  margin-top:20px;
+  margin-top: 20px;
 
-  border:0;
-  border-radius:10px;
+  border: 0;
+  border-radius: 10px;
 
-  background:var(--blue);
+  background: var(--blue);
 
-  color:white;
+  color: white;
 
-  font-size:13px;
-  font-weight:750;
+  font-size: 13px;
+  font-weight: 750;
 
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .submit-button:hover:not(:disabled) {
-  background:var(--navy);
+  background: var(--navy);
 }
 
 .submit-button:disabled {
-  opacity:.6;
+  opacity: .6;
 }
 
 .loading {
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .spinner {
-  width:15px;
-  height:15px;
+  width: 15px;
+  height: 15px;
 
-  border:2px solid rgba(255,255,255,.4);
-  border-top-color:white;
+  border: 2px solid rgba(255, 255, 255, .4);
+  border-top-color: white;
 
-  border-radius:50%;
+  border-radius: 50%;
 
-  animation:spin .7s linear infinite;
+  animation: spin .7s linear infinite;
 }
 
 @keyframes spin {
   to {
-    transform:rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
 .bottom-link {
-  margin-top:18px;
+  margin-top: 18px;
 
-  color:var(--muted);
+  color: var(--muted);
 
-  font-size:12px;
+  font-size: 12px;
 
-  text-align:center;
+  text-align: center;
 }
 
 .bottom-link a {
-  color:var(--blue);
+  color: var(--blue);
 
-  font-weight:750;
+  font-weight: 750;
 
-  text-decoration:none;
+  text-decoration: none;
 }
 
 .test-info {
-  display:flex;
-  justify-content:center;
-  gap:7px;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
 
-  margin-top:25px;
-  padding:10px;
+  margin-top: 25px;
+  padding: 10px;
 
-  border-radius:8px;
+  border-radius: 8px;
 
-  background:var(--bg-soft);
+  background: var(--bg-soft);
 
-  color:var(--muted);
+  color: var(--muted);
 
-  font-size:10px;
+  font-size: 10px;
 }
 
 .test-info i {
-  color:var(--blue);
+  color: var(--blue);
 }
 
 .test-info strong {
-  color:var(--blue);
+  color: var(--blue);
 }
 
 @media(max-width:850px) {
   .forgot-page {
-    grid-template-columns:1fr;
+    grid-template-columns: 1fr;
 
-    height:auto;
-    min-height:100vh;
+    height: auto;
+    min-height: 100vh;
   }
 
   .showcase {
-    display:none;
+    display: none;
   }
 
   .panel {
-    min-height:100vh;
-    height:auto;
+    min-height: 100vh;
+    height: auto;
 
-    align-items:flex-start;
+    align-items: flex-start;
 
-    padding:30px 20px 40px;
+    padding: 30px 20px 40px;
   }
 
   .mobile-logo {
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:9px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
 
-    margin-bottom:35px;
+    margin-bottom: 35px;
 
-    color:var(--navy);
+    color: var(--navy);
 
-    font-size:21px;
-    font-weight:800;
+    font-size: 21px;
+    font-weight: 800;
   }
 
   .mobile-logo .brand-icon {
-    width:36px;
-    height:36px;
+    width: 36px;
+    height: 36px;
 
-    background:var(--blue-light);
+    background: var(--blue-light);
 
-    color:var(--blue);
+    color: var(--blue);
   }
 }
 </style>

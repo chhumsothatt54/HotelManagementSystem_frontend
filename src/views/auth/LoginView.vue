@@ -42,7 +42,6 @@
       </div>
     </section>
 
-    <!-- RIGHT FORM -->
     <section class="auth-panel">
       <div class="auth-container">
         <!-- Mobile Logo -->
@@ -166,36 +165,19 @@ function validateForm() {
     isValid = false;
 
   }
-
-
   return isValid;
-
 }
-
 async function login() {
-
   if (!validateForm()) return;
-
   loading.value = true;
-
   try {
-
-    console.log("FORM DATA:", {
-      email: form.value.email,
-      password: form.value.password
-    });
-
     await auth.login(
       form.value.email.trim(),
       form.value.password
     );
-
     router.push(auth.getRoleDashboard());
 
   } catch (err) {
-
-    console.log("Login Error:", err);
-
     loginError.value =
       err.response?.data?.message ||
       err.message ||

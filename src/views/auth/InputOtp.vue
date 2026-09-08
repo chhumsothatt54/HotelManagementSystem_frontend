@@ -45,17 +45,13 @@
 
     <!-- RIGHT -->
     <section class="panel">
-
       <div class="container">
-
         <div class="mobile-logo">
           <div class="brand-icon">
             <i class="bi bi-building"></i>
           </div>
-
           <span>StayNest</span>
         </div>
-
         <button
           class="back-button"
           @click="goBack"
@@ -63,17 +59,13 @@
           <i class="bi bi-arrow-left"></i>
           Back
         </button>
-
         <div class="otp-icon">
           <i class="bi bi-envelope-check"></i>
         </div>
-
         <div class="header">
-
           <span>
             EMAIL VERIFICATION
           </span>
-
           <h2>
             Enter verification code
           </h2>
@@ -85,7 +77,7 @@
 
         </div>
 
-        <!-- OTP -->
+        <!-- OTP INPUTS -->
         <div
           class="otp-inputs"
           @paste="handlePaste"
@@ -114,15 +106,7 @@
           {{ error }}
         </div>
 
-        <!-- TEST -->
-        <div class="test-otp">
-          <i class="bi bi-info-circle"></i>
-
-          Testing mode:
-          <strong>123456</strong>
-        </div>
-
-        <!-- VERIFY -->
+        <!-- VERIFY BUTTON -->
         <button
           class="submit-button"
           :disabled="
@@ -178,30 +162,21 @@ import {
   onMounted,
   ref
 } from 'vue'
-
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
+const auth = useAuthStore()
 const router = useRouter()
 
-const otp = ref([
-  '',
-  '',
-  '',
-  '',
-  '',
-  ''
-])
-
+const otp = ref(['', '', '', '', '', ''])
 const inputs = ref([])
 
 const email = ref('')
 const flow = ref('forgot-password')
-
 const error = ref('')
 
 const verifying = ref(false)
 const resending = ref(false)
-
 const countdown = ref(60)
 
 let timer = null
@@ -212,22 +187,9 @@ const setInputRef = (element, index) => {
   }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Get OTP Flow
-|--------------------------------------------------------------------------
-*/
-
 onMounted(async () => {
-  flow.value =
-    sessionStorage.getItem(
-      'staynest_otp_flow'
-    ) || 'forgot-password'
-
-  email.value =
-    sessionStorage.getItem(
-      'staynest_otp_email'
-    ) || ''
+  flow.value = sessionStorage.getItem('staynest_otp_flow') || 'forgot-password'
+  email.value = sessionStorage.getItem('staynest_otp_email') || ''
 
   if (!email.value) {
     router.replace('/login')
@@ -235,253 +197,111 @@ onMounted(async () => {
   }
 
   startCountdown()
-
   await nextTick()
-
   inputs.value[0]?.focus()
 })
 
-/*
-|--------------------------------------------------------------------------
-| OTP Input
-|--------------------------------------------------------------------------
-*/
-
 const handleInput = index => {
   error.value = ''
+  otp.value[index] = otp.value[index].replace(/\D/g, '').slice(-1)
 
-  otp.value[index] =
-    otp.value[index]
-      .replace(/\D/g, '')
-      .slice(-1)
-
-  if (
-    otp.value[index] &&
-    index < 5
-  ) {
+  if (otp.value[index] && index < 5) {
     inputs.value[index + 1]?.focus()
   }
 
-  if (
-    otp.value.join('').length === 6
-  ) {
+  if (otp.value.join('').length === 6) {
     verifyOtp()
   }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Keyboard
-|--------------------------------------------------------------------------
-*/
-
-const handleKeydown = (
-  event,
-  index
-) => {
-  if (
-    event.key === 'Backspace' &&
-    !otp.value[index] &&
-    index > 0
-  ) {
+const handleKeydown = (event, index) => {
+  if (event.key === 'Backspace' && !otp.value[index] && index > 0) {
     inputs.value[index - 1]?.focus()
   }
-
-  if (
-    event.key === 'ArrowLeft' &&
-    index > 0
-  ) {
+  if (event.key === 'ArrowLeft' && index > 0) {
     inputs.value[index - 1]?.focus()
   }
-
-  if (
-    event.key === 'ArrowRight' &&
-    index < 5
-  ) {
+  if (event.key === 'ArrowRight' && index < 5) {
     inputs.value[index + 1]?.focus()
   }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Paste
-|--------------------------------------------------------------------------
-*/
-
 const handlePaste = event => {
   event.preventDefault()
-
-  const value =
-    event.clipboardData
-      ?.getData('text')
-      ?.replace(/\D/g, '')
-      .slice(0, 6)
-
-  if (!value) {
-    return
-  }
-
-  otp.value = [
-    '',
-    '',
-    '',
-    '',
-    '',
-    ''
-  ]
-
-  value
-    .split('')
-    .forEach((digit,index) => {
-      otp.value[index] = digit
-    })
-
+  const value = event.clipboardData?.getData('text')?.replace(/\D/g, '').slice(0, 6)
+  if (!value) return
+  otp.value = ['', '', '', '', '', '']
+  value.split('').forEach((digit, index) => {
+    otp.value[index] = digit
+  })
   if (value.length === 6) {
     verifyOtp()
   }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Verify OTP
-|--------------------------------------------------------------------------
-*/
-
 const verifyOtp = async () => {
-  const enteredOtp =
-    otp.value.join('')
-
+  const enteredOtp = otp.value.join('')
   if (enteredOtp.length !== 6) {
-    error.value =
-      'Please enter the complete 6-digit code.'
+    error.value = 'Please enter the complete 6-digit code.'
     return
   }
-
   verifying.value = true
   error.value = ''
 
-  await delay(900)
+  try {
+    await auth.confirmOtp(email.value, enteredOtp)
 
-  /*
-   * Fake OTP
-   */
-  const correctOtp =
-    sessionStorage.getItem(
-      'staynest_reset_otp'
-    ) || '123456'
-
-  if (enteredOtp !== correctOtp) {
-    verifying.value = false
-
-    error.value =
-      'Invalid OTP. Please try again.'
-
-    otp.value = [
-      '',
-      '',
-      '',
-      '',
-      '',
-      ''
-    ]
-
+    if (flow.value === 'forgot-password') {
+      sessionStorage.setItem('staynest_otp_verified', 'true')
+      router.push('/reset-password')
+    } else if (flow.value === 'register') {
+      sessionStorage.setItem('staynest_registration_verified', 'true')
+      router.push('/login')
+    }
+  } catch (err) {
+    console.error('OTP Verification Error:', err)
+    error.value = err.response?.data?.message || err.message || 'Invalid OTP code.'
+    otp.value = ['', '', '', '', '', '']
     await nextTick()
-
     inputs.value[0]?.focus()
-
-    return
-  }
-
-  verifying.value = false
-
-  /*
-   * FORGOT PASSWORD
-   */
-  if (
-    flow.value ===
-    'forgot-password'
-  ) {
-    sessionStorage.setItem(
-      'staynest_otp_verified',
-      'true'
-    )
-
-    router.push('/reset-password')
-
-    return
-  }
-
-  /*
-   * REGISTER
-   */
-  if (
-    flow.value === 'register'
-  ) {
-    sessionStorage.setItem(
-      'staynest_registration_verified',
-      'true'
-    )
-
-    router.push('/login')
+  } finally {
+    verifying.value = false
   }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Resend
-|--------------------------------------------------------------------------
-*/
 
 const resend = async () => {
-  if (countdown.value > 0) {
-    return
-  }
+  if (countdown.value > 0) return
 
   resending.value = true
+  error.value = ''
 
-  await delay(700)
-
-  sessionStorage.setItem(
-    'staynest_reset_otp',
-    '123456'
-  )
-
-  otp.value = [
-    '',
-    '',
-    '',
-    '',
-    '',
-    ''
-  ]
-
-  resending.value = false
-
-  startCountdown()
-
-  await nextTick()
-
-  inputs.value[0]?.focus()
+  try {
+    // ហៅ API ផ្ញើ OTP ឡើងវិញ
+    await auth.forgotPassword(email.value)
+    
+    otp.value = ['', '', '', '', '', '']
+    startCountdown()
+    await nextTick()
+    inputs.value[0]?.focus()
+  } catch (err) {
+    console.error('Resend OTP Error:', err)
+    error.value = err.response?.data?.message || err.message || 'Failed to resend OTP.'
+  } finally {
+    resending.value = false
+  }
 }
-
-/*
-|--------------------------------------------------------------------------
-| Countdown
-|--------------------------------------------------------------------------
-*/
 
 const startCountdown = () => {
   stopCountdown()
-
   countdown.value = 60
-
   timer = setInterval(() => {
     if (countdown.value > 0) {
       countdown.value--
     } else {
       stopCountdown()
     }
-  },1000)
+  }, 1000)
 }
 
 const stopCountdown = () => {
@@ -491,43 +311,19 @@ const stopCountdown = () => {
   }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Back
-|--------------------------------------------------------------------------
-*/
-
 const goBack = () => {
-  if (
-    flow.value ===
-    'forgot-password'
-  ) {
+  if (flow.value === 'forgot-password') {
     router.push('/forgot-password')
   } else {
     router.push('/register')
   }
 }
 
-const delay = ms =>
-  new Promise(resolve =>
-    setTimeout(resolve,ms)
-  )
-
 onBeforeUnmount(() => {
   stopCountdown()
 })
 </script>
-
 <style scoped>
-:global(:root) {
-  --navy:#063B32;
-  --blue:#087F68;
-  --blue-light:#E8F6F2;
-  --ink:#17231F;
-  --muted:#6B7772;
-  --line:#E1E9E5;
-  --bg-soft:#F4F8F6;
-}
 
 .otp-page {
   width:100%;

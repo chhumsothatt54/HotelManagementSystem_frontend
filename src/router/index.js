@@ -39,6 +39,10 @@ import RegisterView from "@/views/auth/RegisterView.vue";
 import ForgotPasswordView from "@/views/auth/ForgotPasswordView.vue";
 
 import { useAuthStore } from "@/stores/auth.js";
+import InputOtp from "@/views/auth/InputOtp.vue";
+import ResetPasswordView from "@/views/auth/ResetPasswordView.vue";
+import HotelMagerView from "@/views/admin/HotelMagerView.vue";
+import HotelView from "@/views/admin/HotelView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -56,6 +60,16 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: LoginView,
+    },
+    {
+      path: "/input-otp",
+      name: "input-otp",
+      component: InputOtp,
+    },
+    {
+      path:'/reset-password',
+      name:'resend-password',
+      component: ResetPasswordView
     },
     {
       path: "/register",
@@ -76,6 +90,22 @@ const router = createRouter({
       path: "/about",
       name: "about",
       component: AboutView,
+    },
+
+    // =============================
+    // Demo Routes
+    // =============================
+
+    {
+      path: "/demomg",
+      name: "demo-manager",
+      component: DemoMg,
+    },
+
+    {
+      path: "/demoadmin",
+      name: "demo-admin",
+      component: DemoAdmin,
     },
 
     // =============================
