@@ -17,8 +17,9 @@
             </RouterLink>
           </li>
 
+          <!-- 🟢 កែប្រែពី /booking ទៅ /booking-detail -->
           <li class="nav-item">
-            <RouterLink to="/booking" class="nav-link" active-class="active">
+            <RouterLink to="/booking-detail" class="nav-link" active-class="active">
               Bookings
             </RouterLink>
           </li>
@@ -44,7 +45,7 @@
             <span class="badge-dot"></span>
           </button>
 
-          <RouterLink to="/login" class="avatar-chip">
+          <RouterLink to="/login" class="avatar-chip text-decoration-none">
             <div class="avatar-circle">S</div>
             <span class="fw-semibold small">Login</span>
           </RouterLink>

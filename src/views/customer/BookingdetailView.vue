@@ -1,508 +1,265 @@
 <template>
   <div>
+    <!-- NAVBAR -->
     <NavbarView />
 
-    <div v-if="hotel">
-      <!-- BACK LINK -->
-      <div class="container pt-4">
-        <router-link to="/" class="back-link">
-          ← Back to all stays
-        </router-link>
+    <main class="container py-5">
+      <!-- HEADER -->
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+          <h2 class="section-title mb-1">My Bookings</h2>
+          <p class="section-sub mb-0">View and manage your hotel reservation history</p>
+        </div>
+
+        <!-- SEARCH & FILTER -->
+        <div class="d-flex gap-2 flex-wrap">
+          <input 
+            type="text" 
+            class="form-control form-control-sm search-input" 
+            placeholder="Search hotel or booking ID..." 
+            v-model="searchQuery"
+          />
+          <select class="form-select form-select-sm status-filter" v-model="statusFilter">
+            <option value="ALL">All Status</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Pending">Pending</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
       </div>
 
-      <!-- GALLERY -->
-      <section class="container pt-3 pb-0">
-        <div class="gallery-grid">
-          <div class="gallery-main">
-            <img :src="hotel.img" :alt="hotel.name">
-            <span v-if="hotel.tag" class="stay-tag gallery-tag">
-              {{ hotel.tag }}
-            </span>
-          </div>
+      <!-- BOOKINGS TABLE CARD -->
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 custom-table">
+            <thead>
+              <tr>
+                <th scope="col">Booking ID</th>
+                <th scope="col">Hotel & Room</th>
+                <th scope="col">Dates</th>
+                <th scope="col">Guests</th>
+                <th scope="col">Total Price</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- EMPTY STATE -->
+              <tr v-if="filteredBookings.length === 0">
+                <td colspan="7" class="text-center py-5 text-muted">
+                  <div class="fs-1 mb-2">🏨</div>
+                  <p class="mb-0 fw-medium">No booking records found.</p>
+                </td>
+              </tr>
 
-          <div class="gallery-side">
-            <div class="gallery-thumb" v-for="n in 4" :key="n">
-              <img :src="hotel.img" :alt="hotel.name">
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- HEADER -->
-      <section class="container pt-4 pb-2">
-        <div class="row">
-          <div class="col-lg-8">
-
-            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
-              <div>
-                <h1 class="hotel-title">{{ hotel.name }}</h1>
-                <div class="hotel-loc">📍 {{ hotel.location }}</div>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <div class="rating-badge">
-                  ★ {{ hotel.rating }}
-                </div>
-                <button class="stay-fav detail-fav" :class="{ active: hotel.fav }" @click="hotel.fav = !hotel.fav">
-                  {{ hotel.fav ? '♥' : '♡' }}
-                </button>
-              </div>
-            </div>
-
-            <div class="stay-amenities mt-3 mb-4">
-              <span class="amenity-pill" v-for="a in hotel.amenities" :key="a">
-                {{ a }}
-              </span>
-            </div>
-
-            <hr class="section-divider">
-
-            <!-- DESCRIPTION -->
-            <div class="detail-block">
-              <h2 class="block-title">About this stay</h2>
-              <p class="block-text">
-                {{ hotel.description || defaultDescription }}
-              </p>
-            </div>
-
-            <hr class="section-divider">
-
-            <!-- AMENITIES FULL -->
-            <div class="detail-block">
-              <h2 class="block-title">What this place offers</h2>
-              <div class="row g-3">
-                <div class="col-6 col-md-4" v-for="a in hotel.amenities" :key="a">
-                  <div class="amenity-full">
-                    <span class="amenity-dot"></span>
-                    {{ a }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <hr class="section-divider">
-
-            <!-- ROOMS -->
-            <div class="detail-block">
-              <h2 class="block-title">Available rooms</h2>
-
-              <div class="rooms-card">
-                <div class="room-row" v-for="room in rooms" :key="room.name">
-                  <div>
-                    <div class="room-name">{{ room.name }}</div>
-                    <div class="room-sub">{{ room.desc }}</div>
-                  </div>
-
+              <!-- BOOKING ROW -->
+              <tr v-for="b in filteredBookings" :key="b.id">
+                <td class="fw-bold text-brand">
+                  #{{ b.id }}
+                </td>
+                <td>
                   <div class="d-flex align-items-center gap-3">
-                    <div class="room-price">${{ room.price }}<span class="price-unit">/night</span></div>
-                    <button class="btn btn-outline-brand btn-sm">Select</button>
+                    <img :src="b.hotelImage" :alt="b.hotelName" class="hotel-thumb rounded-3" />
+                    <div>
+                      <div class="fw-bold text-dark">{{ b.hotelName }}</div>
+                      <div class="small text-muted">{{ b.roomType }}</div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- BOOKING CARD -->
-          <div class="col-lg-4">
-            <div class="booking-card">
-              <div class="d-flex align-items-baseline gap-1 mb-3">
-                <span v-if="hotel.oldPrice" class="price-strike me-1">${{ hotel.oldPrice }}</span>
-                <span class="price-now booking-price">${{ hotel.price }}</span>
-                <span class="price-unit">/night</span>
-              </div>
-
-              <div class="search-field mb-2">
-                <label>Check-in</label>
-                <input type="date" class="form-control" v-model="booking.checkin">
-              </div>
-
-              <div class="search-field mb-2">
-                <label>Check-out</label>
-                <input type="date" class="form-control" v-model="booking.checkout">
-              </div>
-
-              <div class="search-field mb-3">
-                <label>Guests</label>
-                <input type="number" min="1" class="form-control" v-model="booking.guests">
-              </div>
-
-              <button class="btn btn-primary-brand w-100 mb-3">
-                Reserve now
-              </button>
-
-              <p class="booking-note">You won't be charged yet</p>
-
-              <hr class="section-divider">
-
-              <div class="d-flex justify-content-between booking-line">
-                <span>${{ hotel.price }} x {{ nights }} nights</span>
-                <span>${{ hotel.price * nights }}</span>
-              </div>
-
-              <div class="d-flex justify-content-between booking-line">
-                <span>Service fee</span>
-                <span>${{ serviceFee }}</span>
-              </div>
-
-              <hr class="section-divider">
-
-              <div class="d-flex justify-content-between booking-total">
-                <span>Total</span>
-                <span>${{ hotel.price * nights + serviceFee }}</span>
-              </div>
-            </div>
-          </div>
-
+                </td>
+                <td>
+                  <div class="small font-monospace">
+                    <div><strong>In:</strong> {{ b.checkIn }}</div>
+                    <div><strong>Out:</strong> {{ b.checkOut }}</div>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge bg-light text-dark border">
+                    👤 {{ b.guests }} Guest(s)
+                  </span>
+                </td>
+                <td>
+                  <span class="fw-bold text-success">${{ b.totalPrice }}</span>
+                </td>
+                <td>
+                  <span class="badge status-badge" :class="getStatusClass(b.status)">
+                    ● {{ b.status }}
+                  </span>
+                </td>
+                <td class="text-end">
+                  <div class="dropdown">
+                    <button class="btn btn-light btn-sm rounded-circle icon-btn" type="button" data-bs-toggle="dropdown">
+                      ⋮
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
+                      <li v-if="b.status === 'Confirmed' || b.status === 'Pending'">
+                        <button class="dropdown-menu-item dropdown-item text-danger" @click="cancelBooking(b.id)">
+                          ❌ Cancel Booking
+                        </button>
+                      </li>
+                      <li v-else>
+                        <span class="dropdown-item-text text-muted small">No actions</span>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </section>
+      </div>
+    </main>
 
-      <ReviewView />
-    </div>
-
-    <!-- NOT FOUND -->
-    <div v-else class="container not-found">
-      <div class="not-found-icon">🏨</div>
-      <h2 class="section-title">Hotel not found</h2>
-      <p class="section-sub mb-4">The stay you're looking for doesn't exist or was removed.</p>
-      <router-link to="/" class="btn btn-primary-brand">
-        Back to all stays
-      </router-link>
-    </div>
-
+    <!-- FOOTER -->
     <FooterView />
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import NavbarView from '@/components/layout/customer/NavbarView.vue'
 import FooterView from '@/components/layout/customer/FooterView.vue'
 
-import NavbarView from '@/components/layout/customer/NavbarView.vue'
+const searchQuery = ref('')
+const statusFilter = ref('ALL')
 
-const route = useRoute()
-
-// NOTE: this list must match the "id"s used on the list page's
-// "View Hotel" links. Keep both arrays in sync, or move this into
-// a shared composable/store once your app grows.
-const stays = ref([
+// Data Reactive
+const bookings = ref([
   {
-    id: 1,
-    name: 'Riverside Heritage Hotel',
-    location: 'Phnom Penh, Cambodia',
-    rating: 4.7,
-    price: 41,
-    oldPrice: 45,
-    tag: 'Popular',
-    fav: false,
-    amenities: ['Free WiFi', 'Pool', 'Breakfast Included'],
-    img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop'
+    id: 'BK-1001',
+    hotelName: 'Riverside Heritage Hotel',
+    roomType: 'Deluxe King Room',
+    hotelImage: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=200&auto=format&fit=crop',
+    checkIn: '2026-04-10',
+    checkOut: '2026-04-12',
+    guests: 2,
+    totalPrice: 82,
+    status: 'Confirmed'
   },
   {
-    id: 2,
-    name: 'Temple Grove Boutique',
-    location: 'Siem Reap, Cambodia',
-    rating: 4.9,
-    price: 60,
-    fav: false,
-    amenities: ['Free WiFi', 'Pool', 'Breakfast Included'],
-    img: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=800&auto=format&fit=crop'
+    id: 'BK-1002',
+    hotelName: 'Temple Grove Boutique',
+    roomType: 'Pool View Suite',
+    hotelImage: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=200&auto=format&fit=crop',
+    checkIn: '2026-05-01',
+    checkOut: '2026-05-04',
+    guests: 2,
+    totalPrice: 180,
+    status: 'Pending'
   },
   {
-    id: 3,
-    name: 'Sokha Bay Seaview',
-    location: 'Sihanoukville, Cambodia',
-    rating: 4.4,
-    price: 32,
-    oldPrice: 38,
-    tag: '-15%',
-    fav: false,
-    amenities: ['Beach Access', 'Free WiFi', 'Restaurant'],
-    img: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=800&auto=format&fit=crop'
+    id: 'BK-0988',
+    hotelName: 'Sokha Bay Seaview',
+    roomType: 'Ocean Front Bungalow',
+    hotelImage: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=200&auto=format&fit=crop',
+    checkIn: '2026-01-15',
+    checkOut: '2026-01-18',
+    guests: 3,
+    totalPrice: 96,
+    status: 'Completed'
   },
   {
-    id: 4,
-    name: 'Old Market Homestay',
-    location: 'Battambang, Cambodia',
-    rating: 4.6,
-    price: 22,
-    fav: false,
-    amenities: ['Free WiFi', 'Breakfast Included', 'Bicycle Rental'],
-    img: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    id: 5,
-    name: 'Kampot Riverside Lodge',
-    location: 'Kampot, Cambodia',
-    rating: 4.8,
-    price: 50,
-    fav: false,
-    amenities: ['Free WiFi', 'Pool', 'Restaurant'],
-    img: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    id: 6,
-    name: 'Kep Cliffside Villas',
-    location: 'Kep, Cambodia',
-    rating: 4.5,
-    price: 42,
-    fav: false,
-    amenities: ['Sea View', 'Free WiFi', 'Free Parking'],
-    img: 'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?q=80&w=800&auto=format&fit=crop'
+    id: 'BK-0950',
+    hotelName: 'Kampot Cliffside Villa',
+    roomType: 'Mountain View Villa',
+    hotelImage: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=200&auto=format&fit=crop',
+    checkIn: '2025-12-20',
+    checkOut: '2025-12-22',
+    guests: 1,
+    totalPrice: 110,
+    status: 'Cancelled'
   }
 ])
 
-const hotel = computed(() =>
-  stays.value.find(s => s.id === Number(route.params.id))
-)
-
-const defaultDescription =
-  'A handpicked stay offering comfort and character, just steps from local landmarks. Enjoy thoughtful service, warm hospitality, and easy access to everything worth seeing nearby.'
-
-const rooms = computed(() => {
-  if (!hotel.value) return []
-  return [
-    { name: 'Standard Room', desc: '1 queen bed · City view', price: hotel.value.price },
-    { name: 'Deluxe Room', desc: '1 king bed · Balcony', price: hotel.value.price + 15 },
-    { name: 'Suite', desc: '2 beds · Living area · Best view', price: hotel.value.price + 35 }
-  ]
+// Filter Data
+const filteredBookings = computed(() => {
+  return bookings.value.filter(item => {
+    const matchesSearch = item.hotelName.toLowerCase().includes(searchQuery.value.toLowerCase()) || 
+                          item.id.toLowerCase().includes(searchQuery.value.toLowerCase())
+    const matchesStatus = statusFilter.value === 'ALL' || item.status === statusFilter.value
+    return matchesSearch && matchesStatus
+  })
 })
 
-const booking = ref({
-  checkin: '',
-  checkout: '',
-  guests: 2
-})
+// ពណ៌ Status Badge
+function getStatusClass(status) {
+  switch (status) {
+    case 'Confirmed': return 'bg-success-subtle text-success border border-success-subtle'
+    case 'Pending': return 'bg-warning-subtle text-warning-emphasis border border-warning-subtle'
+    case 'Completed': return 'bg-info-subtle text-info-emphasis border border-info-subtle'
+    case 'Cancelled': return 'bg-danger-subtle text-danger border border-danger-subtle'
+    default: return 'bg-secondary-subtle text-secondary'
+  }
+}
 
-const nights = computed(() => {
-  if (!booking.value.checkin || !booking.value.checkout) return 1
-  const diff = new Date(booking.value.checkout) - new Date(booking.value.checkin)
-  const n = Math.round(diff / (1000 * 60 * 60 * 24))
-  return n > 0 ? n : 1
-})
-
-const serviceFee = 8
+// Cancel Booking ធម្មតា (In-Memory)
+function cancelBooking(id) {
+  if (confirm(`Are you sure you want to cancel booking ${id}?`)) {
+    const target = bookings.value.find(b => b.id === id)
+    if (target) {
+      target.status = 'Cancelled'
+    }
+  }
+}
 </script>
 
 <style scoped>
-.back-link {
-  color: var(--muted);
+.text-brand {
+  color: #087F68;
+}
+
+.search-input, .status-filter {
+  min-width: 180px;
+  border-color: #E1E9E5;
+  border-radius: 8px;
+}
+
+.search-input:focus, .status-filter:focus {
+  border-color: #087F68;
+  box-shadow: 0 0 0 3px #E8F6F2;
+}
+
+.custom-table {
+  font-size: 0.92rem;
+}
+
+.custom-table thead th {
+  background-color: #F8FAF9;
+  color: #063B32;
   font-weight: 600;
-  font-size: 0.9rem;
-  transition: color 0.2s ease;
+  padding: 1rem;
+  border-bottom: 1px solid #E1E9E5;
 }
 
-.back-link:hover {
-  color: var(--blue);
+.custom-table tbody td {
+  padding: 1rem;
+  border-bottom: 1px solid #EEF2F0;
 }
 
-/* GALLERY */
-.gallery-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 0.75rem;
-  height: 420px;
-}
-
-.gallery-main {
-  position: relative;
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.gallery-main img {
-  width: 100%;
-  height: 100%;
+.hotel-thumb {
+  width: 52px;
+  height: 52px;
   object-fit: cover;
 }
 
-.gallery-tag {
-  top: 1rem;
-  left: 1rem;
-}
-
-.gallery-side {
-  display: grid;
-  grid-template-rows: repeat(2, 1fr);
-  grid-auto-flow: column;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
-}
-
-.gallery-thumb {
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.gallery-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* HEADER */
-.hotel-title {
-  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+.status-badge {
+  padding: 0.4em 0.75em;
   font-weight: 600;
-  color: var(--navy);
-  margin-bottom: 0.3rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
 }
 
-.hotel-loc {
-  color: var(--muted);
-  font-size: 0.95rem;
-}
-
-.rating-badge {
-  background: var(--blue-light);
-  color: var(--navy);
-  font-weight: 700;
-  font-size: 0.9rem;
-  padding: 0.4rem 0.8rem;
-  border-radius: 999px;
-}
-
-.detail-fav {
-  position: static;
-  background: #fff;
-  border: 1px solid var(--line);
-}
-
-.section-divider {
-  border: none;
-  border-top: 1px solid var(--line);
-  margin: 1.8rem 0;
-}
-
-/* DETAIL BLOCKS */
-.block-title {
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--navy);
-  margin-bottom: 0.8rem;
-}
-
-.block-text {
-  color: var(--ink);
-  font-size: 0.95rem;
-  line-height: 1.6;
-}
-
-.amenity-full {
-  display: flex;
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: var(--ink);
+  justify-content: center;
 }
 
-.amenity-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--blue);
-  flex-shrink: 0;
-}
-
-/* ROOMS CARD */
-.rooms-card {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 0 1.25rem;
-  box-shadow: 0 12px 30px rgba(6, 59, 50, 0.08);
-}
-
-.room-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.room-row:last-child {
-  border-bottom: none;
-}
-
-.room-name {
-  font-weight: 700;
-  color: var(--navy);
-  font-size: 0.95rem;
-}
-
-.room-sub {
-  color: var(--muted);
-  font-size: 0.82rem;
-}
-
-.room-price {
-  font-weight: 700;
-  color: var(--navy);
-  font-size: 1rem;
-}
-
-/* BOOKING CARD */
-.booking-card {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  position: sticky;
-  top: 1.5rem;
-  box-shadow: 0 12px 30px rgba(6, 59, 50, 0.08);
-}
-
-.booking-price {
-  font-size: 1.4rem;
-}
-
-.booking-note {
-  text-align: center;
-  color: var(--muted);
-  font-size: 0.8rem;
-  margin: 0;
-}
-
-.booking-line {
-  color: var(--ink);
+.dropdown-menu-item {
   font-size: 0.88rem;
-  margin-bottom: 0.6rem;
-}
-
-.booking-total {
-  font-weight: 700;
-  color: var(--navy);
-  font-size: 1rem;
-}
-
-/* NOT FOUND */
-.not-found {
-  text-align: center;
-  padding: 6rem 1rem;
-}
-
-.not-found-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-@media (max-width: 767px) {
-  .gallery-grid {
-    grid-template-columns: 1fr;
-    height: auto;
-  }
-
-  .gallery-main {
-    height: 240px;
-  }
-
-  .gallery-side {
-    display: none;
-  }
-
-  .booking-card {
-    position: static;
-    margin-top: 2rem;
-  }
+  cursor: pointer;
 }
 </style>
