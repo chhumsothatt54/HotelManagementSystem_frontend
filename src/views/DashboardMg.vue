@@ -273,18 +273,20 @@ body {
 
 /* Topbar: sticky, stays put, doesn't scroll with content */
 .topbar {
+  min-height: var(--topbar-height);
+
+  padding: 18px 28px;
+
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: flex-start;
+
+  gap: 20px;
+
   position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
-  z-index: 15;
-  padding: 1.25rem 0;
-  margin: 0 -2rem 0 -2rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
+
+  z-index: 20;
 }
 
 .page-title {

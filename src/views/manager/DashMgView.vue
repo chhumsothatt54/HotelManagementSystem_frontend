@@ -21,7 +21,7 @@
                     <span class="dot"></span>
                 </button>
 
-                <!-- Manager -->
+                <!-- Manager
                 <div class="user-chip">
                     <div class="avatar-circle">
                         {{ managerInitial }}
@@ -38,7 +38,7 @@
                     </div>
 
                     <i class="bi bi-chevron-down text-muted small"></i>
-                </div>
+                </div> -->
 
             </div>
         </div>

@@ -122,6 +122,27 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
+  async function changePassword(data) {
+  try {
+    const response = await api.put('/change-password', data)
+
+    return {
+      success: true,
+      message: response.data.message,
+      errors: {},
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error.response?.data?.message ||
+        'Failed to change password.',
+      errors:
+        error.response?.data?.errors || {},
+    }
+  }
+}
+
   return {
     user,
     token,
@@ -129,6 +150,7 @@ export const useAuthStore = defineStore("auth", () => {
     isAdmin,
     isManager,
     isCustomer,
+
     login,
     getRoleDashboard,
     logout,
@@ -137,5 +159,6 @@ export const useAuthStore = defineStore("auth", () => {
     confirmOtp,
     resetPassword,
     resendOtp,
+    changePassword,
   };
 });

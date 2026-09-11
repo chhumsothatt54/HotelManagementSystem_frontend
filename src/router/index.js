@@ -27,6 +27,7 @@ import PricingView from "@/views/manager/PricingView.vue";
 import RevenView from "@/views/manager/RevenView.vue";
 import OccupancyView from "@/views/manager/OccupancyView.vue";
 import BookingsView from "@/views/manager/BookingsView.vue";
+import ConnectAmenityView from '@/views/manager/ConnectAmenityView.vue'
 
 // Admin Views
 import DashboardAdmin from "@/views/DashboardAdmin.vue";
@@ -44,6 +45,8 @@ import ResetPasswordView from "@/views/auth/ResetPasswordView.vue";
 import HotelMagerView from "@/views/admin/HotelMagerView.vue";
 import HotelView from "@/views/admin/HotelView.vue";
 import ReviewView from "@/views/admin/ReviewView.vue";
+import ChangePasswordView from "@/views/auth/ChangePasswordView.vue";
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -72,6 +75,12 @@ const router = createRouter({
       name: "resend-password",
       component: ResetPasswordView,
     },
+
+    {
+      path: "/change-password",
+      name: "change-password",
+      component: ChangePasswordView,
+    },
     {
       path: "/register",
       name: "register",
@@ -92,6 +101,7 @@ const router = createRouter({
       name: "about",
       component: AboutView,
     },
+    
 
     // =============================
     // Demo Routes
@@ -146,6 +156,7 @@ const router = createRouter({
       name: "demo-admin",
       component: DemoAdmin,
     },
+    
 
     // =============================
     // Admin Routes
@@ -356,6 +367,15 @@ const router = createRouter({
           },
         },
         {
+          path: "connect-amenity",
+          name: "manager-connect-amenity",
+          component: ConnectAmenityView,
+          meta: {
+            requireAuth: true,
+            roles: ["hotel_manager"],
+          },
+        },
+        {
           path: "price",
           name: "manager-price",
           component: PricingView,
@@ -391,6 +411,8 @@ const router = createRouter({
             roles: ["hotel_manager"],
           },
         },
+        
+        
       ],
     },
   ],
