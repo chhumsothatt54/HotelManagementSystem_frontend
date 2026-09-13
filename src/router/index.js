@@ -47,6 +47,14 @@ import HotelView from "@/views/admin/HotelView.vue";
 import ReviewView from "@/views/admin/ReviewView.vue";
 import ChangePasswordView from "@/views/auth/ChangePasswordView.vue";
 
+import Ad_RoomTypeView from "@/views/admin/Ad_RoomTypeView.vue";
+import Ad_RoomView from "@/views/admin/Ad_RoomView.vue";
+import Ad_AmenityView from "@/views/admin/Ad_AmenityView.vue";
+import Ad_BookingView from "@/views/admin/Ad_BookingView.vue";
+import Ad_PaymentView from "@/views/admin/Ad_PaymentView.vue";
+import Ad_RevenueReportView from "@/views/admin/Ad_RevenueReportView.vue";
+import Ad_OccupancyReport from "@/views/admin/Ad_OccupancyReport.vue";
+import Ad_ProfileView from "@/views/admin/Ad_ProfileView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -212,45 +220,45 @@ const router = createRouter({
           },
         },
         {
-          path: "room-type",
-          name: "room-type",
-          component: RoomTypeView,
+          path: "ad-room-type",
+          name: "ad-room-type",
+          component: Ad_RoomTypeView,
           meta: {
             requireAuth: true,
             roles: ["admin"],
           },
         },
         {
-          path: "rooms",
-          name: "rooms",
-          component: RoomView,
+          path: "ad-rooms",
+          name: "ad-rooms",
+          component: Ad_RoomView,
           meta: {
             requireAuth: true,
             roles: ["admin"],
           },
         },
         {
-          path: "amenity",
-          name: "amenity",
-          component: AmenityView,
+          path: "ad-amenity",
+          name: "ad-amenity",
+          component:Ad_AmenityView,
           meta: {
             requireAuth: true,
             roles: ["admin"],
           },
         },
         {
-          path: "booking",
-          name: "booking",
-          component: BookingView,
+          path: "ad-booking",
+          name: "ad-booking",
+          component: Ad_BookingView,
           meta: {
             requireAuth: true,
             roles: ["admin"],
           },
         },
         {
-          path: "payment",
-          name: "payment",
-          component: PaymentView,
+          path: "ad-payment",
+          name: "ad-payment",
+          component: Ad_PaymentView,
           meta: {
             requireAuth: true,
             roles: ["admin"],
@@ -266,18 +274,27 @@ const router = createRouter({
           },
         },
         {
-          path: "revenue",
-          name: "revenue",
-          component: RevenView,
+          path: "ad-revenue",
+          name: "ad-revenue",
+          component: Ad_RevenueReportView,
           meta: {
             requireAuth: true,
             roles: ["admin"],
           },
         },
         {
-          path: "occupancy",
-          name: "occupancy",
-          component: OccupancyView,
+          path: "ad-occupancy",
+          name: "ad-occupancy",
+          component: Ad_OccupancyReport,
+          meta: {
+            requireAuth: true,
+            roles: ["admin"],
+          },
+        },
+        {
+          path: "ad-profile",
+          name: "ad-profile",
+          component: Ad_ProfileView,
           meta: {
             requireAuth: true,
             roles: ["admin"],
