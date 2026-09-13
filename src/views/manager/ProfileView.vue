@@ -40,6 +40,7 @@
   <div class="page-content">
     <div class="panel-card">
       <!-- Header -->
+
       <div
         class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4"
       >
@@ -53,21 +54,30 @@
           </p>
         </div>
 
-        <button
-          type="button"
-          class="btn-brand"
-          :disabled="managerStore.loading"
-          @click="saveChanges"
-        >
-          <span
-            v-if="managerStore.loading"
-            class="spinner-border spinner-border-sm me-2"
-          ></span>
+        <div class="d-flex align-items-center gap-2">
+          <!-- Save Changes -->
+          <button
+            type="button"
+            class="btn-brand"
+            :disabled="managerStore.loading"
+            @click="saveChanges"
+          >
+            <span
+              v-if="managerStore.loading"
+              class="spinner-border spinner-border-sm me-2"
+            ></span>
 
-          <i v-else class="bi bi-check-lg me-1"></i>
+            <i v-else class="bi bi-check-lg me-1"></i>
 
-          {{ managerStore.loading ? "Saving..." : "Save Changes" }}
-        </button>
+            {{ managerStore.loading ? "Saving..." : "Save Changes" }}
+          </button>
+
+          <!-- Logout -->
+          <button type="button" class="btn-logout" @click="handleLogout">
+            <i class="bi bi-box-arrow-right me-1"></i>
+            Logout
+          </button>
+        </div>
       </div>
 
       <!-- Loading -->
@@ -109,11 +119,38 @@
           <div class="col-12 col-lg-4">
             <div class="card-panel h-100 text-center">
               <!-- Avatar -->
-              <div class="profile-avatar mx-auto">
+              <div
+                class="profile-avatar mx-auto"
+                @click="openAvatarPicker"
+                title="Change profile photo"
+              >
                 <div class="profile-avatar-inner">
-                  {{ profileInitial }}
+                  <img
+                    v-if="avatarPreview || profile?.avatar"
+                    :src="avatarPreview || avatarUrl"
+                    alt="Profile photo"
+                    class="profile-avatar-image"
+                  />
+
+                  <span v-else>
+                    {{ profileInitial }}
+                  </span>
+
+                  <!-- Camera overlay -->
+                  <div class="avatar-upload-overlay">
+                    <i class="bi bi-camera-fill"></i>
+                  </div>
                 </div>
               </div>
+
+              <!-- Hidden file input -->
+              <input
+                ref="fileInput"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                class="d-none"
+                @change="handleAvatarChange"
+              />
 
               <!-- Name -->
               <p class="profile-name mb-1">
@@ -143,45 +180,45 @@
               <p class="panel-desc">Update your account information.</p>
 
               <form @submit.prevent="saveChanges">
-  <div class="mb-3">
-    <label class="form-label">Full Name</label>
-    <input
-      v-model="form.name"
-      type="text"
-      class="form-control"
-      required
-    />
-  </div>
+                <div class="mb-3">
+                  <label class="form-label">Full Name</label>
+                  <input
+                    v-model="form.name"
+                    type="text"
+                    class="form-control"
+                    required
+                  />
+                </div>
 
-  <div class="mb-3">
-    <label class="form-label">Email</label>
-    <input
-      v-model="form.email"
-      type="email"
-      class="form-control"
-      required
-    />
-  </div>
+                <div class="mb-3">
+                  <label class="form-label">Email</label>
+                  <input
+                    v-model="form.email"
+                    type="email"
+                    class="form-control"
+                    required
+                  />
+                </div>
 
-  <div class="mb-3">
-    <label class="form-label">Phone</label>
-    <input
-      v-model="form.phone"
-      type="text"
-      class="form-control"
-    />
-  </div>
+                <div class="mb-3">
+                  <label class="form-label">Phone</label>
+                  <input
+                    v-model="form.phone"
+                    type="text"
+                    class="form-control"
+                  />
+                </div>
 
-  <div class="mb-3">
-    <label class="form-label">Role</label>
-    <input
-      v-model="form.role"
-      type="text"
-      class="form-control"
-      disabled
-    />
-  </div>
-</form>
+                <div class="mb-3">
+                  <label class="form-label">Role</label>
+                  <input
+                    v-model="form.role"
+                    type="text"
+                    class="form-control"
+                    disabled
+                  />
+                </div>
+              </form>
             </div>
           </div>
 
@@ -238,56 +275,40 @@
           <!-- SECURITY -->
           <!-- ========================= -->
           <div class="col-12">
-  <div class="card-panel">
-    <h2>Security</h2>
+            <div class="card-panel">
+              <h2>Security</h2>
 
-    <p class="panel-desc">
-      Manage your account security.
-    </p>
+              <p class="panel-desc">Manage your account security.</p>
 
-    <div class="security-row">
+              <div class="security-row">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="security-icon">
+                    <i class="bi bi-lock-fill"></i>
+                  </div>
 
-      <div class="d-flex align-items-center gap-3">
+                  <div>
+                    <p class="security-title mb-1">Password</p>
 
-        <div class="security-icon">
-          <i class="bi bi-lock-fill"></i>
-        </div>
+                    <p class="security-sub mb-0">
+                      Keep your account secure with a strong password.
+                    </p>
+                  </div>
+                </div>
 
-        <div>
-          <p class="security-title mb-1">
-            Password
-          </p>
+                <div class="d-flex align-items-center gap-2">
+                  <!-- Forgot Password -->
+                  <RouterLink to="/forgot-password" class="btn-forgot">
+                    Forgot Password
+                  </RouterLink>
 
-          <p class="security-sub mb-0">
-            Keep your account secure with a strong password.
-          </p>
-        </div>
-
-      </div>
-
-      <div class="d-flex align-items-center gap-2">
-
-        <!-- Forgot Password -->
-        <RouterLink
-          to="/forgot-password"
-          class="btn-forgot"
-        >
-          Forgot Password
-        </RouterLink>
-
-        <!-- Change Password -->
-        <RouterLink
-          to="/change-password"
-          class="btn-outline-brand"
-        >
-          Change Password
-        </RouterLink>
-
-      </div>
-
-    </div>
-  </div>
-</div>
+                  <!-- Change Password -->
+                  <RouterLink to="/change-password" class="btn-outline-brand">
+                    Change Password
+                  </RouterLink>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </template>
     </div>
@@ -298,6 +319,70 @@
 <script setup>
 import { computed, onMounted, reactive, ref, watch } from "vue";
 import { useManagerStore } from "@/stores/manager";
+import { useAuthStore } from "@/stores/auth";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const authStore = useAuthStore();
+
+
+const handleLogout = () => {
+  const confirmed = window.confirm(
+    "Are you sure you want to logout?"
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  authStore.logout();
+  router.push("/login");
+};
+
+
+
+const fileInput = ref(null);
+const selectedAvatar = ref(null);
+const avatarPreview = ref("");
+const openAvatarPicker = () => {
+  fileInput.value?.click();
+};
+
+const handleAvatarChange = (event) => {
+  const file = event.target.files?.[0];
+
+  if (!file) return;
+
+  const validTypes = ["image/jpeg", "image/png", "image/webp"];
+
+  if (!validTypes.includes(file.type)) {
+    alert("Please select JPG, PNG, or WEBP.");
+    event.target.value = "";
+    return;
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    alert("Image must be smaller than 2MB.");
+    event.target.value = "";
+    return;
+  }
+
+  selectedAvatar.value = file;
+  avatarPreview.value = URL.createObjectURL(file);
+};
+
+const avatarUrl = computed(() => {
+  if (!profile.value?.avatar) {
+    return "";
+  }
+
+  if (profile.value.avatar.startsWith("http")) {
+    return profile.value.avatar;
+  }
+
+  return `http://127.0.0.1:8000/${profile.value.avatar}`;
+});
 
 const managerStore = useManagerStore();
 
@@ -405,19 +490,41 @@ async function loadProfile() {
 // ==========================================
 
 async function saveChanges() {
-    justSaved.value = false;
+  justSaved.value = false;
 
-    try {
-        await managerStore.updateProfile({
-            name: form.name,
-            email: form.email,
-            phone: form.phone,
-        });
+  try {
+    const formData = new FormData();
 
-        justSaved.value = true;
-    } catch (error) {
-        console.error("Failed to update profile:", error);
+    formData.append("name", form.name);
+    formData.append("email", form.email || "");
+    formData.append("phone", form.phone || "");
+
+    // Add avatar only when user selected a new image
+    if (selectedAvatar.value) {
+      formData.append("avatar", selectedAvatar.value);
     }
+
+    // Debug
+    // console.log("Avatar:", selectedAvatar.value);
+    // console.log("FormData avatar:", formData.get("avatar"));
+
+    await managerStore.updateProfile(formData);
+
+    // Refresh profile from backend
+    await managerStore.getProfile();
+
+    // Clear selected file
+    selectedAvatar.value = null;
+    avatarPreview.value = "";
+
+    if (fileInput.value) {
+      fileInput.value.value = "";
+    }
+
+    justSaved.value = true;
+  } catch (error) {
+    console.error("Failed to update profile:", error);
+  }
 }
 
 // ==========================================
@@ -425,7 +532,7 @@ async function saveChanges() {
 // ==========================================
 
 function changePassword() {
-  console.log("TODO: open change-password modal");
+  // console.log("TODO: open change-password modal");
 }
 
 // ==========================================
@@ -438,6 +545,38 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.profile-avatar {
+  cursor: pointer;
+  position: relative;
+}
+
+.profile-avatar-inner {
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatar-upload-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  color: white;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.profile-avatar:hover .avatar-upload-overlay {
+  opacity: 1;
+}
 .font-display {
   font-family: "Lora", serif;
 }
@@ -713,6 +852,23 @@ onMounted(() => {
 .btn-brand:disabled {
   opacity: 0.65;
   cursor: not-allowed;
+}
+
+.btn-logout {
+  border: 1px solid #dc3545;
+  background: #dc3545;
+  color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+  background: #8d222d;
+  color: #ffffff;
 }
 
 .btn-outline-brand {

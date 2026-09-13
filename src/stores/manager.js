@@ -185,25 +185,29 @@ export const useManagerStore = defineStore("manager", {
       }
     },
 
-    async uploadHotelImages(formData) {
+    async updateProfile(formData) {
       this.loading = true;
       this.error = null;
 
       try {
-        const response = await api.post("/manager/hotel/images", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const response = await api.post(
+          "/manager/me/profile",
+          formData
+        );
 
-        // Add newly uploaded image immediately
-        if (response.data?.data) {
-          this.images.unshift(response.data.data);
-        }
+        this.profile = response.data.user;
 
         return response.data;
       } catch (error) {
-        this.error = getErrorMessage(error, "Failed to upload hotel image.");
+        console.error(
+          "Update profile error:",
+          error.response?.data || error.message
+        );
+
+        this.error = getErrorMessage(
+          error,
+          "Failed to update profile."
+        );
 
         throw error;
       } finally {
@@ -401,7 +405,7 @@ export const useManagerStore = defineStore("manager", {
           params: { page },
         });
 
-        console.log("ROOMS:", response.data);
+        // console.log("ROOMS:", response.data);
 
         const { items, meta } = normalizePaginated(response.data.data);
 
@@ -555,7 +559,7 @@ export const useManagerStore = defineStore("manager", {
           params: { page },
         });
 
-        console.log("ROOM AMENITIES RESPONSE:", response.data);
+        // console.log("ROOM AMENITIES RESPONSE:", response.data);
 
         const data = response.data.data;
 
@@ -563,8 +567,8 @@ export const useManagerStore = defineStore("manager", {
         this.availableAmenities = data.amenities || [];
         this.amenitiesPagination = data.rooms || null;
 
-        console.log("Rooms with amenities:", this.roomAmenities);
-        console.log("Available amenities:", this.availableAmenities);
+        // console.log("Rooms with amenities:", this.roomAmenities);
+        // console.log("Available amenities:", this.availableAmenities);
 
         return response.data;
       } catch (error) {
@@ -673,7 +677,7 @@ export const useManagerStore = defineStore("manager", {
       try {
         const response = await api.get("/manager/amenities");
 
-        console.log("AMENITY API RESPONSE:", response.data);
+        // console.log("AMENITY API RESPONSE:", response.data);
 
         // Backend:
         // data.rooms.data = rooms
@@ -688,8 +692,8 @@ export const useManagerStore = defineStore("manager", {
           total: response.data.data.rooms.total,
         };
 
-        console.log("Rooms with amenities loaded:", this.amenities);
-        console.log("Available amenities:", this.availableAmenities);
+        // console.log("Rooms with amenities loaded:", this.amenities);
+        // console.log("Available amenities:", this.availableAmenities);
 
         return response.data;
       } catch (error) {
@@ -702,64 +706,72 @@ export const useManagerStore = defineStore("manager", {
     },
 
     async attachAmenity(roomId, amenityId) {
+      this.error = null;
+
+      try {
+        const response = await api.post(
+          `/manager/rooms/${roomId}/amenities/${amenityId}`,
+        );
+
+        return response.data;
+      } catch (error) {
+        this.error = getErrorMessage(error, "Failed to attach amenity.");
+
+        throw error;
+      }
+    },
+
+    async detachAmenity(roomId, amenityId) {
+      this.error = null;
+
+      try {
+        const response = await api.delete(
+          `/manager/rooms/${roomId}/amenities/${amenityId}`,
+        );
+
+        return response.data;
+      } catch (error) {
+        this.error = getErrorMessage(error, "Failed to remove amenity.");
+
+        throw error;
+      }
+    },
+
+    //update profile
+    async updateProfile(formData) {
+  this.loading = true;
   this.error = null;
 
   try {
     const response = await api.post(
-      `/manager/rooms/${roomId}/amenities/${amenityId}`
-    );
-
-    return response.data;
-  } catch (error) {
-    this.error = getErrorMessage(
-      error,
-      "Failed to attach amenity."
-    );
-
-    throw error;
-  }
-},
-
-async detachAmenity(roomId, amenityId) {
-  this.error = null;
-
-  try {
-    const response = await api.delete(
-      `/manager/rooms/${roomId}/amenities/${amenityId}`
-    );
-
-    return response.data;
-  } catch (error) {
-    this.error = getErrorMessage(
-      error,
-      "Failed to remove amenity."
-    );
-
-    throw error;
-  }
-},
-
-
-
-    //update profile
-    async updateProfile(profileData) {
-      this.loading = true;
-      this.error = null;
-
-      try {
-        const response = await api.put("/update/profile", profileData);
-
-        this.profile = response.data.user;
-
-        return response.data;
-      } catch (error) {
-        this.error = getErrorMessage(error, "Failed to update profile.");
-
-        throw error;
-      } finally {
-        this.loading = false;
+      "/manager/me/profile",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }
-    },
+    );
+
+    this.profile = response.data.user;
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Update profile error:",
+      error.response?.data || error.message
+    );
+
+    this.error = getErrorMessage(
+      error,
+      "Failed to update profile."
+    );
+
+    throw error;
+  } finally {
+    this.loading = false;
+  }
+},
 
     /* Bookings */
     async getBookings(page = 1) {

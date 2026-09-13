@@ -1,12 +1,18 @@
 <template>
-  <aside
-    id="sidebar"
-    :class="{ collapsed: sidebarCollapsed }"
-  >
+  <aside id="sidebar" :class="{ collapsed: sidebarCollapsed }">
     <!-- Fixed Header -->
-    <div class="brand-box">
+    <RouterLink to="/" class="brand-box">
       <div class="brand-logo">
-        {{ hotelInitial }}
+        <img
+          v-if="hotelImageUrl"
+          :src="hotelImageUrl"
+          :alt="hotelName"
+          class="hotel-logo-image"
+        />
+
+        <span v-else>
+          {{ hotelInitial }}
+        </span>
       </div>
 
       <div class="brand-text">
@@ -14,11 +20,9 @@
           {{ hotelName }}
         </div>
 
-        <div class="brand-sub">
-          Manager Portal
-        </div>
+        <div class="brand-sub">Manager Portal</div>
       </div>
-    </div>
+    </RouterLink>
 
     <!-- Toggle Button -->
     <button
@@ -27,21 +31,14 @@
       type="button"
     >
       <i
-        :class="
-          sidebarCollapsed
-            ? 'bi bi-chevron-right'
-            : 'bi bi-chevron-left'
-        "
+        :class="sidebarCollapsed ? 'bi bi-chevron-right' : 'bi bi-chevron-left'"
       ></i>
     </button>
 
     <!-- Scrollable Middle Content -->
     <div class="sidebar-content">
-
       <!-- OVERVIEW -->
-      <div class="nav-section-label">
-        OVERVIEW
-      </div>
+      <div class="nav-section-label">OVERVIEW</div>
 
       <RouterLink
         to="/manager/dashboard"
@@ -49,28 +46,21 @@
         active-class="active"
       >
         <i class="bi bi-grid-1x2-fill"></i>
-        <span class="link-text">
-          Dashboard
-        </span>
+        <span class="link-text"> Dashboard </span>
       </RouterLink>
       <RouterLink
         to="/manager/manger-hotel"
         class="sidebar-link"
         active-class="active"
       >
-        <i class="bi bi-grid-1x2-fill"></i>
-        <span class="link-text">
-          Manage Hotel
-        </span>
+        <i class="bi bi-person-vcard"></i>
+        <span class="link-text"> Manage Hotel </span>
       </RouterLink>
 
-
       <!-- PROPERTY SETUP -->
-      <div class="nav-section-label">
-        PROPERTY SETUP
-      </div>
+      <div class="nav-section-label">PROPERTY SETUP</div>
 
-      <RouterLink
+      <!-- <RouterLink
         to="/manager/profile"
         class="sidebar-link"
         active-class="active"
@@ -79,7 +69,7 @@
         <span class="link-text">
           Profile
         </span>
-      </RouterLink>
+      </RouterLink> -->
 
       <RouterLink
         to="/manager/hotel-image"
@@ -87,26 +77,15 @@
         active-class="active"
       >
         <i class="bi bi-images"></i>
-        <span class="link-text">
-          Hotel Images
-        </span>
+        <span class="link-text"> Hotel Images </span>
       </RouterLink>
 
-
       <!-- ROOMS & PRICING -->
-      <div class="nav-section-label">
-        ROOMS &amp; PRICING
-      </div>
+      <div class="nav-section-label">ROOMS &amp; PRICING</div>
 
-      <RouterLink
-        to="/manager/room"
-        class="sidebar-link"
-        active-class="active"
-      >
+      <RouterLink to="/manager/room" class="sidebar-link" active-class="active">
         <i class="bi bi-door-closed"></i>
-        <span class="link-text">
-          Rooms
-        </span>
+        <span class="link-text"> Rooms </span>
       </RouterLink>
 
       <RouterLink
@@ -115,9 +94,7 @@
         active-class="active"
       >
         <i class="bi bi-grid-3x3-gap"></i>
-        <span class="link-text">
-          Room Types
-        </span>
+        <span class="link-text"> Room Types </span>
       </RouterLink>
 
       <RouterLink
@@ -126,9 +103,7 @@
         active-class="active"
       >
         <i class="bi bi-image"></i>
-        <span class="link-text">
-          Room Images
-        </span>
+        <span class="link-text"> Room Images </span>
       </RouterLink>
 
       <RouterLink
@@ -137,16 +112,11 @@
         active-class="active"
       >
         <i class="bi bi-tag"></i>
-        <span class="link-text">
-          Pricing
-        </span>
+        <span class="link-text"> Pricing </span>
       </RouterLink>
 
-
       <!-- AMENITIES -->
-      <div class="nav-section-label">
-        AMENITIES
-      </div>
+      <div class="nav-section-label">AMENITIES</div>
 
       <RouterLink
         to="/manager/amenity"
@@ -154,9 +124,7 @@
         active-class="active"
       >
         <i class="bi bi-stars"></i>
-        <span class="link-text">
-          Amenities
-        </span>
+        <span class="link-text"> Amenities </span>
       </RouterLink>
 
       <RouterLink
@@ -165,16 +133,11 @@
         active-class="active"
       >
         <i class="bi bi-patch-plus-fill"></i>
-        <span class="link-text">
-          Connect Amenities
-        </span>
+        <span class="link-text"> Connect Amenities </span>
       </RouterLink>
 
-
       <!-- BOOKING -->
-      <div class="nav-section-label">
-        BOOKING
-      </div>
+      <div class="nav-section-label">BOOKING</div>
 
       <RouterLink
         to="/manager/booking"
@@ -182,16 +145,11 @@
         active-class="active"
       >
         <i class="bi bi-calendar-check"></i>
-        <span class="link-text">
-          Booking
-        </span>
+        <span class="link-text"> Booking </span>
       </RouterLink>
 
-
       <!-- INSIGHTS -->
-      <div class="nav-section-label">
-        INSIGHTS
-      </div>
+      <div class="nav-section-label">INSIGHTS</div>
 
       <RouterLink
         to="/manager/revenue"
@@ -199,9 +157,7 @@
         active-class="active"
       >
         <i class="bi bi-graph-up-arrow"></i>
-        <span class="link-text">
-          Revenue
-        </span>
+        <span class="link-text"> Revenue </span>
       </RouterLink>
 
       <RouterLink
@@ -210,9 +166,7 @@
         active-class="active"
       >
         <i class="bi bi-pie-chart"></i>
-        <span class="link-text">
-          Occupancy
-        </span>
+        <span class="link-text"> Occupancy </span>
       </RouterLink>
 
       <RouterLink
@@ -221,9 +175,7 @@
         active-class="active"
       >
         <i class="bi bi-file-earmark-bar-graph"></i>
-        <span class="link-text">
-          Booking Reports
-        </span>
+        <span class="link-text"> Booking Reports </span>
       </RouterLink>
 
       <RouterLink
@@ -232,53 +184,46 @@
         active-class="active"
       >
         <i class="bi bi-file-earmark-text"></i>
-        <span class="link-text">
-          Revenue Reports
-        </span>
+        <span class="link-text"> Revenue Reports </span>
       </RouterLink>
-
     </div>
-
 
     <!-- Footer -->
     <div class="sidebar-footer">
-  <RouterLink
-    to="/manager/profile"
-    class="sidebar-user"
-  >
-    <div class="avatar-circle">
-      {{ managerInitial }}
+      <RouterLink to="/manager/profile" class="sidebar-user">
+        <div class="avatar-circle">
+          <img
+            v-if="avatarUrl"
+            :src="avatarUrl"
+            alt="Manager profile"
+            class="sidebar-avatar-image"
+          />
+
+          <span v-else>
+            {{ managerInitial }}
+          </span>
+        </div>
+        <div class="flex-grow-1 link-text">
+          <div class="name">
+            {{ managerName }}
+          </div>
+
+          <div class="role">
+            {{ managerRole }}
+          </div>
+        </div>
+
+        <i class="bi bi-chevron-right link-text"></i>
+      </RouterLink>
     </div>
-
-    <div class="flex-grow-1 link-text">
-      <div class="name">
-        {{ managerName }}
-      </div>
-
-      <div class="role">
-        {{ managerRole }}
-      </div>
-    </div>
-
-    <i
-      class="bi bi-chevron-right link-text"
-    ></i>
-  </RouterLink>
-</div>
-
   </aside>
 </template>
 
 
 <script setup>
-import {
-  ref,
-  computed,
-  onMounted
-} from 'vue'
+import { ref, computed, onMounted } from "vue";
 
-import { useManagerStore } from '@/stores/manager'
-
+import { useManagerStore } from "@/stores/manager";
 
 /*
 |--------------------------------------------------------------------------
@@ -286,8 +231,7 @@ import { useManagerStore } from '@/stores/manager'
 |--------------------------------------------------------------------------
 */
 
-const sidebarCollapsed = ref(false)
-
+const sidebarCollapsed = ref(false);
 
 /*
 |--------------------------------------------------------------------------
@@ -295,8 +239,7 @@ const sidebarCollapsed = ref(false)
 |--------------------------------------------------------------------------
 */
 
-const managerStore = useManagerStore()
-
+const managerStore = useManagerStore();
 
 /*
 |--------------------------------------------------------------------------
@@ -305,19 +248,31 @@ const managerStore = useManagerStore()
 */
 
 const hotel = computed(() => {
-  return managerStore.hotel || {}
-})
+  return managerStore.hotel || {};
+});
 
 const hotelName = computed(() => {
-  return hotel.value?.name || 'My Hotel'
-})
+  return hotel.value?.name || "My Hotel";
+});
+const hotelImageUrl = computed(() => {
+  const images = managerStore.images || [];
+
+  if (!images.length) {
+    return "";
+  }
+
+  const firstImage = images[0];
+
+  if (typeof firstImage === "string") {
+    return firstImage;
+  }
+
+  return firstImage?.url || "";
+});
 
 const hotelInitial = computed(() => {
-  return hotelName.value
-    .charAt(0)
-    .toUpperCase()
-})
-
+  return hotelName.value.charAt(0).toUpperCase();
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -326,27 +281,32 @@ const hotelInitial = computed(() => {
 */
 
 const profile = computed(() => {
-  return managerStore.profile || {}
-})
+  return managerStore.profile || {};
+});
 
 const managerName = computed(() => {
-  return (
-    profile.value?.name ||
-    profile.value?.full_name ||
-    'Manager'
-  )
-})
+  return profile.value?.name || profile.value?.full_name || "Manager";
+});
 
 const managerRole = computed(() => {
-  return profile.value?.role || 'Hotel Manager'
-})
+  return profile.value?.role || "Hotel Manager";
+});
 
 const managerInitial = computed(() => {
-  return managerName.value
-    .charAt(0)
-    .toUpperCase()
-})
+  return managerName.value.charAt(0).toUpperCase();
+});
 
+const avatarUrl = computed(() => {
+  if (!profile.value?.avatar) {
+    return "";
+  }
+
+  if (profile.value.avatar.startsWith("http")) {
+    return profile.value.avatar;
+  }
+
+  return `http://127.0.0.1:8000/${profile.value.avatar}`;
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -358,16 +318,13 @@ async function loadSidebarData() {
   try {
     await Promise.all([
       managerStore.getMyHotel(),
-      managerStore.getProfile()
-    ])
+      managerStore.getProfile(),
+      managerStore.getHotelImages()
+    ]);
   } catch (error) {
-    console.error(
-      'Failed to load sidebar data:',
-      error
-    )
+    console.error("Failed to load sidebar data:", error);
   }
 }
-
 
 /*
 |--------------------------------------------------------------------------
@@ -376,10 +333,46 @@ async function loadSidebarData() {
 */
 
 onMounted(() => {
-  loadSidebarData()
-})
+  loadSidebarData();
+});
 </script>
 <style scoped>
+
+.brand-box {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.brand-box:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hotel-logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sidebar-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .sidebar-user {
   display: flex;
   align-items: center;
@@ -414,11 +407,19 @@ onMounted(() => {
   height: 38px;
   min-width: 38px;
   border-radius: 50%;
+  overflow: hidden;
   background: var(--blue);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
+}
+
+.sidebar-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 </style>
