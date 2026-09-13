@@ -31,57 +31,57 @@
             </RouterLink>
 
             <div class="nav-section-label">Properties</div>
-            <a href="#" class="sidebar-link">
+            <RouterLink to="/admin/hotels" class="sidebar-link">
                 <i class="bi bi-buildings-fill"></i>
                 <span class="link-text">Hotels</span>
-            </a>
-            <a href="#" class="sidebar-link">
+            </RouterLink>
+            <RouterLink to="/admin/ad-room-type" class="sidebar-link">
                 <i class="bi bi-ui-checks-grid"></i>
                 <span class="link-text">Room Types</span>
-            </a>
-            <a href="#" class="sidebar-link">
+            </RouterLink>
+            <RouterLink to="/admin/ad-rooms" class="sidebar-link">
                 <i class="bi bi-door-open"></i>
                 <span class="link-text">Rooms</span>
-            </a>
-            <a href="#" class="sidebar-link">
+            </RouterLink>
+            <RouterLink to="/admin/ad-amenity" class="sidebar-link">
                 <i class="bi bi-stars"></i>
                 <span class="link-text">Amenities</span>
-            </a>
+            </RouterLink>
 
             <div class="nav-section-label">Bookings</div>
-            <a href="#" class="sidebar-link">
+            <RouterLink to="/admin/ad-booking" class="sidebar-link">
                 <i class="bi bi-calendar-check"></i>
                 <span class="link-text">Bookings</span>
-            </a>
-            <a href="#" class="sidebar-link">
+            </RouterLink>
+            <RouterLink to="/admin/ad-payment" class="sidebar-link">
                 <i class="bi bi-credit-card"></i>
                 <span class="link-text">Payments</span>
-            </a>
-            <a href="#" class="sidebar-link">
+            </RouterLink>
+            <RouterLink to="/admin/review" class="sidebar-link">
                 <i class="bi bi-star"></i>
                 <span class="link-text">Reviews</span>
-            </a>
+            </RouterLink>
             <div class="nav-section-label">Report</div>
 
-            <a href="#" class="sidebar-link">
+            <RouterLink to="/admin/ad-revenue" class="sidebar-link">
                 <i class="bi bi-graph-up-arrow"></i>
                 <span class="link-text">Revenue Report</span>
-            </a>
-            <a href="#" class="sidebar-link">
+            </RouterLink>
+            <RouterLink to="/admin/ad-occupancy" class="sidebar-link">
                 <i class="bi bi-pie-chart"></i>
                 <span class="link-text">Occupancy Report</span>
-            </a>
+            </RouterLink>
         </div>
 
         <div class="sidebar-footer">
-            <div class="sidebar-user">
-                <div class="avatar-circle">P</div>
+            <RouterLink to="/admin/ad-profile" class="sidebar-user">
+                <div class="avatar-circle"></div>
                 <div class="link-text">
                     <div class="name">Platform Admin</div>
                     <div class="role">Administrator</div>
                 </div>
                 <i class="fa-solid fa-chevron-right link-text ms-auto text-white-50"></i>
-            </div>
+            </RouterLink>
         </div>
     </aside>
 </template>

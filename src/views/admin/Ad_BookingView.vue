@@ -3,7 +3,7 @@
         <!-- Topbar -->
         <div class="topbar bg-white px-5">
             <div class="ps-4">
-                <div class="page-title">Reviews</div>
+                <div class="page-title">Bookings</div>
                 <div class="page-subtitle">Platform performance overview</div>
             </div>
             <div class="d-flex align-items-center gap-3 pe-4">
@@ -22,13 +22,13 @@
             </div>
         </div>
 
-        <!-- Reviews Panel -->
+        <!-- Bookings Panel -->
         <div class="p-4">
             <div class="panel-card">
                 <div class="d-flex justify-content-between align-items-start mb-4">
                     <div>
-                        <div class="panel-title fw-bold fs-6">Customer Reviews</div>
-                        <div class="panel-sub text-muted font-sm">Reviews submitted for platform hotels</div>
+                        <div class="panel-title fw-bold fs-6">All Bookings</div>
+                        <div class="panel-sub text-muted font-sm">Recent booking activities</div>
                     </div>
                 </div>
 
@@ -36,53 +36,39 @@
                     <table class="table custom-table align-middle mb-0">
                         <thead>
                             <tr>
-                                <th>REVIEW ID</th>
-                                <th>USER</th>
-                                <th>HOTEL</th>
-                                <th>RATING</th>
-                                <th>COMMENT</th>
+                                <th>BOOKING ID</th>
+                                <th>GUEST</th>
+                                <th>HOTEL / ROOM</th>
+                                <th>CHECK-IN</th>
+                                <th>CHECK-OUT</th>
+                                <th>TOTAL PRICE</th>
                                 <th>STATUS</th>
-                                <th class="text-end">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-if="loading">
-                                <td colspan="7" class="text-center py-4 text-muted">Loading reviews...</td>
+                                <td colspan="7" class="text-center py-4 text-muted">Loading bookings...</td>
                             </tr>
-                            <tr v-else-if="!reviewList.length">
-                                <td colspan="7" class="text-center py-4 text-muted">No reviews found.</td>
+                            <tr v-else-if="!bookingList.length">
+                                <td colspan="7" class="text-center py-4 text-muted">No bookings found.</td>
                             </tr>
-                            <tr v-for="review in reviewList" :key="review.id" v-else>
-                                <td class="text-muted">#{{ review.id }}</td>
-                                <td class="fw-bold text-dark">{{ review.user?.name || review.guest_name || 'Anonymous' }}</td>
-                                <td class="text-secondary">{{ review.hotel?.name || 'N/A' }}</td>
+                            <tr v-for="booking in bookingList" :key="booking.id" v-else>
+                                <td class="fw-bold text-dark">#{{ booking.id || booking.booking_number }}</td>
                                 <td>
-                                    <div class="text-warning">
-                                        <i v-for="n in 5" :key="n" 
-                                           :class="n <= (review.rating || review.stars || 0) ? 'bi-star-fill' : 'bi-star'" 
-                                           class="bi me-1"></i>
-                                    </div>
-                                </td>
-                                <td class="text-secondary" style="max-width: 250px;">
-                                    <div class="text-truncate" :title="review.comment">{{ review.comment || 'No comment provided' }}</div>
+                                    <div class="text-dark fw-semibold">{{ booking.user?.name || booking.guest_name || 'N/A' }}</div>
+                                    <div class="text-muted font-xs">{{ booking.user?.email || booking.guest_email }}</div>
                                 </td>
                                 <td>
-                                    <span class="status-badge" :class="review.status">
-                                        {{ review.status }}
+                                    <div class="text-dark">{{ booking.hotel?.name || 'N/A' }}</div>
+                                    <div class="text-muted font-xs">{{ booking.room?.room_number || booking.room_type?.name }}</div>
+                                </td>
+                                <td class="text-secondary">{{ formatDate(booking.check_in_date || booking.check_in) }}</td>
+                                <td class="text-secondary">{{ formatDate(booking.check_out_date || booking.check_out) }}</td>
+                                <td class="fw-bold text-success">${{ booking.total_price || booking.amount }}</td>
+                                <td>
+                                    <span class="status-badge" :class="booking.status">
+                                        {{ booking.status }}
                                     </span>
-                                </td>
-                                <td>
-                                    <div class="d-flex justify-content-end align-items-center gap-2">
-                                        <select 
-                                            :value="review.status" 
-                                            class="status-select" 
-                                            @change="changeStatus(review.id, $event.target.value)"
-                                        >
-                                            <option value="pending">Pending</option>
-                                            <option value="approved">Approved</option>
-                                            <option value="rejected">Rejected</option>
-                                        </select>
-                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -100,19 +86,19 @@ import { useAdminStore } from '@/stores/admin';
 const adminStore = useAdminStore();
 const loading = ref(false);
 
-const loadReviews = async () => {
+const loadBookings = async () => {
     loading.value = true;
     try {
-        await adminStore.getReviews();
+        await adminStore.getBookings();
     } catch (error) {
-        console.error('Failed to load reviews:', error);
+        console.error('Failed to load bookings:', error);
     } finally {
         loading.value = false;
     }
 };
 
-const reviewList = computed(() => {
-    const data = adminStore.reviews;
+const bookingList = computed(() => {
+    const data = adminStore.bookings;
     if (!data) return [];
     
     // Recursive search for the first array in the object
@@ -120,7 +106,7 @@ const reviewList = computed(() => {
         if (Array.isArray(obj)) return obj;
         if (obj && typeof obj === 'object') {
             if (obj.data && Array.isArray(obj.data)) return obj.data;
-            if (obj.reviews && Array.isArray(obj.reviews)) return obj.reviews;
+            if (obj.bookings && Array.isArray(obj.bookings)) return obj.bookings;
             for (const key in obj) {
                 if (Array.isArray(obj[key])) return obj[key];
             }
@@ -138,17 +124,17 @@ const reviewList = computed(() => {
     return findArray(data);
 });
 
-const changeStatus = async (id, status) => {
-    try {
-        await adminStore.updateReviewstatus(id, status);
-        loadReviews(); // Refresh list after update
-    } catch (error) {
-        console.error('Failed to update review status:', error);
-    }
+const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    });
 };
 
 onMounted(() => {
-    loadReviews();
+    loadBookings();
 });
 </script>
 
@@ -237,14 +223,7 @@ onMounted(() => {
     font-weight: 600;
     text-transform: capitalize;
 }
-.status-badge.approved { background-color: #def7ec; color: #03543f; }
+.status-badge.confirmed, .status-badge.completed { background-color: #def7ec; color: #03543f; }
 .status-badge.pending { background-color: #fef08a; color: #854d0e; }
-.status-badge.rejected { background-color: #fde8e8; color: #9b1c1c; }
-.status-select {
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 4px 8px;
-    font-size: 13px;
-    outline: none;
-}
+.status-badge.cancelled { background-color: #fde8e8; color: #9b1c1c; }
 </style>

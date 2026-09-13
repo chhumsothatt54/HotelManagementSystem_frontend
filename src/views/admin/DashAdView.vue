@@ -1,14 +1,14 @@
 <template>
     <div>
         <!-- Topbar -->
-        <div class="topbar  bg-white">
+        <div class="topbar bg-white">
             <div class="ps-4">
                 <div class="page-title">Dashboard</div>
                 <div class="page-subtitle">Platform performance overview</div>
             </div>
             <div class="d-flex align-items-center gap-3 pe-4">
                 <button class="icon-btn">
-                    <i class="fa-regular fa-bell"></i>
+                   <i class="bi bi-bell"></i>
                     <span class="dot"></span>
                 </button>
                 <div class="user-chip">
@@ -31,7 +31,7 @@
                         <span class="stat-icon"><i class="bi bi-people-fill"></i></span>
                     </div>
                     <div class="stat-value">{{ stats.users }}</div>
-                    <div class="stat-foot">2 hotel managers</div>
+                    <div class="stat-foot">{{ admin.dashboard?.data?.total_managers ?? 0 }} hotel managers</div>
                 </div>
             </div>
 
@@ -39,10 +39,10 @@
                 <div class="stat-card h-100">
                     <div class="d-flex justify-content-between align-items-start">
                         <span class="stat-label">Total Hotels</span>
-                        <span class="stat-icon"><i class="bi bi-people-fill"></i></span>
+                        <span class="stat-icon"><i class="bi bi-building"></i></span>
                     </div>
                     <div class="stat-value">{{ stats.hotels }}</div>
-                    <div class="stat-foot">0 pending approval</div>
+                    <div class="stat-foot">{{ admin.dashboard?.data?.pending_hotels ?? 0 }} pending approval</div>
                 </div>
             </div>
 
@@ -50,7 +50,7 @@
                 <div class="stat-card h-100">
                     <div class="d-flex justify-content-between align-items-start">
                         <span class="stat-label">Total Rooms</span>
-                        <span class="stat-icon" style="background:#fdf1d6;color:#9a6a00;"><i class="bi bi-hospital"></i></span>
+                        <span class="stat-icon" style="background:#fdf1d6;color:#9a6a00;"><i class="bi bi-door-open"></i></span>
                     </div>
                     <div class="stat-value">{{ stats.rooms }}</div>
                     <div class="stat-foot">Across all properties</div>
@@ -64,7 +64,7 @@
                         <span class="stat-icon"><i class="bi bi-bookmark-check"></i></span>
                     </div>
                     <div class="stat-value">{{ stats.bookings }}</div>
-                    <div class="stat-foot">1 pending</div>
+                    <div class="stat-foot">{{ admin.dashboard?.data?.pending_bookings ?? 0 }} pending</div>
                 </div>
             </div>
         </div>
@@ -77,36 +77,16 @@
                     <div class="panel-sub">Users, hotels, rooms & bookings compared</div>
                 </div>
             </div>
-            <div style="position:relative; height:280px;">
-                <canvas ref="statsChartCanvas"></canvas>
+            <div class="custom-chart-container">
+                <div v-for="(item, index) in chartData" :key="index" class="chart-column">
+                    <span class="chart-val">{{ item.value }}</span>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill" :style="{ height: `${(item.value / maxStat) * 100}%` }"></div>
+                    </div>
+                    <span class="chart-label">{{ item.label }}</span>
+                </div>
             </div>
         </div>
-
-        <!-- Stat cards row 2 -->
-        <!-- <div class="row g-3 mt-1">
-            <div class="col-6 col-lg-3">
-                <div class="stat-card h-100">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <span class="stat-label">Total Revenue</span>
-                        <span class="stat-icon"><i class="fa-solid fa-sack-dollar"></i></span>
-                    </div>
-                    <div class="stat-value">$925</div>
-                    <div class="stat-foot">From paid bookings</div>
-                </div>
-            </div>
-
-            <div class="col-6 col-lg-3">
-                <div class="stat-card h-100">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <span class="stat-label">Pending Bookings</span>
-                        <span class="stat-icon" style="background:#fbe4e4;color:#c23434;"><i
-                                class="fa-regular fa-hourglass-half"></i></span>
-                    </div>
-                    <div class="stat-value">1</div>
-                    <div class="stat-foot">Awaiting confirmation</div>
-                </div>
-            </div>
-        </div> -->
 
         <!-- Pending hotel approvals -->
         <div class="panel-card mt-3">
@@ -115,7 +95,9 @@
                     <div class="panel-title">Pending hotel approvals</div>
                     <div class="panel-sub">Hotels waiting for your review</div>
                 </div>
-                <a href="#" class="view-all-link">View all <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                <router-link to="/admin/hotels" class="view-all-link">
+                    View all <i class="fa-solid fa-arrow-right ms-1"></i>
+                </router-link>
             </div>
 
             <div class="table-responsive">
@@ -129,102 +111,160 @@
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- Rows go here when hotels are pending, e.g.:
-            <tr>
-              <td class="guest-name">Ocean View Resort</td>
-              <td>Jane Doe</td>
-              <td>Miami, FL</td>
-              <td>12</td>
-              <td><span class="badge-status badge-pending">Pending</span></td>
-            </tr>
-            -->
+                    <tbody v-if="admin.dashboard?.data?.pending_hotels_list?.length">
+                        <tr v-for="hotel in admin.dashboard.data.pending_hotels_list" :key="hotel.id">
+                            <td class="guest-name">{{ hotel.name }}</td>
+                            <td>{{ hotel.manager?.name || 'N/A' }}</td>
+                            <td>{{ hotel.address || hotel.location || 'N/A' }}</td>
+                            <td>{{ hotel.rooms_count ?? 0 }}</td>
+                            <td>
+                                <span class="badge-status badge-pending">
+                                    {{ hotel.status }}
+                                </span>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
-                <div class="empty-state">No hotels pending approval.</div>
+                <div 
+                    v-if="!admin.dashboard?.data?.pending_hotels_list?.length" 
+                    class="empty-state text-center py-4 text-muted"
+                >
+                    No hotels pending approval.
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-    import { useAdminStore } from '@/stores/admin';
-    import { onMounted, onBeforeUnmount, ref, computed, watch, nextTick } from 'vue';
-    import Chart from 'chart.js/auto';
+import { useAdminStore } from '@/stores/admin';
+import { onMounted, ref, computed } from 'vue';
 
-    const admin = useAdminStore();
-    
-    const stats = computed(() => ({
-        users: admin.dashboard?.data?.total_users ?? 0,
-        hotels: admin.dashboard?.data?.total_hotels ?? 0,
-        rooms: admin.dashboard?.data?.total_rooms ?? 0,
-        bookings: admin.dashboard?.data?.total_bookings ?? 0,
-    }));
+const admin = useAdminStore();
 
-    const statsChartCanvas = ref(null);
-    let statsChart = null;
+const stats = computed(() => ({
+    users: admin.dashboard?.data?.total_users ?? 0,
+    hotels: admin.dashboard?.data?.total_hotels ?? 0,
+    rooms: admin.dashboard?.data?.total_rooms ?? 0,
+    bookings: admin.dashboard?.data?.total_bookings ?? 0,
+}));
 
-    const buildChart = () => {
-        if (!statsChartCanvas.value) return;
+// We map the stats to an array to easily loop over them in the custom chart
+const chartData = computed(() => [
+    { label: 'Users', value: stats.value.users },
+    { label: 'Hotels', value: stats.value.hotels },
+    { label: 'Rooms', value: stats.value.rooms },
+    { label: 'Bookings', value: stats.value.bookings },
+]);
 
-        // destroy any previous instance before redrawing (avoids duplicate charts on data refresh)
-        if (statsChart) {
-            statsChart.destroy();
-        }
-        statsChart = new Chart(statsChartCanvas.value, {
-            type: 'bar',
-            data: {
-                labels: ['Users', 'Hotels', 'Rooms', 'Bookings'],
-                datasets: [
-                    {
-                        label: 'Count',
-                        data: [
-                            stats.value.users,
-                            stats.value.hotels,
-                            stats.value.rooms,
-                            stats.value.bookings,
-                        ],
-                        backgroundColor: [
-                            '#4e73df',
-                            '#1cc88a',
-                            '#f6c23e',
-                            '#e74a3b',
-                        ],
-                        borderRadius: 6,
-                        maxBarThickness: 60,
-                    },
-                ],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { stepSize: 1 },
-                    },
-                },
-            },
-        });
-    };
+const maxStat = computed(() => {
+    const max = Math.max(...chartData.value.map(d => d.value));
+    return max > 0 ? max : 1; // Prevent division by zero
+});
 
-    onMounted(async () => {
-        await admin.getDashboard();
-        await nextTick();
-        buildChart();
-    });
-
-    // redraw the chart whenever the underlying stats change (e.g. after a refetch)
-    watch(stats, () => {
-        buildChart();
-    });
-
-    onBeforeUnmount(() => {
-        if (statsChart) {
-            statsChart.destroy();
-        }
-    });
+onMounted(async () => {
+    await admin.getDashboard();
+});
 </script>
+
+<style scoped>
+/* Topbar & Cards (existing, add custom chart CSS) */
+.page-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+.page-subtitle {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+.stat-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #eef2f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+.stat-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+}
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 8px 0;
+}
+.stat-foot {
+    font-size: 0.8rem;
+    color: #9ca3af;
+}
+.stat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eef2f0;
+    color: #11684e;
+    font-size: 1.1rem;
+}
+.panel-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid #eef2f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+.panel-title {
+    font-weight: 700;
+    font-size: 1rem;
+}
+.panel-sub {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Custom CSS Bar Chart */
+.custom-chart-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    height: 250px;
+    padding: 20px 0;
+}
+.chart-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+}
+.chart-val {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 600;
+}
+.chart-bar-bg {
+    width: 40px;
+    flex-grow: 1;
+    background-color: #eaf6f2; /* Light green */
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+}
+.chart-bar-fill {
+    width: 100%;
+    background-color: #11684e; /* Dark green */
+    border-radius: 8px;
+    transition: height 0.8s ease-out;
+}
+.chart-label {
+    font-size: 13px;
+    color: #9ca3af;
+    font-weight: 500;
+    margin-top: 4px;
+}
+</style>

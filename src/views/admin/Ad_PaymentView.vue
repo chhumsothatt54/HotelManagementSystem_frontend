@@ -3,7 +3,7 @@
         <!-- Topbar -->
         <div class="topbar bg-white px-5">
             <div class="ps-4">
-                <div class="page-title">Reviews</div>
+                <div class="page-title">Payments</div>
                 <div class="page-subtitle">Platform performance overview</div>
             </div>
             <div class="d-flex align-items-center gap-3 pe-4">
@@ -22,13 +22,13 @@
             </div>
         </div>
 
-        <!-- Reviews Panel -->
+        <!-- Payments Panel -->
         <div class="p-4">
             <div class="panel-card">
                 <div class="d-flex justify-content-between align-items-start mb-4">
                     <div>
-                        <div class="panel-title fw-bold fs-6">Customer Reviews</div>
-                        <div class="panel-sub text-muted font-sm">Reviews submitted for platform hotels</div>
+                        <div class="panel-title fw-bold fs-6">Transactions List</div>
+                        <div class="panel-sub text-muted font-sm">Recent payments and transactions across the platform</div>
                     </div>
                 </div>
 
@@ -36,53 +36,35 @@
                     <table class="table custom-table align-middle mb-0">
                         <thead>
                             <tr>
-                                <th>REVIEW ID</th>
-                                <th>USER</th>
-                                <th>HOTEL</th>
-                                <th>RATING</th>
-                                <th>COMMENT</th>
+                                <th>PAYMENT ID</th>
+                                <th>BOOKING ID</th>
+                                <th>AMOUNT</th>
+                                <th>METHOD</th>
+                                <th>DATE</th>
                                 <th>STATUS</th>
-                                <th class="text-end">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-if="loading">
-                                <td colspan="7" class="text-center py-4 text-muted">Loading reviews...</td>
+                                <td colspan="6" class="text-center py-4 text-muted">Loading payments...</td>
                             </tr>
-                            <tr v-else-if="!reviewList.length">
-                                <td colspan="7" class="text-center py-4 text-muted">No reviews found.</td>
+                            <tr v-else-if="!paymentList.length">
+                                <td colspan="6" class="text-center py-4 text-muted">No payments found.</td>
                             </tr>
-                            <tr v-for="review in reviewList" :key="review.id" v-else>
-                                <td class="text-muted">#{{ review.id }}</td>
-                                <td class="fw-bold text-dark">{{ review.user?.name || review.guest_name || 'Anonymous' }}</td>
-                                <td class="text-secondary">{{ review.hotel?.name || 'N/A' }}</td>
+                            <tr v-for="payment in paymentList" :key="payment.id" v-else>
+                                <td class="fw-bold text-dark">#{{ payment.id || payment.transaction_id }}</td>
+                                <td class="text-muted">#{{ payment.booking_id }}</td>
+                                <td class="fw-bold text-success">${{ payment.amount }}</td>
                                 <td>
-                                    <div class="text-warning">
-                                        <i v-for="n in 5" :key="n" 
-                                           :class="n <= (review.rating || review.stars || 0) ? 'bi-star-fill' : 'bi-star'" 
-                                           class="bi me-1"></i>
-                                    </div>
-                                </td>
-                                <td class="text-secondary" style="max-width: 250px;">
-                                    <div class="text-truncate" :title="review.comment">{{ review.comment || 'No comment provided' }}</div>
-                                </td>
-                                <td>
-                                    <span class="status-badge" :class="review.status">
-                                        {{ review.status }}
+                                    <span class="text-uppercase text-secondary font-sm fw-semibold">
+                                        {{ payment.method || payment.payment_method }}
                                     </span>
                                 </td>
+                                <td class="text-secondary">{{ formatDate(payment.created_at || payment.payment_date) }}</td>
                                 <td>
-                                    <div class="d-flex justify-content-end align-items-center gap-2">
-                                        <select 
-                                            :value="review.status" 
-                                            class="status-select" 
-                                            @change="changeStatus(review.id, $event.target.value)"
-                                        >
-                                            <option value="pending">Pending</option>
-                                            <option value="approved">Approved</option>
-                                            <option value="rejected">Rejected</option>
-                                        </select>
-                                    </div>
+                                    <span class="status-badge" :class="payment.status">
+                                        {{ payment.status }}
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>
@@ -100,19 +82,19 @@ import { useAdminStore } from '@/stores/admin';
 const adminStore = useAdminStore();
 const loading = ref(false);
 
-const loadReviews = async () => {
+const loadPayments = async () => {
     loading.value = true;
     try {
-        await adminStore.getReviews();
+        await adminStore.getPayments();
     } catch (error) {
-        console.error('Failed to load reviews:', error);
+        console.error('Failed to load payments:', error);
     } finally {
         loading.value = false;
     }
 };
 
-const reviewList = computed(() => {
-    const data = adminStore.reviews;
+const paymentList = computed(() => {
+    const data = adminStore.payments;
     if (!data) return [];
     
     // Recursive search for the first array in the object
@@ -120,7 +102,7 @@ const reviewList = computed(() => {
         if (Array.isArray(obj)) return obj;
         if (obj && typeof obj === 'object') {
             if (obj.data && Array.isArray(obj.data)) return obj.data;
-            if (obj.reviews && Array.isArray(obj.reviews)) return obj.reviews;
+            if (obj.payments && Array.isArray(obj.payments)) return obj.payments;
             for (const key in obj) {
                 if (Array.isArray(obj[key])) return obj[key];
             }
@@ -138,17 +120,19 @@ const reviewList = computed(() => {
     return findArray(data);
 });
 
-const changeStatus = async (id, status) => {
-    try {
-        await adminStore.updateReviewstatus(id, status);
-        loadReviews(); // Refresh list after update
-    } catch (error) {
-        console.error('Failed to update review status:', error);
-    }
+const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
 };
 
 onMounted(() => {
-    loadReviews();
+    loadPayments();
 });
 </script>
 
@@ -237,14 +221,7 @@ onMounted(() => {
     font-weight: 600;
     text-transform: capitalize;
 }
-.status-badge.approved { background-color: #def7ec; color: #03543f; }
+.status-badge.successful, .status-badge.completed, .status-badge.paid { background-color: #def7ec; color: #03543f; }
 .status-badge.pending { background-color: #fef08a; color: #854d0e; }
-.status-badge.rejected { background-color: #fde8e8; color: #9b1c1c; }
-.status-select {
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 4px 8px;
-    font-size: 13px;
-    outline: none;
-}
+.status-badge.failed, .status-badge.cancelled { background-color: #fde8e8; color: #9b1c1c; }
 </style>
