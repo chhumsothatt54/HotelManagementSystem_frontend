@@ -53,6 +53,8 @@ import Ad_PaymentView from "@/views/admin/Ad_PaymentView.vue";
 import Ad_RevenueReportView from "@/views/admin/Ad_RevenueReportView.vue";
 import Ad_OccupancyReport from "@/views/admin/Ad_OccupancyReport.vue";
 import Ad_ProfileView from "@/views/admin/Ad_ProfileView.vue";
+import ChangePasswordView from "@/views/auth/ChangePasswordView.vue";
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
