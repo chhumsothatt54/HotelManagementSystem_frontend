@@ -1,5 +1,4 @@
 <template>
-
     <!-- Top bar -->
     <div class="topbar bg-white">
         <div>
@@ -8,178 +7,151 @@
         </div>
         <div class="d-flex align-items-center gap-3">
             <div class="icon-btn"><i class="bi bi-bell"></i><span class="dot"></span></div>
-            <div class="user-chip">
+            <!-- <div class="user-chip">
                 <div class="avatar-circle">M</div>
                 <div>
                     <div class="name">Sokha Manager</div>
                     <div class="sub">Mekong Riverside Hotel</div>
                 </div>
                 <i class="bi bi-chevron-down text-muted small"></i>
+            </div> -->
+        </div>
+    </div>
+
+    <div class="page-content">
+        <!-- Subheader Action Area -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <div class="text-uppercase fw-bold" style="font-size: 10px; color: var(--blue); letter-spacing: 0.5px;">PROPERTY SETUP</div>
+                <h2 class="fw-bold mb-0" style="font-size: 22px; color: var(--navy);">Hotel Images</h2>
+                <p class="text-muted mb-0" style="font-size: 13px;">Manage the images displayed for your hotel.</p>
+            </div>
+            
+            <!-- Hidden File Input Triggered by Button -->
+            <input 
+                type="file" 
+                ref="fileInput" 
+                class="d-none" 
+                accept="image/*" 
+                multiple 
+                @change="handleFileUpload" 
+            />
+            
+            <button 
+                class="btn-primary-custom" 
+                @click="triggerFileInput" 
+                :disabled="managerStore.loading"
+            >
+                <span v-if="managerStore.loading" class="spinner-border spinner-border-sm me-1" role="status"></span>
+                <i v-else class="bi bi-cloud-upload"></i> Upload Images
+            </button>
+        </div>
+
+        <!-- Error Notification -->
+        <div v-if="managerStore.error" class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            {{ managerStore.error }}
+            <button type="button" class="btn-close" @click="managerStore.clearError()"></button>
+        </div>
+
+        <!-- Hotel Images Gallery Grid -->
+        <div class="row g-3 mb-4">
+            <!-- Loading State -->
+            <div v-if="managerStore.loading && !managerStore.images?.length" class="col-12 text-center py-5 text-muted">
+                <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                Loading images...
+            </div>
+
+            <!-- Empty State -->
+            <div v-else-if="!managerStore.images?.length" class="col-12 text-center py-5 text-muted">
+                No images uploaded yet. Click "Upload Images" to add your property photos.
+            </div>
+
+            <!-- Dynamic Image List -->
+            <div 
+                v-else 
+                v-for="(img, index) in managerStore.images" 
+                :key="imageId || index" 
+                class="col-6 col-md-3"
+            >
+                <div class="hotel-img-card">
+                    <img :src="img.url || img" :alt="img.caption || 'Hotel Image ' + (index + 1)">
+                    <span class="img-tag">Image {{ index + 1 }}</span>
+                    <button 
+                        class="delete-btn" 
+                        title="Delete Image" 
+                        @click="handleDelete(img.id || index)"
+                        :disabled="deletingId === (img.id || index)"
+                    >
+                        <span v-if="deletingId === (img.id || index)" class="spinner-border spinner-border-sm" role="status"></span>
+                        <i v-else class="bi bi-trash"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-    <div class="page-content">
-
-        <!-- Weekly revenue -->
-       
-            <!-- Subheader Action Area -->
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <div>
-                    <div class="text-uppercase fw-bold" style="font-size: 10px; color: var(--blue); letter-spacing: 0.5px;">PROPERTY SETUP</div>
-                    <h2 class="fw-bold mb-0" style="font-size: 22px; color: var(--navy);">Hotel Images</h2>
-                    <p class="text-muted mb-0" style="font-size: 13px;">Manage the images displayed for your hotel.</p>
-                </div>
-                <button class="btn-primary-custom">
-                    <i class="bi bi-cloud-upload"></i> Upload Images
-                </button>
-            </div>
-
-            <!-- Hotel Images Gallery Grid -->
-            <div class="row g-3 mb-4">
-                <div class="col-6 col-md-3">
-                    <div class="hotel-img-card">
-                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80" alt="Resort Pool">
-                        <span class="img-tag">Image 1</span>
-                        <button class="delete-btn" title="Delete Image"><i class="bi bi-trash"></i></button>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="hotel-img-card">
-                        <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80" alt="Bedroom Suite">
-                        <span class="img-tag">Image 2</span>
-                        <button class="delete-btn" title="Delete Image"><i class="bi bi-trash"></i></button>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="hotel-img-card">
-                        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80" alt="Hotel Exterior">
-                        <span class="img-tag">Image 3</span>
-                        <button class="delete-btn" title="Delete Image"><i class="bi bi-trash"></i></button>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="hotel-img-card">
-                        <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=600&q=80" alt="Sunset View Pool">
-                        <span class="img-tag">Image 4</span>
-                        <button class="delete-btn" title="Delete Image"><i class="bi bi-trash"></i></button>
-                    </div>
-                </div>
-            </div>
-
-            
-       
-
-    </div>
-
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
+import { useManagerStore } from '@/stores/manager' // កែប្រែ path ទៅតាមទីតាំង store របស់អ្នក
 
+const managerStore = useManagerStore()
+const fileInput = ref(null)
+const deletingId = ref(null)
+
+// ទាញយកព័ត៌មានរូបភាពពី API នៅពេល Mounted
+onMounted(async () => {
+    try {
+        await managerStore.getHotelImages()
+    } catch (err) {
+        console.error('Failed to load images:', err)
+    }
+})
+
+// Trigger click ទៅលើ Hidden Native File Input
+const triggerFileInput = () => {
+    fileInput.value.click()
+}
+
+// Upload រូបភាពទៅកាន់ REST API
+const handleFileUpload = async (event) => {
+    const files = event.target.files
+
+    if (!files || !files.length) {
+        return
+    }
+
+    try {
+        for (const file of files) {
+            const formData = new FormData()
+
+            formData.append('image', file)
+
+            await managerStore.uploadHotelImages(formData)
+        }
+
+        await managerStore.getHotelImages()
+
+        event.target.value = ''
+    } catch (err) {
+        console.error('Failed to upload image:', err)
+    }
+}
+
+// លុបរូបភាពតាមរយៈ REST API
+const handleDelete = async (imageId) => {
+    deletingId.value = imageId
+    try {
+        await managerStore.deleteHotelImage(imageId)
+    } catch (err) {
+        console.error('Failed to delete image:', err)
+    } finally {
+        deletingId.value = null
+    }
+}
 </script>
 <style scoped>
-/* Layout Structure */
-        .app-wrapper {
-            display: flex;
-            min-height: 100vh;
-        }
 
-        /* Sidebar Styling */
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: var(--navy);
-            color: #ffffff;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 1000;
-        }
-
-        .sidebar-brand {
-            padding: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .brand-avatar {
-            width: 38px;
-            height: 38px;
-            background-color: var(--sky);
-            color: #ffffff;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-
-        .brand-text .title {
-            font-size: 14px;
-            font-weight: 700;
-            line-height: 1.2;
-        }
-
-        .brand-text .subtitle {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .sidebar-menu {
-            padding: 16px 12px;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-
-        .menu-section-label {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--sky);
-            font-weight: 700;
-            margin: 16px 8px 8px;
-        }
-
-        .nav-link-custom {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .nav-link-custom:hover {
-            color: #ffffff;
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-
-        .nav-link-custom.active {
-            color: #ffffff;
-            background-color: var(--blue);
-        }
-
-        .sidebar-footer {
-            padding: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            background-color: rgba(0, 0, 0, 0.1);
-        }
-
-        .user-card-sm {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #ffffff;
-        }
 
         /* Main Content Styling */
         .main-wrapper {
@@ -190,63 +162,7 @@
             min-width: 0;
         }
 
-        /* Top Bar */
-        .topbar {
-            height: 72px;
-            background: #ffffff;
-            border-bottom: 1px solid var(--line);
-            padding: 0 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 999;
-        }
-
-        .page-title-text {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--ink);
-            margin: 0;
-        }
-
-        .page-subtitle-text {
-            font-size: 12px;
-            color: var(--muted);
-            margin: 0;
-        }
-
-        /* Notification Icon */
-        .icon-btn {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            border: 1px solid var(--line);
-            background: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--ink);
-            position: relative;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .icon-btn:hover {
-            background-color: var(--bg-soft);
-        }
-
-        .notification-dot {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 8px;
-            height: 8px;
-            background-color: var(--gold);
-            border-radius: 50%;
-            border: 2px solid #ffffff;
-        }
+        
 
         /* User Chip Right */
         .user-chip {
