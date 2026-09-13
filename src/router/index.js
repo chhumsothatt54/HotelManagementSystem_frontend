@@ -54,6 +54,7 @@ import Ad_RevenueReportView from "@/views/admin/Ad_RevenueReportView.vue";
 import Ad_OccupancyReport from "@/views/admin/Ad_OccupancyReport.vue";
 import Ad_ProfileView from "@/views/admin/Ad_ProfileView.vue";
 import ChangePasswordView from "@/views/auth/ChangePasswordView.vue";
+import MangeHotelView from "@/views/manager/MangeHotelView.vue";
 
 
 const router = createRouter({
@@ -318,6 +319,15 @@ const router = createRouter({
           path: "",
           redirect: {
             name: "manager-dashboard",
+          },
+        },
+        {
+          path: "manger-hotel",
+          name: "manager-hotel",
+          component: MangeHotelView,
+          meta: {
+            requireAuth: true,
+            roles: ["hotel_manager"],
           },
         },
         {

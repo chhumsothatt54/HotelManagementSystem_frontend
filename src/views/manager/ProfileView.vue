@@ -277,7 +277,7 @@
 
         <!-- Change Password -->
         <RouterLink
-          to="/manager/change-password"
+          to="/change-password"
           class="btn-outline-brand"
         >
           Change Password

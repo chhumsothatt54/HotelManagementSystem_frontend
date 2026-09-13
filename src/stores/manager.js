@@ -170,6 +170,21 @@ export const useManagerStore = defineStore("manager", {
       }
     },
 
+    async deleteHotel(id) {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await api.delete(`/manager/hotel/${id}`);
+        this.hotel = null;
+        return response.data;
+      } catch (error) {
+        this.error = getErrorMessage(error, "Failed to delete hotel.");
+        throw error;
+      } finally {
+        this.loading = false;
+      }
+    },
+
     async uploadHotelImages(formData) {
       this.loading = true;
       this.error = null;

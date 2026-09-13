@@ -53,6 +53,16 @@
           Dashboard
         </span>
       </RouterLink>
+      <RouterLink
+        to="/manager/manger-hotel"
+        class="sidebar-link"
+        active-class="active"
+      >
+        <i class="bi bi-grid-1x2-fill"></i>
+        <span class="link-text">
+          Manage Hotel
+        </span>
+      </RouterLink>
 
 
       <!-- PROPERTY SETUP -->
