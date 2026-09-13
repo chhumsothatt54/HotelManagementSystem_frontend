@@ -4,7 +4,7 @@
     <NavbarView />
 
     <!-- HERO -->
-    <section class="hero pb-0">
+    <section class="hero pb-0 container mt-3">
       <div class="eyebrow">GET IN TOUCH</div>
 
       <h1>We'd love to hear from you</h1>
@@ -16,7 +16,7 @@
     </section>
 
     <!-- CONTACT CARD -->
-    <div class="search-card contact-card">
+    <div class="search-card contact-card container">
       <div class="row g-0">
 
         <!-- LEFT: CONTACT INFO -->

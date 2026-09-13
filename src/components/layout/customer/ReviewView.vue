@@ -6,12 +6,12 @@
         What guests are saying
       </h2>
 
-      <div class="row g-4 mt-2">
+      <div class="row g-4 mt-2 my-5">
 
         <div class="col-md-4" v-for="r in reviews" :key="r.name">
-          <div class="review-card">
+          <div class="review-card border shadow rounded p-2">
 
-            <div class="review-stars">
+            <div class="review-stars text-warning">
               ★★★★★
             </div>
 

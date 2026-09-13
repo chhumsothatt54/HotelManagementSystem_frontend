@@ -143,6 +143,20 @@ export const useAuthStore = defineStore("auth", () => {
   }
 }
 
+  async function getMe() {
+    try {
+      const res = await api.get("/me");
+      user.value = res.data.user;
+      localStorage.setItem("user", JSON.stringify(user.value));
+      return res.data;
+    } catch (error) {
+      if (error.response?.status === 401) {
+        logout();
+      }
+      throw error;
+    }
+  }
+
   return {
     user,
     token,
@@ -160,5 +174,6 @@ export const useAuthStore = defineStore("auth", () => {
     resetPassword,
     resendOtp,
     changePassword,
+    getMe,
   };
 });
