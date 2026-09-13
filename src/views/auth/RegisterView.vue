@@ -80,7 +80,7 @@
             <div class="input-wrapper" :class="{ error: errors.name }">
               <i class="bi bi-person input-icon"></i>
 
-              <input id="name" v-model="form.name" type="text" placeholder="Enter your name" autocomplete="name" />
+              <input id="name" v-model="form.name" class="ps-5 rounded-3" type="text" placeholder="Enter your name" autocomplete="name" />
             </div>
 
             <small v-if="errors.name" class="error-text">
@@ -97,7 +97,7 @@
             <div class="input-wrapper" :class="{ error: errors.phone }">
               <i class="bi bi-telephone input-icon"></i>
 
-              <input id="phone" v-model="form.phone" type="tel" placeholder="012 345 678" autocomplete="tel" />
+              <input id="phone" v-model="form.phone" class="ps-5 rounded-3" type="tel" placeholder="012 345 678" autocomplete="tel" />
             </div>
 
             <small v-if="errors.phone" class="error-text">
@@ -114,7 +114,7 @@
           <div class="input-wrapper" :class="{ error: errors.email }">
             <i class="bi bi-envelope input-icon"></i>
 
-            <input id="email" v-model="form.email" type="email" placeholder="you@example.com" autocomplete="email" />
+            <input id="email" v-model="form.email" class="ps-5 rounded-3" type="email" placeholder="you@example.com" autocomplete="email" />
           </div>
 
           <small v-if="errors.email" class="error-text">
@@ -127,9 +127,9 @@
           <label for="password">Password</label>
 
           <div class="input-wrapper" :class="{ error: errors.password }">
-            <i class="bi bi-lock input-icon"></i>
+            <!-- <i class="bi bi-lock input-icon"></i> -->
 
-            <input id="password" v-model="form.password" :type="showPassword ? 'text' : 'password'"
+            <input id="password" v-model="form.password" class="ps-5 rounded-3" :type="showPassword ? 'text' : 'password'"
               placeholder="Create a password" autocomplete="new-password" />
 
             <button type="button" class="password-toggle" @click="showPassword = !showPassword">
@@ -147,9 +147,9 @@
           <label for="confirmPassword">Confirm password</label>
 
           <div class="input-wrapper" :class="{ error: errors.confirmPassword }">
-            <i class="bi bi-shield-lock input-icon"></i>
+            <!-- <i class="bi bi-shield-lock input-icon"></i> -->
 
-            <input id="confirmPassword" v-model="form.confirmPassword" :type="showConfirmPassword ? 'text' : 'password'"
+            <input id="confirmPassword" v-model="form.confirmPassword" class="ps-5 rounded-3" :type="showConfirmPassword ? 'text' : 'password'"
               placeholder="Repeat your password" autocomplete="new-password" />
 
             <button type="button" class="password-toggle" @click="showConfirmPassword = !showConfirmPassword">

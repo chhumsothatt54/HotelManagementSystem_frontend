@@ -72,7 +72,7 @@
           <div class="input-wrapper" :class="{ error: errors.email }">
             <i class="bi bi-envelope input-icon"></i>
 
-            <input v-model="form.email" type="email" placeholder="you@example.com" />
+            <input v-model="form.email" type="email" class="ps-5 rounded-3" placeholder="you@example.com" />
           </div>
 
           <small v-if="errors.email">
@@ -90,7 +90,7 @@
           <div class="input-wrapper" :class="{ error: errors.password }">
             <i class="bi bi-lock input-icon"></i>
 
-            <input v-model="form.password" type="password" placeholder="Enter your password" />
+            <input v-model="form.password" type="password" class="ps-5 rounded-3" placeholder="Enter your password" />
           </div>
 
           <small v-if="errors.password">

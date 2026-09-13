@@ -73,7 +73,7 @@
           <div class="input-wrapper" :class="{ error: emailError }">
             <i class="bi bi-envelope input-icon"></i>
 
-            <input v-model="email" type="email" placeholder="you@example.com" @keyup.enter="sendOtp" />
+            <input v-model="email" class="ps-5" type="email" placeholder="you@example.com" @keyup.enter="sendOtp" />
           </div>
 
           <small v-if="emailError">
