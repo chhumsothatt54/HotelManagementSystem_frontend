@@ -3,239 +3,81 @@
   <div>
 
     <!-- NAVBAR -->
-
-    <NavbarView/>
-
-
+    <NavbarView />
 
     <!-- HERO -->
-
     <section class="hero pb-0">
-
       <div class="eyebrow">CAMBODIA, CURATED</div>
-
-
-
       <h1>Stays worth the journey</h1>
-
-
-
       <p>
-
         From riverside boutique rooms in Phnom Penh to
-
         temple-view suites in Siem Reap — find your next stay.
-
       </p>
-
     </section>
-
-
-
     <!-- SEARCH -->
-
     <div class="search-card">
-
       <div class="row g-3 align-items-end">
 
-
-
         <div class="col-md-3 search-field">
-
-          <label>Location</label>
-
-
-
-          <select class="form-select" v-model="search.location">
-
-            <option>All provinces</option>
-
-
-
-            <option v-for="d in destinations" :key="d.name">
-
-              {{ d.name }}
-
-            </option>
-
-          </select>
-
+          <label>Search Keyword</label>
+          <input type="text" class="form-control" placeholder="Hotel name, description..." v-model="search.keyword">
         </div>
-
-
-
-        <div class="col-md-3 search-field">
-
-          <label>Check-in</label>
-
-
-
-          <input type="date" class="form-control" v-model="search.checkin">
-
-        </div>
-
-
-
-        <div class="col-md-3 search-field">
-
-          <label>Check-out</label>
-
-
-
-          <input type="date" class="form-control" v-model="search.checkout">
-
-        </div>
-
-
 
         <div class="col-md-2 search-field">
-
-          <label>Guests</label>
-
-
-
-          <input type="number" min="1" class="form-control" v-model="search.guests">
-
+          <label>City</label>
+          <select class="form-select" v-model="search.location">
+            <option>All provinces</option>
+            <option v-for="d in destinations" :key="d.name">
+              {{ d.name }}
+            </option>
+          </select>
         </div>
 
+        <div class="col-md-2 search-field">
+          <label>Check-in</label>
+          <input type="date" class="form-control" v-model="search.checkin">
+        </div>
 
+        <div class="col-md-2 search-field">
+          <label>Check-out</label>
+          <input type="date" class="form-control" v-model="search.checkout">
+        </div>
+
+        <div class="col-md-2 search-field">
+          <label>Guests</label>
+          <input type="number" min="1" class="form-control" v-model="search.guests">
+        </div>
 
         <div class="col-md-1 search-field">
-
           <button class="btn btn-primary-brand w-100">
-
             🔍
-
           </button>
-
         </div>
 
-
-
       </div>
-
     </div>
-
-
-
-    <!-- DESTINATIONS -->
-
-    <section class="container">
-
-      <h2 class="section-title">
-
-        Browse by destination
-
-      </h2>
-
-
-
-      <p class="section-sub mb-4">
-
-        Six regions, six different reasons to visit.
-
-      </p>
-
-
-
-      <div class="row g-3">
-
-
-
-        <div class="col-6 col-md-2" v-for="d in destinations" :key="d.name">
-
-          <div class="dest-card" :class="{
-
-            active: search.location === d.name
-
-          }" @click="search.location = d.name">
-
-            <img :src="d.img" :alt="d.name">
-
-
-
-            <div class="dest-label">
-
-              {{ d.name }}
-
-            </div>
-
-
-
-            <div class="dest-count">
-
-              {{ d.count }} stays
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-
-      </div>
-
-    </section>
-
-
-
     <!-- STAYS -->
-
-    <section class="container pt-2">
-
-
-
+    <section class="container pt-2 pt-3">
       <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
-
         <div>
-
           <h2 class="section-title mb-1">
-
-            {{ stays.length }} stays found
-
+            View Hotels {{ stays.length }}
           </h2>
-
-
-
           <p class="section-sub mb-0">
-
             Handpicked places, booked direct.
-
           </p>
-
         </div>
-
-
-
         <select class="form-select w-auto" v-model="sortBy">
-
           <option value="recommended">
-
             Sort: Recommended
-
           </option>
-
-
-
           <option value="price-asc">
-
             Price: Low to High
-
           </option>
-
-
-
           <option value="price-desc">
-
             Price: High to Low
-
           </option>
-
-
-
           <option value="rating">
-
             Top Rated
 
           </option>
@@ -247,27 +89,13 @@
 
 
       <div class="row g-4">
-
-
-
         <div class="col-sm-6 col-lg-4" v-for="s in sortedStays" :key="s.id">
-
           <div class="stay-card">
-
-
-
             <div class="stay-img-wrap">
-
-
-
               <img :src="s.img" :alt="s.name">
-
-
-
               <span v-if="s.tag" class="stay-tag">
 
                 {{ s.tag }}
-
               </span>
 
 
@@ -376,13 +204,7 @@
 
                 <!-- ភ្ជាប់ប៊ូតុងទៅកាន់ Hotel Detail -->
 
-                <button
-
-                  class="btn btn-outline-brand btn-sm"
-
-                  @click="goToDetail(s.id)"
-
-                >
+                <button class="btn btn-outline-brand btn-sm" @click="goToDetail(s.id)">
 
                   View Hotel
 
@@ -428,7 +250,7 @@
 
 <script setup>
 
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 import { useRouter } from 'vue-router'
 
@@ -446,310 +268,82 @@ const router = useRouter()
 
 
 const search = ref({
-
+  keyword: '',
   location: 'All provinces',
-
   checkin: '',
-
   checkout: '',
-
   guests: 2
-
 })
-
-
 
 const sortBy = ref('recommended')
 
+import { useCustomerStore } from '@/stores/customer'
 
+const customerStore = useCustomerStore()
 
-const destinations = ref([
-
-  {
-
-    name: 'Phnom Penh',
-
-    count: 1,
-
-    img: 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?q=80&w=400&auto=format&fit=crop'
-
-  },
-
-  {
-
-    name: 'Siem Reap',
-
-    count: 1,
-
-    img: 'https://images.unsplash.com/photo-1563492065599-3520f775eeed?q=80&w=400&auto=format&fit=crop'
-
-  },
-
-  {
-
-    name: 'Sihanoukville',
-
-    count: 1,
-
-    img: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?q=80&w=400&auto=format&fit=crop'
-
-  },
-
-  {
-
-    name: 'Battambang',
-
-    count: 1,
-
-    img: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=400&auto=format&fit=crop'
-
-  },
-
-  {
-
-    name: 'Kampot',
-
-    count: 1,
-
-    img: 'https://images.unsplash.com/photo-1500534623283-312aade485b7?q=80&w=400&auto=format&fit=crop'
-
-  },
-
-  {
-
-    name: 'Kep',
-
-    count: 1,
-
-    img: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?q=80&w=400&auto=format&fit=crop'
-
+onMounted(async () => {
+  try {
+    await customerStore.getHotels()
+  } catch (err) {
+    console.error('Failed to load hotels:', err)
   }
-
-])
-
-
-
-// បានធ្វើបច្ចុប្បន្នភាព Link រូបភាព (img) ឲ្យត្រូវគ្នាជាមួយ Hotel Detail
-
-const stays = ref([
-
-  {
-
-    id: 1,
-
-    name: 'Riverside Heritage Hotel',
-
-    location: 'Phnom Penh, Cambodia',
-
-    rating: 4.7,
-
-    price: 41,
-
-    oldPrice: 45,
-
-    tag: 'Popular',
-
-    fav: false,
-
-    amenities: [
-
-      'Free WiFi',
-
-      'Pool',
-
-      'Breakfast Included'
-
-    ],
-
-    img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop'
-
-  },
-
-  {
-
-    id: 2,
-
-    name: 'Temple Grove Boutique',
-
-    location: 'Siem Reap, Cambodia',
-
-    rating: 4.9,
-
-    price: 60,
-
-    tag: 'Popular',
-
-    fav: false,
-
-    amenities: [
-
-      'Free WiFi',
-
-      'Pool',
-
-      'Breakfast Included'
-
-    ],
-
-    img: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=800&auto=format&fit=crop'
-
-  },
-
-  {
-
-    id: 3,
-
-    name: 'Sokha Bay Seaview',
-
-    location: 'Sihanoukville, Cambodia',
-
-    rating: 4.4,
-
-    price: 32,
-
-    oldPrice: 38,
-
-    tag: '-15%',
-
-    fav: false,
-
-    amenities: [
-
-      'Beach Access',
-
-      'Free WiFi',
-
-      'Restaurant'
-
-    ],
-
-    img: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=800&auto=format&fit=crop'
-
-  },
-
-  {
-
-    id: 4,
-
-    name: 'Bamboo River Sanctuary',
-
-    location: 'Battambang, Cambodia',
-
-    rating: 4.6,
-
-    price: 35,
-
-    fav: false,
-
-    amenities: [
-
-      'Free WiFi',
-
-      'River View',
-
-      'Bicycle Rental'
-
-    ],
-
-    img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=800&auto=format&fit=crop'
-
-  },
-
-  {
-
-    id: 5,
-
-    name: 'Kampot Cliffside Villa',
-
-    location: 'Kampot, Cambodia',
-
-    rating: 4.8,
-
-    price: 55,
-
-    fav: false,
-
-    amenities: [
-
-      'Free WiFi',
-
-      'Pool',
-
-      'Restaurant'
-
-    ],
-
-    img: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=800&auto=format&fit=crop'
-
-  },
-
-  {
-
-    id: 6,
-
-    name: 'Kep Beach Resort',
-
-    location: 'Kep, Cambodia',
-
-    rating: 4.5,
-
-    price: 48,
-
-    fav: false,
-
-    amenities: [
-
-      'Sea View',
-
-      'Free WiFi',
-
-      'Free Parking'
-
-    ],
-
-    img: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=800&auto=format&fit=crop'
-
-  }
-
-])
-
-
-
-const sortedStays = computed(() => {
-
-  const arr = [...stays.value]
-
-
-
-  if (sortBy.value === 'price-asc') {
-
-    arr.sort((a, b) => a.price - b.price)
-
-  }
-
-
-
-  if (sortBy.value === 'price-desc') {
-
-    arr.sort((a, b) => b.price - a.price)
-
-  }
-
-
-
-  if (sortBy.value === 'rating') {
-
-    arr.sort((a, b) => b.rating - a.rating)
-
-  }
-
-
-
-  return arr
-
 })
 
+const stays = computed(() => {
+  if (!customerStore.hotels || customerStore.hotels.length === 0) return []
 
+  return customerStore.hotels.map(h => {
+    // Attempt to extract the lowest room price if rooms are loaded, else a default or property price
+    let basePrice = 50;
+
+    // Attempt to extract amenities if they exist
+    let ams = ['Free WiFi', 'Pool', 'Breakfast Included'];
+
+    // Get the first image or a default fallback
+    let image = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop';
+    if (h.images && h.images.length > 0) {
+      const primaryImage = h.images.find(img => img.is_primary);
+      const imgPath = primaryImage ? primaryImage.image : h.images[0].image;
+
+      if (imgPath && !imgPath.startsWith('http')) {
+        image = `http://127.0.0.1:8000/storage/${imgPath}`;
+      } else if (imgPath) {
+        image = imgPath;
+      }
+    }
+
+    return {
+      id: h.id,
+      name: h.name,
+      location: `${h.city || ''}, ${h.country || ''}`.replace(/^, |, $/g, ''),
+      rating: 4.5, // Default rating if not provided by backend
+      price: basePrice,
+      oldPrice: null,
+      tag: 'Popular',
+      fav: false,
+      amenities: ams,
+      img: image
+    }
+  })
+})
+
+const sortedStays = computed(() => {
+  const arr = [...stays.value]
+
+  if (sortBy.value === 'price-asc') {
+    arr.sort((a, b) => a.price - b.price)
+  }
+
+  if (sortBy.value === 'price-desc') {
+    arr.sort((a, b) => b.price - a.price)
+  }
+
+  if (sortBy.value === 'rating') {
+    arr.sort((a, b) => b.rating - a.rating)
+  }
+
+  return arr
+})
 
 // Function បញ្ជូនទៅកាន់ Hotel Detail View
 
@@ -764,7 +358,6 @@ function goToDetail(id) {
 
 
 <style>
-
 :root {
 
   --navy: #063B32;
@@ -2234,5 +1827,4 @@ footer p.desc {
   }
 
 }
-
 </style>

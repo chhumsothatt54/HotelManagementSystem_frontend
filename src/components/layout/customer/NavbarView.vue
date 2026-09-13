@@ -41,7 +41,7 @@
           <button class="icon-btn">♡</button>
 
           <button class="icon-btn">
-            🔔
+            <i class="bi bi-bell"></i>
             <span class="badge-dot"></span>
           </button>
 

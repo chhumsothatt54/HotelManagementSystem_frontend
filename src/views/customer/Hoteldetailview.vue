@@ -267,21 +267,85 @@ const mockHotels = [
 
 const hotel = ref(null)
 const selectedRoom = ref(null)
+const isLoading = ref(true)
 
-function loadHotelData(id) {
+import { useCustomerStore } from '@/stores/customer'
+const customerStore = useCustomerStore()
+
+async function loadHotelData(id) {
   window.scrollTo({ top: 0, behavior: 'instant' })
+  isLoading.value = true;
   
-  const hotelId = Number(id)
-  const found = mockHotels.find(h => h.id === hotelId)
-  
-  if (found) {
-    hotel.value = found
-    if (found.rooms && found.rooms.length > 0) {
-      selectedRoom.value = found.rooms[0]
+  try {
+    const hotelId = Number(id)
+    
+    // Fetch hotel and rooms in parallel
+    const [hotelData, roomsData] = await Promise.all([
+      customerStore.getHotelDetail(hotelId),
+      customerStore.getHotelRooms(hotelId).catch(() => ({ data: [] }))
+    ])
+    
+    const h = hotelData.data || hotelData;
+    const roomsList = roomsData.data || roomsData;
+
+    // Get the first image or a default fallback
+    let image = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop';
+    if (h.images && h.images.length > 0) {
+      const primaryImage = h.images.find(img => img.is_primary);
+      const imgPath = primaryImage ? primaryImage.image : h.images[0].image;
+      if (imgPath && !imgPath.startsWith('http')) {
+        image = `http://127.0.0.1:8000/storage/${imgPath}`;
+      } else if (imgPath) {
+        image = imgPath;
+      }
     }
-  } else {
-    hotel.value = mockHotels[0]
-    selectedRoom.value = mockHotels[0].rooms[0]
+
+    hotel.value = {
+      id: h.id,
+      name: h.name,
+      location: `${h.city || ''}, ${h.country || ''}`.replace(/^, |, $/g, ''),
+      rating: h.rating || 4.5,
+      reviewsCount: h.reviews_count || 42,
+      price: h.price || 50,
+      oldPrice: null,
+      img: image,
+      description: h.description || 'Welcome to our beautiful property. Experience refined elegance and top-tier services.',
+      amenities: h.amenities || ['Free WiFi', 'Pool', 'Breakfast Included', 'River View', 'Spa'],
+      rooms: []
+    }
+
+    // Map rooms
+    if (Array.isArray(roomsList) && roomsList.length > 0) {
+      hotel.value.rooms = roomsList.map(r => {
+        let rImage = 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=600&auto=format&fit=crop';
+        if (r.images && r.images.length > 0) {
+          const rImgPath = r.images[0].image;
+          if (rImgPath && !rImgPath.startsWith('http')) {
+            rImage = `http://127.0.0.1:8000/storage/${rImgPath}`;
+          } else if (rImgPath) {
+            rImage = rImgPath;
+          }
+        }
+        return {
+          id: r.id,
+          name: r.name || 'Standard Room',
+          bed: r.bed_type || '1 Double Bed',
+          view: r.view || 'City View',
+          size: r.size ? `${r.size} m²` : '28 m²',
+          price: r.price_per_night || r.price || 50,
+          img: rImage,
+          features: r.features || ['Free WiFi', 'AC', 'TV']
+        }
+      })
+    }
+
+    if (hotel.value.rooms.length > 0) {
+      selectedRoom.value = hotel.value.rooms[0]
+    }
+  } catch (err) {
+    console.error('Failed to load hotel detail:', err);
+  } finally {
+    isLoading.value = false;
   }
 }
 
