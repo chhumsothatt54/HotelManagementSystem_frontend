@@ -37,6 +37,7 @@ import UserView from "@/views/admin/UserView.vue";
 import LoginView from "@/views/auth/LoginView.vue";
 import RegisterView from "@/views/auth/RegisterView.vue";
 import ForgotPasswordView from "@/views/auth/ForgotPasswordView.vue";
+import GoogleCallbackView from "@/views/GoogleCallbackView.vue"; // 🟢 ថែម Import ត្រង់នេះ
 
 import { useAuthStore } from "@/stores/auth.js";
 import InputOtp from "@/views/auth/InputOtp.vue";
@@ -61,6 +62,11 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: LoginView,
+    },
+    {
+      path: "/auth/google/callback", // 🟢 ថែម Google Callback Route ត្រង់នេះ (Public)
+      name: "google-callback",
+      component: GoogleCallbackView,
     },
     {
       path: "/input-otp",
