@@ -4,7 +4,14 @@
     <NavbarView />
 
     <!-- CONTENT CONTAINER -->
-    <div class="container py-4 content-container" v-if="hotel">
+    <div class="container py-5 text-center mt-5" v-if="isLoading">
+      <div class="spinner-border text-success" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="text-muted mt-2">Loading hotel details...</p>
+    </div>
+
+    <div class="container py-4 content-container" v-else-if="hotel">
       <!-- BREADCRUMB / BACK LINK -->
       <div class="mb-3">
         <router-link to="/" class="text-decoration-none text-muted small">
@@ -24,10 +31,10 @@
       <!-- GALLERY / MAIN IMAGE -->
       <div class="hotel-gallery mb-5">
         <div class="row g-3">
-          <div class="col-md-8">
+          <div class="col-md-8" style="overflow: hidden; max-height: 500px;">
             <img :src="hotel.img" :alt="hotel.name" class="main-img rounded-3 w-100 h-100 object-fit-cover" />
           </div>
-          <div class="col-md-4 d-none d-md-flex flex-column gap-3">
+          <div class="col-md-4 d-none d-md-flex flex-column gap-3" style="overflow: hidden; max-height: 500px;">
             <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=800&auto=format&fit=crop" class="sub-img rounded-3 w-100 h-50 object-fit-cover" />
             <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=800&auto=format&fit=crop" class="sub-img rounded-3 w-100 h-50 object-fit-cover" />
           </div>
@@ -170,100 +177,6 @@ import FooterView from '@/components/layout/customer/FooterView.vue'
 const route = useRoute()
 const router = useRouter()
 
-const mockHotels = [
-  {
-    id: 1,
-    name: 'Riverside Heritage Hotel',
-    location: 'Phnom Penh, Cambodia',
-    rating: 4.7,
-    reviewsCount: 42,
-    price: 41,
-    oldPrice: 45,
-    img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop',
-    description: 'Experience refined elegance overlooking the Mekong River. Featuring classic French-colonial design, lush gardens, rooftop lounges, and spacious modern rooms.',
-    amenities: ['Free WiFi', 'Pool', 'Breakfast Included', 'River View', 'Spa'],
-    rooms: [
-      { id: 101, name: 'Standard Heritage Room', bed: '1 Double Bed', view: 'City View', size: '28 m²', price: 41, img: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=600&auto=format&fit=crop', features: ['Free WiFi', 'AC', 'TV'] },
-      { id: 102, name: 'Riverfront Deluxe Suite', bed: '1 King Bed', view: 'Mekong River View', size: '45 m²', price: 65, img: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=600&auto=format&fit=crop', features: ['Free WiFi', 'Balcony', 'Breakfast'] }
-    ]
-  },
-  {
-    id: 2,
-    name: 'Temple Grove Boutique',
-    location: 'Siem Reap, Cambodia',
-    rating: 4.9,
-    reviewsCount: 88,
-    price: 60,
-    img: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=800&auto=format&fit=crop',
-    description: 'A serene sanctuary close to Angkor Wat. Modern tropical aesthetic with traditional Khmer art accents, private balconies, and a saltwater swimming pool.',
-    amenities: ['Free WiFi', 'Pool', 'Breakfast Included', 'Airport Shuttle', 'Bar'],
-    rooms: [
-      { id: 201, name: 'Deluxe Pool View Room', bed: '1 King Bed', view: 'Pool View', size: '32 m²', price: 60, img: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=600&auto=format&fit=crop', features: ['Free WiFi', 'Balcony', 'AC'] },
-      { id: 202, name: 'Angkor Garden Villa', bed: '1 King Bed', view: 'Garden View', size: '55 m²', price: 95, img: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?q=80&w=600&auto=format&fit=crop', features: ['Free WiFi', 'Mini Bar', 'Bathtub'] }
-    ]
-  },
-  {
-    id: 3,
-    name: 'Sokha Bay Seaview',
-    location: 'Sihanoukville, Cambodia',
-    rating: 4.4,
-    reviewsCount: 52,
-    price: 32,
-    oldPrice: 38,
-    img: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=800&auto=format&fit=crop',
-    description: 'Relax with uninterrupted views of the Gulf of Thailand. Enjoy direct beach access, coastal cuisine, rooftop bars, and sunset views.',
-    amenities: ['Beach Access', 'Free WiFi', 'Restaurant', 'Pool', 'Bar'],
-    rooms: [
-      { id: 301, name: 'Standard Ocean Room', bed: '1 Double Bed', view: 'Sea View', size: '28 m²', price: 32, img: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=600&auto=format&fit=crop', features: ['Free WiFi', 'Balcony', 'AC'] },
-      { id: 302, name: 'Deluxe Beachfront Suite', bed: '1 King Bed', view: 'Direct Beach Access', size: '45 m²', price: 58, img: 'https://images.unsplash.com/photo-1591088398332-8a7791972843?q=80&w=600&auto=format&fit=crop', features: ['Free WiFi', 'Mini Bar', 'Breakfast'] }
-    ]
-  },
-  {
-    id: 4,
-    name: 'Bamboo River Sanctuary',
-    location: 'Battambang, Cambodia',
-    rating: 4.6,
-    reviewsCount: 35,
-    price: 45,
-    img: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?q=80&w=800&auto=format&fit=crop',
-    description: 'An eco-friendly sanctuary tucked along the Sangker River. Serene atmosphere, sustainable architecture, and peaceful nature views.',
-    amenities: ['Free WiFi', 'River View', 'Bicycle Rental', 'Garden', 'Restaurant'],
-    rooms: [
-      { id: 401, name: 'Bamboo Riverside Suite', bed: '1 King Bed', view: 'River View', size: '35 m²', price: 45, img: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?q=80&w=600&auto=format&fit=crop', features: ['Free WiFi', 'Balcony', 'AC'] },
-      { id: 402, name: 'Tropical Garden Bungalow', bed: '1 Queen Bed', view: 'Garden View', size: '30 m²', price: 55, img: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=600&auto=format&fit=crop', features: ['Free WiFi', 'Patio', 'Breakfast'] }
-    ]
-  },
-  {
-    id: 5,
-    name: 'Kampot Cliffside Villa',
-    location: 'Kampot, Cambodia',
-    rating: 4.8,
-    reviewsCount: 64,
-    price: 75,
-    img: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=800&auto=format&fit=crop',
-    description: 'Breathtaking cliffside villa overlooking the Kampot River and Bokor Mountain. Perfect for romantic retreats and relaxing stays.',
-    amenities: ['Free WiFi', 'Infinity Pool', 'Mountain View', 'Restaurant', 'Bar'],
-    rooms: [
-      { id: 501, name: 'Cliffside Deluxe Villa', bed: '1 King Bed', view: 'Mountain & River View', size: '45 m²', price: 75, img: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=600&auto=format&fit=crop', features: ['Free WiFi', 'Private Balcony', 'Mini Bar'] },
-      { id: 502, name: 'Sunset Pool Villa', bed: '1 King Bed', view: 'Panoramic Sunset View', size: '60 m²', price: 110, img: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=600&auto=format&fit=crop', features: ['Free WiFi', 'Private Pool', 'Bathtub'] }
-    ]
-  },
-  {
-    id: 6,
-    name: 'Kep Beach Resort',
-    location: 'Kep, Cambodia',
-    rating: 4.5,
-    reviewsCount: 29,
-    price: 50,
-    img: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=800&auto=format&fit=crop',
-    description: 'Peaceful beachfront stay just minutes from the famous Kep Crab Market. Enjoy seaside dining, fresh seafood, and tranquil sea breezes.',
-    amenities: ['Sea View', 'Free WiFi', 'Pool', 'Seafood Restaurant', 'Bar'],
-    rooms: [
-      { id: 601, name: 'Seaview Superior Room', bed: '1 Queen Bed', view: 'Sea View', size: '30 m²', price: 50, img: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=600&auto=format&fit=crop', features: ['Free WiFi', 'AC', 'Balcony'] },
-      { id: 602, name: 'Kep Horizon Suite', bed: '1 King Bed', view: 'Ocean View', size: '50 m²', price: 85, img: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=600&auto=format&fit=crop', features: ['Free WiFi', 'Mini Bar', 'Breakfast'] }
-    ]
-  }
-]
 
 const hotel = ref(null)
 const selectedRoom = ref(null)
@@ -292,7 +205,9 @@ async function loadHotelData(id) {
     let image = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop';
     if (h.images && h.images.length > 0) {
       const primaryImage = h.images.find(img => img.is_primary);
-      const imgPath = primaryImage ? primaryImage.image : h.images[0].image;
+      const imgObj = primaryImage || h.images[0];
+      const imgPath = imgObj.image || imgObj.image_url;
+
       if (imgPath && !imgPath.startsWith('http')) {
         image = `http://127.0.0.1:8000/storage/${imgPath}`;
       } else if (imgPath) {
@@ -318,23 +233,29 @@ async function loadHotelData(id) {
     if (Array.isArray(roomsList) && roomsList.length > 0) {
       hotel.value.rooms = roomsList.map(r => {
         let rImage = 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=600&auto=format&fit=crop';
-        if (r.images && r.images.length > 0) {
-          const rImgPath = r.images[0].image;
+        
+        // Sometimes room images might be in r.room_type.images or r.images
+        const roomImages = r.images || (r.room_type && r.room_type.images) || [];
+        if (roomImages.length > 0) {
+          const rImgObj = roomImages[0];
+          const rImgPath = rImgObj.image || rImgObj.image_url;
           if (rImgPath && !rImgPath.startsWith('http')) {
             rImage = `http://127.0.0.1:8000/storage/${rImgPath}`;
           } else if (rImgPath) {
             rImage = rImgPath;
           }
         }
+
+        const rt = r.room_type || {};
         return {
           id: r.id,
-          name: r.name || 'Standard Room',
-          bed: r.bed_type || '1 Double Bed',
-          view: r.view || 'City View',
-          size: r.size ? `${r.size} m²` : '28 m²',
-          price: r.price_per_night || r.price || 50,
+          name: rt.name || r.name || 'Standard Room',
+          bed: rt.bed_type || r.bed_type || '1 Double Bed',
+          view: rt.view || r.view || 'City View',
+          size: rt.size ? `${rt.size} m²` : (r.size ? `${r.size} m²` : '28 m²'),
+          price: rt.price_per_night || r.price_per_night || r.price || 50,
           img: rImage,
-          features: r.features || ['Free WiFi', 'AC', 'TV']
+          features: rt.features || r.features || ['Free WiFi', 'AC', 'TV']
         }
       })
     }
@@ -351,6 +272,9 @@ async function loadHotelData(id) {
 
 onMounted(() => {
   loadHotelData(route.params.id)
+  console.log(hotel.value);
+  
+  
 })
 
 watch(

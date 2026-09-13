@@ -55,6 +55,7 @@ import Ad_OccupancyReport from "@/views/admin/Ad_OccupancyReport.vue";
 import Ad_ProfileView from "@/views/admin/Ad_ProfileView.vue";
 import ChangePasswordView from "@/views/auth/ChangePasswordView.vue";
 import MangeHotelView from "@/views/manager/MangeHotelView.vue";
+import Cus_ProfileView from "@/views/customer/cus_ProfileView.vue";
 
 
 const router = createRouter({
@@ -150,6 +151,15 @@ const router = createRouter({
       path: "/payment",
       name: "customer-payment",
       component: PaymentView,
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: Cus_ProfileView,
+      meta: {
+        requireAuth: true,
+        roles: ['customer']
+      },
     },
 
     // =============================
