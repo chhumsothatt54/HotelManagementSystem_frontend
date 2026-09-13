@@ -12,7 +12,7 @@
 
     </body>
   </div>
-</template> 
+</template>
 
 <script setup>
 import { ref } from 'vue'
@@ -21,7 +21,7 @@ import SidebarView from '../components/layout/manager/SidebarView.vue'
 const sidebarCollapsed = ref(false)
 </script>
 
-<style >
+<style>
 :root {
   --sidebar-bg: #0c3b34;
   --sidebar-bg-light: #123f37;
@@ -48,7 +48,7 @@ body {
 /* ===== Sidebar ===== */
 #sidebar {
   width: var(--sidebar-width);
-  height: 100vh; 
+  height: 100vh;
   background: var(--sidebar-bg);
   color: #cfe3df;
   position: fixed;
@@ -57,15 +57,17 @@ body {
   display: flex;
   flex-direction: column;
   padding: 1.25rem 1rem;
-  overflow: hidden; 
+  overflow: hidden;
   transition: width .2s ease, padding .2s ease;
   z-index: 20;
 }
 
 /* Scrollable middle container */
 .sidebar-content {
-  flex: 1; /* Fills available space between header and footer */
-  overflow-y: auto; /* Enables vertical scrolling */
+  flex: 1;
+  /* Fills available space between header and footer */
+  overflow-y: auto;
+  /* Enables vertical scrolling */
   overflow-x: hidden;
   padding-right: 0.25rem;
 }
@@ -74,6 +76,7 @@ body {
 .sidebar-content::-webkit-scrollbar {
   width: 4px;
 }
+
 .sidebar-content::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 4px;

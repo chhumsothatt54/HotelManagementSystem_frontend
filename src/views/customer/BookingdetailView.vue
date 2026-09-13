@@ -13,12 +13,6 @@
 
         <!-- SEARCH & FILTER -->
         <div class="d-flex gap-2 flex-wrap">
-          <input 
-            type="text" 
-            class="form-control form-control-sm search-input" 
-            placeholder="Search hotel or booking ID..." 
-            v-model="searchQuery"
-          />
           <select class="form-select form-select-sm status-filter" v-model="statusFilter">
             <option value="ALL">All Status</option>
             <option value="Confirmed">Confirmed</option>
@@ -60,30 +54,30 @@
                 </td>
                 <td>
                   <div class="d-flex align-items-center gap-3">
-                    <img :src="b.hotelImage" :alt="b.hotelName" class="hotel-thumb rounded-3" />
+                    <img :src="getHotelImage(b)" :alt="b.hotel?.name || 'Hotel'" class="hotel-thumb rounded-3" />
                     <div>
-                      <div class="fw-bold text-dark">{{ b.hotelName }}</div>
-                      <div class="small text-muted">{{ b.roomType }}</div>
+                      <div class="fw-bold text-dark">{{ b.hotel?.name || 'Unknown Hotel' }}</div>
+                      <div class="small text-muted">{{ b.room?.roomType?.name || 'Standard Room' }}</div>
                     </div>
                   </div>
                 </td>
                 <td>
                   <div class="small font-monospace">
-                    <div><strong>In:</strong> {{ b.checkIn }}</div>
-                    <div><strong>Out:</strong> {{ b.checkOut }}</div>
+                    <div><strong>In:</strong> {{ formatDate(b.check_in) }}</div>
+                    <div><strong>Out:</strong> {{ formatDate(b.check_out) }}</div>
                   </div>
                 </td>
                 <td>
                   <span class="badge bg-light text-dark border">
-                    👤 {{ b.guests }} Guest(s)
+                    👤 {{ b.total_guests || 1 }} Guest(s)
                   </span>
                 </td>
                 <td>
-                  <span class="fw-bold text-success">${{ b.totalPrice }}</span>
+                  <span class="fw-bold text-success">${{ b.total_amount }}</span>
                 </td>
                 <td>
                   <span class="badge status-badge" :class="getStatusClass(b.status)">
-                    ● {{ b.status }}
+                    ● {{ formatStatus(b.status) }}
                   </span>
                 </td>
                 <td class="text-end">
@@ -92,8 +86,8 @@
                       ⋮
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
-                      <li v-if="b.status === 'Confirmed' || b.status === 'Pending'">
-                        <button class="dropdown-menu-item dropdown-item text-danger" @click="cancelBooking(b.id)">
+                      <li v-if="b.status === 'confirmed' || b.status === 'pending'">
+                        <button class="dropdown-menu-item dropdown-item text-danger" @click="handleCancel(b.id)" :disabled="customerStore.loading">
                           ❌ Cancel Booking
                         </button>
                       </li>
@@ -116,88 +110,79 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import NavbarView from '@/components/layout/customer/NavbarView.vue'
 import FooterView from '@/components/layout/customer/FooterView.vue'
+import { useCustomerStore } from '@/stores/customer'
+
+const customerStore = useCustomerStore()
 
 const searchQuery = ref('')
 const statusFilter = ref('ALL')
 
-// Data Reactive
-const bookings = ref([
-  {
-    id: 'BK-1001',
-    hotelName: 'Riverside Heritage Hotel',
-    roomType: 'Deluxe King Room',
-    hotelImage: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=200&auto=format&fit=crop',
-    checkIn: '2026-04-10',
-    checkOut: '2026-04-12',
-    guests: 2,
-    totalPrice: 82,
-    status: 'Confirmed'
-  },
-  {
-    id: 'BK-1002',
-    hotelName: 'Temple Grove Boutique',
-    roomType: 'Pool View Suite',
-    hotelImage: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=200&auto=format&fit=crop',
-    checkIn: '2026-05-01',
-    checkOut: '2026-05-04',
-    guests: 2,
-    totalPrice: 180,
-    status: 'Pending'
-  },
-  {
-    id: 'BK-0988',
-    hotelName: 'Sokha Bay Seaview',
-    roomType: 'Ocean Front Bungalow',
-    hotelImage: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=200&auto=format&fit=crop',
-    checkIn: '2026-01-15',
-    checkOut: '2026-01-18',
-    guests: 3,
-    totalPrice: 96,
-    status: 'Completed'
-  },
-  {
-    id: 'BK-0950',
-    hotelName: 'Kampot Cliffside Villa',
-    roomType: 'Mountain View Villa',
-    hotelImage: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=200&auto=format&fit=crop',
-    checkIn: '2025-12-20',
-    checkOut: '2025-12-22',
-    guests: 1,
-    totalPrice: 110,
-    status: 'Cancelled'
-  }
-])
+onMounted(async () => {
+  await customerStore.getBookingHistory()
+})
 
 // Filter Data
 const filteredBookings = computed(() => {
-  return bookings.value.filter(item => {
-    const matchesSearch = item.hotelName.toLowerCase().includes(searchQuery.value.toLowerCase()) || 
-                          item.id.toLowerCase().includes(searchQuery.value.toLowerCase())
-    const matchesStatus = statusFilter.value === 'ALL' || item.status === statusFilter.value
+  const list = customerStore.bookings || []
+  return list.filter(item => {
+    const hotelName = item.hotel?.name || ''
+    const matchesSearch = hotelName.toLowerCase().includes(searchQuery.value.toLowerCase()) || 
+                          String(item.id).toLowerCase().includes(searchQuery.value.toLowerCase())
+    const matchesStatus = statusFilter.value === 'ALL' || String(item.status).toLowerCase() === statusFilter.value.toLowerCase()
     return matchesSearch && matchesStatus
   })
 })
 
+function formatStatus(status) {
+  if (!status) return 'Unknown'
+  return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()
+}
+
 // ពណ៌ Status Badge
 function getStatusClass(status) {
-  switch (status) {
-    case 'Confirmed': return 'bg-success-subtle text-success border border-success-subtle'
-    case 'Pending': return 'bg-warning-subtle text-warning-emphasis border border-warning-subtle'
-    case 'Completed': return 'bg-info-subtle text-info-emphasis border border-info-subtle'
-    case 'Cancelled': return 'bg-danger-subtle text-danger border border-danger-subtle'
+  if (!status) return 'bg-secondary-subtle text-secondary'
+  switch (status.toLowerCase()) {
+    case 'confirmed': return 'bg-success-subtle text-success border border-success-subtle'
+    case 'pending': return 'bg-warning-subtle text-warning-emphasis border border-warning-subtle'
+    case 'completed': return 'bg-info-subtle text-info-emphasis border border-info-subtle'
+    case 'checked-in': return 'bg-primary-subtle text-primary border border-primary-subtle'
+    case 'checked-out': return 'bg-dark-subtle text-dark border border-dark-subtle'
+    case 'cancelled': 
+    case 'rejected': return 'bg-danger-subtle text-danger border border-danger-subtle'
     default: return 'bg-secondary-subtle text-secondary'
   }
 }
 
-// Cancel Booking ធម្មតា (In-Memory)
-function cancelBooking(id) {
-  if (confirm(`Are you sure you want to cancel booking ${id}?`)) {
-    const target = bookings.value.find(b => b.id === id)
-    if (target) {
-      target.status = 'Cancelled'
+function formatDate(dateString) {
+  if (!dateString) return ''
+  return new Date(dateString).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+}
+
+function getHotelImage(booking) {
+  // Try to use a real image if available, else a nice placeholder
+  if (booking.hotel?.images && booking.hotel.images.length > 0) {
+    const path = booking.hotel.images[0].image_path
+    return path.startsWith('http') ? path : `http://127.0.0.1:8000/storage/${path}`
+  }
+  return 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=200&auto=format&fit=crop'
+}
+
+// Cancel Booking via API
+async function handleCancel(id) {
+  const reason = prompt(`Are you sure you want to cancel booking #${id}?\n\nPlease enter a reason for cancellation:`)
+  if (reason !== null) {
+    if (!reason.trim()) {
+      alert("A reason is required to cancel your booking.")
+      return
+    }
+    try {
+      await customerStore.cancelBooking(id, reason.trim())
+      await customerStore.getBookingHistory() // refresh
+    } catch (err) {
+      alert(customerStore.error || "Failed to cancel booking.")
     }
   }
 }

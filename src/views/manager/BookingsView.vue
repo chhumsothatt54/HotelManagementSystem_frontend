@@ -94,9 +94,9 @@
                                         <span class="fw-bold text-dark">{{ booking.guest_name }}</span>
                                     </div>
                                 </td>
-                                <td class="text-muted">{{ booking.room_number || booking.room_id }}</td>
-                                <td class="text-muted">{{ booking.check_in }}</td>
-                                <td class="text-muted">{{ booking.check_out }}</td>
+                                <td class="text-muted">{{ booking.room?.room_number || booking.room_id || 'N/A' }}</td>
+                                <td class="text-muted">{{ formatDate(booking.check_in) }}</td>
+                                <td class="text-muted">{{ formatDate(booking.check_out) }}</td>
                                 <td>
                                     <span class="status-badge" :class="getStatusClass(booking.status)">
                                         {{ formatStatus(booking.status) }}
@@ -179,21 +179,28 @@ const formatStatus = (status = '') => {
 }
 
 const getStatusClass = (status = '') => {
+    if (!status) return ''
     const key = status.toLowerCase().replace(/[^a-z]/g, '')
     return `status-${key}`
 }
 
-const getInitial = (name = '') => {
-    return name ? name.charAt(0).toUpperCase() : '?'
+const getInitial = (name) => {
+    return name ? String(name).charAt(0).toUpperCase() : '?'
 }
 
-const getAvatarStyle = (name = '') => {
-    const charCode = name.charCodeAt(0) || 65
+const getAvatarStyle = (name) => {
+    const charCode = name ? String(name).charCodeAt(0) : 65
     const bgHue = (charCode * 55) % 360
     return {
         bg: `hsl(${bgHue}, 65%, 85%)`,
         text: `hsl(${bgHue}, 70%, 25%)`
     }
+}
+
+const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 </script>
 <style scoped>

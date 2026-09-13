@@ -4,7 +4,7 @@
     <NavbarView />
 
     <!-- PAGE HEADER -->
-    <section class="booking-header">
+    <section class="booking-header" v-if="!isLoading && hotel">
       <div class="container">
         <div class="eyebrow">CONFIRM YOUR STAY</div>
         <h1>Complete your booking</h1>
@@ -12,7 +12,15 @@
       </div>
     </section>
 
-    <section class="container py-5">
+    <!-- LOADING STATE -->
+    <div class="container py-5 text-center mt-5" v-if="isLoading">
+      <div class="spinner-border text-success" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="text-muted mt-2">Loading booking details...</p>
+    </div>
+
+    <section class="container py-5" v-else-if="hotel">
       <div class="row g-4">
 
         <!-- LEFT: FORM -->
@@ -100,17 +108,7 @@
             </div>
           </div>
 
-          <!-- STEP 4: PAYMENT -->
-          <div class="booking-card">
-            <h5 class="booking-card-title">4. Payment method</h5>
-
-            <div class="payment-option" v-for="p in paymentMethods" :key="p.id"
-                 :class="{ active: booking.payment === p.id }"
-                 @click="booking.payment = p.id">
-              <span>{{ p.icon }}</span>
-              <span class="fw-semibold">{{ p.label }}</span>
-            </div>
-          </div>
+          <!-- (Payment step removed, moved to PaymentView) -->
 
         </div>
 
@@ -170,14 +168,15 @@
 
               <button
                 class="btn btn-primary-brand w-100 mt-3"
-                :disabled="!canConfirm"
+                :disabled="!canConfirm || isSubmitting"
                 @click="confirmBooking"
               >
-                Confirm Booking
+                <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Continue to Payment
               </button>
 
               <p class="summary-note">
-                You won't be charged yet. Review your details before confirming.
+                You won't be charged yet. You will review details before payment.
               </p>
             </div>
           </div>
@@ -191,97 +190,19 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, reactive, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import NavbarView from '@/components/layout/customer/NavbarView.vue'
 import FooterView from '@/components/layout/customer/FooterView.vue'
+import { useCustomerStore } from '@/stores/customer'
 
 const route = useRoute()
+const router = useRouter()
+const customerStore = useCustomerStore()
 
-const mockHotels = [
-  {
-    id: 1,
-    name: 'Riverside Heritage Hotel',
-    location: 'Phnom Penh, Cambodia',
-    rating: 4.7,
-    img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop',
-    rooms: [
-      {
-        id: 101,
-        name: 'Deluxe King Room',
-        desc: '1 King Bed · City View · 35 m²',
-        price: 41,
-        img: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=600&auto=format&fit=crop',
-        amenities: ['Free WiFi', 'Balcony', 'AC']
-      },
-      {
-        id: 102,
-        name: 'River Suite',
-        desc: '1 King Bed · River View · 50 m²',
-        price: 65,
-        img: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=600&auto=format&fit=crop',
-        amenities: ['Free WiFi', 'Bathtub', 'Breakfast']
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: 'Temple Grove Boutique',
-    location: 'Siem Reap, Cambodia',
-    rating: 4.9,
-    img: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=800&auto=format&fit=crop',
-    rooms: [
-      {
-        id: 201,
-        name: 'Deluxe Pool View Room',
-        desc: '1 King Bed · Pool View · 32 m²',
-        price: 60,
-        img: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?q=80&w=600&auto=format&fit=crop',
-        amenities: ['Free WiFi', 'AC']
-      },
-      {
-        id: 202,
-        name: 'Angkor Garden Villa',
-        desc: '1 King Bed · Garden View · 55 m²',
-        price: 95,
-        img: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=600&auto=format&fit=crop',
-        amenities: ['Free WiFi', 'Private Pool', 'Breakfast']
-      }
-    ]
-  },
-  {
-    id: 3,
-    name: 'Sokha Bay Seaview',
-    location: 'Sihanoukville, Cambodia',
-    rating: 4.4,
-    img: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=800&auto=format&fit=crop',
-    rooms: [
-      {
-        id: 301,
-        name: 'Standard Ocean Room',
-        desc: '1 Double Bed · Sea View · 28 m²',
-        price: 32,
-        img: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=600&auto=format&fit=crop',
-        amenities: ['Free WiFi', 'Balcony', 'AC']
-      },
-      {
-        id: 302,
-        name: 'Deluxe Beachfront Suite',
-        desc: '1 King Bed · Direct Beach Access · 45 m²',
-        price: 58,
-        img: 'https://images.unsplash.com/photo-1591088398332-8a7791972843?q=80&w=600&auto=format&fit=crop',
-        amenities: ['Free WiFi', 'Mini Bar', 'Breakfast']
-      }
-    ]
-  }
-]
-
-const hotel = computed(() => {
-  const queryHotelId = Number(route.query.hotelId || route.params.id)
-  return mockHotels.find(h => h.id === queryHotelId) || mockHotels[0]
-})
-
-const rooms = computed(() => hotel.value?.rooms || [])
+const isLoading = ref(true)
+const hotel = ref(null)
+const rooms = ref([])
 
 const paymentMethods = ref([
   { id: 'card', label: 'Credit / Debit Card', icon: '💳' },
@@ -293,8 +214,7 @@ const booking = reactive({
   checkin: '',
   checkout: '',
   guests: 2,
-  roomId: null,
-  payment: ''
+  roomId: null
 })
 
 const guest = reactive({
@@ -304,20 +224,87 @@ const guest = reactive({
   notes: ''
 })
 
-watch(
-  () => route.query,
-  (newQuery) => {
-    const qRoomId = Number(newQuery.roomId)
+const isSubmitting = ref(false)
+
+async function loadData(hotelId) {
+  isLoading.value = true;
+  try {
+    const [hotelData, roomsData] = await Promise.all([
+      customerStore.getHotelDetail(hotelId),
+      customerStore.getHotelRooms(hotelId).catch(() => ({ data: [] }))
+    ])
+
+    const h = hotelData.data || hotelData;
+    const roomsList = roomsData.data || roomsData;
+
+    let image = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop';
+    if (h.images && h.images.length > 0) {
+      const primaryImage = h.images.find(img => img.is_primary);
+      const imgObj = primaryImage || h.images[0];
+      const imgPath = imgObj.image || imgObj.image_url;
+
+      if (imgPath && !imgPath.startsWith('http')) {
+        image = `http://127.0.0.1:8000/storage/${imgPath}`;
+      } else if (imgPath) {
+        image = imgPath;
+      }
+    }
+
+    hotel.value = {
+      id: h.id,
+      name: h.name,
+      location: `${h.city || ''}, ${h.country || ''}`.replace(/^, |, $/g, ''),
+      rating: h.rating || 4.5,
+      img: image
+    }
+
+    if (Array.isArray(roomsList) && roomsList.length > 0) {
+      rooms.value = roomsList.map(r => {
+        let rImage = 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=600&auto=format&fit=crop';
+        const roomImages = r.images || (r.room_type && r.room_type.images) || [];
+        if (roomImages.length > 0) {
+          const rImgObj = roomImages[0];
+          const rImgPath = rImgObj.image || rImgObj.image_url;
+          if (rImgPath && !rImgPath.startsWith('http')) {
+            rImage = `http://127.0.0.1:8000/storage/${rImgPath}`;
+          } else if (rImgPath) {
+            rImage = rImgPath;
+          }
+        }
+
+        const rt = r.room_type || {};
+        return {
+          id: r.id,
+          name: rt.name || r.name || 'Standard Room',
+          desc: `${rt.bed_type || r.bed_type || '1 Double Bed'} · ${rt.view || r.view || 'City View'} · ${rt.size ? rt.size + ' m²' : '28 m²'}`,
+          price: rt.price_per_night || r.price_per_night || r.price || 50,
+          img: rImage,
+          amenities: rt.features || r.features || ['Free WiFi', 'AC', 'TV']
+        }
+      })
+    }
+
+    const qRoomId = Number(route.query.roomId)
     const foundRoom = rooms.value.find(r => r.id === qRoomId)
-    
     if (foundRoom) {
       booking.roomId = foundRoom.id
     } else if (rooms.value.length > 0) {
       booking.roomId = rooms.value[0].id
     }
-  },
-  { immediate: true }
-)
+
+  } catch (err) {
+    console.error('Failed to load hotel detail for booking:', err);
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+onMounted(() => {
+  const queryHotelId = Number(route.query.hotelId || route.params.id)
+  if (queryHotelId) {
+    loadData(queryHotelId)
+  }
+})
 
 const nights = computed(() => {
   if (!booking.checkin || !booking.checkout) return 0
@@ -344,14 +331,40 @@ const canConfirm = computed(() =>
   booking.checkout &&
   nights.value > 0 &&
   booking.roomId &&
-  booking.payment &&
   guest.name &&
+  guest.phone &&
   guest.email
 )
 
-function confirmBooking() {
-  if (!canConfirm.value) return
-  alert(`Booking confirmed for ${guest.name}! Total: $${total.value}`)
+async function confirmBooking() {
+  if (!canConfirm.value || isSubmitting.value) return
+  
+  isSubmitting.value = true
+  try {
+    const payload = {
+      hotel_id: hotel.value.id,
+      room_id: booking.roomId,
+      guest_name: guest.name,
+      guest_phone: guest.phone,
+      guest_email: guest.email,
+      check_in: booking.checkin,
+      check_out: booking.checkout,
+      total_guests: booking.guests
+    }
+    
+    const res = await customerStore.createBooking(payload)
+    const newBooking = res.data?.data || res.data || res;
+    const newBookingId = newBooking.id;
+    
+    if (newBookingId) {
+      router.push({ path: '/payment', query: { bookingId: newBookingId } })
+    }
+  } catch (err) {
+    console.error('Failed to create booking:', err)
+    alert('Failed to create booking. Please check your details. ' + (err.response?.data?.message || ''))
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 

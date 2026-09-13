@@ -1,26 +1,7 @@
 <template>
     <div class="page-container">
         <!-- Topbar -->
-        <div class="topbar bg-white px-5">
-            <div class="ps-4">
-                <div class="page-title">Reviews</div>
-                <div class="page-subtitle">Platform performance overview</div>
-            </div>
-            <div class="d-flex align-items-center gap-3 pe-4">
-                <button class="icon-btn">
-                    <i class="bi bi-bell"></i>
-                    <span class="dot"></span>
-                </button>
-                <div class="user-chip">
-                    <div class="avatar-circle">P</div>
-                    <div>
-                        <div class="name">Platform Admin</div>
-                        <div class="sub">Administrator</div>
-                    </div>
-                    <i class="fa-solid fa-chevron-down text-muted small ms-1"></i>
-                </div>
-            </div>
-        </div>
+        <AdminTopbar title="Reviews" subtitle="Platform performance overview" />
 
         <!-- Reviews Panel -->
         <div class="p-4">
@@ -94,6 +75,7 @@
 </template>
 
 <script setup>
+import AdminTopbar from '@/components/layout/admin/AdminTopbar.vue'
 import { ref, computed, onMounted } from 'vue';
 import { useAdminStore } from '@/stores/admin';
 

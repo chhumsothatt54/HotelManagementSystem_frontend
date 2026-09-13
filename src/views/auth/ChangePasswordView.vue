@@ -1,4 +1,3 @@
-
 <template>
   <div class="auth-page">
 
@@ -93,19 +92,13 @@
         </div>
 
         <!-- SUCCESS -->
-        <div
-          v-if="successMessage"
-          class="alert-success"
-        >
+        <div v-if="successMessage" class="alert-success">
           <i class="bi bi-check-circle"></i>
           {{ successMessage }}
         </div>
 
         <!-- ERROR -->
-        <div
-          v-if="errorMessage"
-          class="alert-error"
-        >
+        <div v-if="errorMessage" class="alert-error">
           <i class="bi bi-exclamation-circle"></i>
           {{ errorMessage }}
         </div>
@@ -117,31 +110,18 @@
 
             <label>Current password</label>
 
-            <div
-              class="input-wrapper"
-              :class="{ error: errors.current_password }"
-            >
+            <div class="input-wrapper" :class="{ error: errors.current_password }">
 
-              <i class="bi bi-lock input-icon"></i>
+              <!-- <i class="bi bi-lock input-icon"></i> -->
 
-              <input
-                v-model="form.current_password"
-                :type="showCurrent ? 'text' : 'password'"
-                placeholder="Enter your current password"
-              />
+              <input v-model="form.current_password" :type="showCurrent ? 'text' : 'password'"
+                placeholder="Enter your current password" class="rounded-3 ps-5" />
 
-              <button
-                type="button"
-                class="password-toggle"
-                @click="showCurrent = !showCurrent"
-              >
-                <i
-                  :class="
-                    showCurrent
-                      ? 'bi bi-eye-slash'
-                      : 'bi bi-eye'
-                  "
-                ></i>
+              <button type="button" class="password-toggle" @click="showCurrent = !showCurrent">
+                <i :class="showCurrent
+                  ? 'bi bi-eye-slash'
+                  : 'bi bi-eye'
+                  "></i>
               </button>
 
             </div>
@@ -157,31 +137,18 @@
 
             <label>New password</label>
 
-            <div
-              class="input-wrapper"
-              :class="{ error: errors.new_password }"
-            >
+            <div class="input-wrapper" :class="{ error: errors.new_password }">
 
-              <i class="bi bi-lock input-icon"></i>
+              <!-- <i class="bi bi-lock input-icon"></i> -->
 
-              <input
-                v-model="form.new_password"
-                :type="showNew ? 'text' : 'password'"
-                placeholder="Enter your new password"
-              />
+              <input v-model="form.new_password" :type="showNew ? 'text' : 'password'"
+                placeholder="Enter your new password" class="rounded-3 ps-5" />
 
-              <button
-                type="button"
-                class="password-toggle"
-                @click="showNew = !showNew"
-              >
-                <i
-                  :class="
-                    showNew
-                      ? 'bi bi-eye-slash'
-                      : 'bi bi-eye'
-                  "
-                ></i>
+              <button type="button" class="password-toggle" @click="showNew = !showNew">
+                <i :class="showNew
+                  ? 'bi bi-eye-slash'
+                  : 'bi bi-eye'
+                  "></i>
               </button>
 
             </div>
@@ -190,10 +157,7 @@
               {{ errors.new_password[0] }}
             </small>
 
-            <small
-              v-else
-              class="password-hint"
-            >
+            <small v-else class="password-hint">
               Password must be at least 8 characters.
             </small>
 
@@ -204,31 +168,18 @@
 
             <label>Confirm new password</label>
 
-            <div
-              class="input-wrapper"
-              :class="{ error: errors.new_password }"
-            >
+            <div class="input-wrapper" :class="{ error: errors.new_password }">
 
-              <i class="bi bi-shield-lock input-icon"></i>
+              <!-- <i class="bi bi-shield-lock input-icon"></i> -->
 
-              <input
-                v-model="form.new_password_confirmation"
-                :type="showConfirm ? 'text' : 'password'"
-                placeholder="Confirm your new password"
-              />
+              <input v-model="form.new_password_confirmation" :type="showConfirm ? 'text' : 'password'"
+                placeholder="Confirm your new password" class="rounded-3 ps-5" />
 
-              <button
-                type="button"
-                class="password-toggle"
-                @click="showConfirm = !showConfirm"
-              >
-                <i
-                  :class="
-                    showConfirm
-                      ? 'bi bi-eye-slash'
-                      : 'bi bi-eye'
-                  "
-                ></i>
+              <button type="button" class="password-toggle" @click="showConfirm = !showConfirm">
+                <i :class="showConfirm
+                  ? 'bi bi-eye-slash'
+                  : 'bi bi-eye'
+                  "></i>
               </button>
 
             </div>
@@ -236,16 +187,9 @@
           </div>
 
           <!-- SUBMIT -->
-          <button
-            type="submit"
-            class="submit-button"
-            :disabled="loading"
-          >
+          <button type="submit" class="submit-button" :disabled="loading">
 
-            <span
-              v-if="loading"
-              class="loading"
-            >
+            <span v-if="loading" class="loading">
               <span class="spinner"></span>
               Changing password...
             </span>
@@ -282,6 +226,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import { Router } from "@lucide/vue";
 
 const router = useRouter();
 const auth = useAuthStore();
@@ -369,11 +314,10 @@ async function submitForm() {
   try {
 
     const result = await auth.changePassword({
-  current_password: form.value.current_password,
-  password: form.value.new_password,
-  password_confirmation: form.value.new_password_confirmation
-})
-
+      current_password: form.value.current_password,
+      password: form.value.new_password,
+      password_confirmation: form.value.new_password_confirmation
+    })
 
     if (!result.success) {
 
@@ -386,13 +330,9 @@ async function submitForm() {
 
       return;
     }
-
-
     successMessage.value =
       result.message ||
       "Password changed successfully.";
-
-
     // Clear form
     form.value = {
       current_password: "",
@@ -419,7 +359,6 @@ async function submitForm() {
 
 
 <style scoped>
-
 :global(:root) {
 
   --navy: #063B32;
@@ -473,13 +412,10 @@ async function submitForm() {
   height: 100vh;
 
   background:
-    linear-gradient(
-      135deg,
+    linear-gradient(135deg,
       rgba(6, 59, 50, .95),
-      rgba(8, 127, 104, .72)
-    ),
-    url("https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=85")
-    center / cover no-repeat;
+      rgba(8, 127, 104, .72)),
+    url("https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=85") center / cover no-repeat;
 
 }
 
@@ -491,11 +427,9 @@ async function submitForm() {
   inset: 0;
 
   background:
-    linear-gradient(
-      180deg,
+    linear-gradient(180deg,
       rgba(6, 59, 50, .3),
-      rgba(6, 59, 50, .9)
-    );
+      rgba(6, 59, 50, .9));
 
 }
 
@@ -1121,5 +1055,4 @@ async function submitForm() {
   }
 
 }
-
 </style>

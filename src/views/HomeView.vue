@@ -57,7 +57,7 @@
           </div>
 
           <div class="col-md-1 search-field-premium">
-            <button class="btn btn-search-premium w-100">
+            <button class="btn btn-search-premium w-100" @click="executeSearch">
               <i class="bi bi-arrow-right"></i>
             </button>
           </div>
@@ -72,12 +72,7 @@
           <h2 class="section-title-premium mb-2">View Hotels <span class="badge-count">{{ stays.length }}</span></h2>
           <p class="section-sub-premium mb-0">Handpicked places, booked direct.</p>
         </div>
-        <select class="form-select custom-sort-select w-auto" v-model="sortBy">
-          <option value="recommended">Sort: Recommended</option>
-          <option value="price-asc">Price: Low to High</option>
-          <option value="price-desc">Price: High to Low</option>
-          <option value="rating">Top Rated</option>
-        </select>
+
       </div>
 
       <div class="row g-4">
@@ -148,14 +143,18 @@ const search = ref({
 })
 
 const sortBy = ref('recommended')
-const destinations = ref([
-  { name: 'Phnom Penh' },
-  { name: 'Siem Reap' },
-  { name: 'Sihanoukville' },
-  { name: 'Battambang' },
-  { name: 'Kampot' },
-  { name: 'Kep' }
-])
+const destinations = computed(() => {
+  if (!customerStore.hotels || customerStore.hotels.length === 0) return []
+  
+  const cities = new Set()
+  customerStore.hotels.forEach(h => {
+    if (h.city) {
+      cities.add(h.city)
+    }
+  })
+  
+  return Array.from(cities).map(city => ({ name: city }))
+})
 
 onMounted(async () => {
   try {
@@ -199,13 +198,42 @@ const stays = computed(() => {
   })
 })
 
+const filteredStays = computed(() => {
+  let arr = [...stays.value]
+  
+  if (search.value.keyword) {
+    const kw = search.value.keyword.toLowerCase()
+    arr = arr.filter(s => s.name.toLowerCase().includes(kw))
+  }
+  
+  // Local fallback filter for location just in case
+  if (search.value.location && search.value.location !== 'All provinces') {
+    arr = arr.filter(s => s.location.includes(search.value.location))
+  }
+  
+  return arr
+})
+
 const sortedStays = computed(() => {
-  const arr = [...stays.value]
+  const arr = [...filteredStays.value]
   if (sortBy.value === 'price-asc') arr.sort((a, b) => a.price - b.price)
   if (sortBy.value === 'price-desc') arr.sort((a, b) => b.price - a.price)
   if (sortBy.value === 'rating') arr.sort((a, b) => b.rating - a.rating)
   return arr
 })
+
+async function executeSearch() {
+  const params = {}
+  if (search.value.location && search.value.location !== 'All provinces') {
+    params.city = search.value.location
+  }
+  
+  try {
+    await customerStore.getHotels(params)
+  } catch (err) {
+    console.error('Search failed:', err)
+  }
+}
 
 function goToDetail(id) {
   router.push({ name: 'hotel-detail', params: { id } })

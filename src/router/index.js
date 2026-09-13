@@ -11,7 +11,7 @@ import DemoAdmin from "@/views/DemoAdmin.vue";
 // Customer Views
 import HoteldetailView from "@/views/customer/Hoteldetailview.vue";
 import BookingView from "@/views/customer/BookingView.vue";
-import BookingdetailView from "@/views/customer/BookingdetailView.vue"; // 🟢 Import BookingdetailView
+import BookingdetailView from "@/views/customer/BookingdetailView.vue"; 
 import PaymentView from "@/views/customer/PaymentView.vue";
 import ContactView from "@/views/customer/ContactView.vue";
 import AboutView from "@/views/customer/AboutView.vue";

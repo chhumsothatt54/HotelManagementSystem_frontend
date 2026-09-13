@@ -4,15 +4,15 @@
     <NavbarView />
 
     <!-- HERO -->
-    <section class="hero about-hero">
-      <div class="container">
+    <section class="hero about-hero mx-auto py-3">
+      <div class="container text-center">
         <div class="eyebrow">ABOUT US</div>
         <h1>About AngkorStay</h1>
         <p>Get to know the team behind AngkorStay.</p>
       </div>
     </section>
 
-    <section class="container py-5">
+    <section class="container mt-3">
 
       <!-- COMPANY INFO -->
       <div class="about-card mb-5">
@@ -26,9 +26,9 @@
       </div>
 
       <!-- TEAM -->
-      <h4 class="team-heading">Our Team</h4>
+      <h4 class="team-heading text-center">Our Team</h4>
 
-      <div class="row g-4">
+      <div class="row g-4 mb-5">
         <div class="col-md-4" v-for="member in team" :key="member.name">
           <div class="team-card">
             <div class="team-avatar">{{ member.initials }}</div>

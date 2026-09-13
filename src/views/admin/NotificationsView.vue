@@ -1,26 +1,7 @@
 <template>
     <div class="page-container">
         <!-- Topbar -->
-        <div class="topbar bg-white">
-            <div class="ps-4">
-                <div class="page-title fw-bold fs-5">Notifications</div>
-                <div class="page-subtitle text-muted font-sm">Platform notifications & alerts</div>
-            </div>
-            <div class="d-flex align-items-center gap-3 pe-4">
-                <button class="icon-btn">
-                    <i class="bi bi-bell"></i>
-                    <span class="dot"></span>
-                </button>
-                <div class="user-chip">
-                    <div class="avatar-circle">P</div>
-                    <div>
-                        <div class="name fw-bold font-sm">Platform Admin</div>
-                        <div class="sub text-muted font-xs">Administrator</div>
-                    </div>
-                    <i class="fa-solid fa-chevron-down text-muted small ms-1"></i>
-                </div>
-            </div>
-        </div>
+        <AdminTopbar title="Notifications" subtitle="Platform notifications & alerts" />
 
         <!-- Notifications Panel -->
         <div class="p-4">
@@ -60,6 +41,7 @@
 </template>
 
 <script setup>
+import AdminTopbar from '@/components/layout/admin/AdminTopbar.vue'
 import { ref, computed, onMounted } from 'vue';
 import { useAdminStore } from '@/stores/admin';
 

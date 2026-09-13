@@ -6,180 +6,86 @@
     <!-- PAGE HEADER -->
     <section class="booking-header">
       <div class="container">
-        <div class="eyebrow">CONFIRM YOUR STAY</div>
-        <h1>Complete your booking</h1>
-        <p>You're just a few steps away from your stay at {{ hotel.name }}.</p>
+        <div class="eyebrow">FINAL STEP</div>
+        <h1>Complete your payment</h1>
+        <p>Review your booking details and select a payment method.</p>
       </div>
     </section>
 
-    <section class="container py-5">
+    <!-- LOADING STATE -->
+    <div class="container py-5 text-center mt-5" v-if="isLoading">
+      <div class="spinner-border text-success" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="text-muted mt-2">Loading booking details...</p>
+    </div>
+
+    <section class="container py-5" v-else-if="booking">
       <div class="row g-4">
-
-        <!-- LEFT: FORM -->
+        <!-- LEFT: PAYMENT FORM -->
         <div class="col-lg-7">
-
-          <!-- STEP: DATES & GUESTS -->
-          <div class="booking-card mb-4">
-            <h5 class="booking-card-title">1. Dates &amp; Guests</h5>
-
-            <div class="row g-3">
-              <div class="col-md-4">
-                <label class="form-label-sm">Check-in</label>
-                <input type="date" class="form-control" v-model="booking.checkin">
-              </div>
-
-              <div class="col-md-4">
-                <label class="form-label-sm">Check-out</label>
-                <input type="date" class="form-control" v-model="booking.checkout">
-              </div>
-
-              <div class="col-md-4">
-                <label class="form-label-sm">Guests</label>
-                <input type="number" min="1" class="form-control" v-model.number="booking.guests">
-              </div>
-            </div>
-
-            <div class="nights-pill mt-3" v-if="nights > 0">
-              {{ nights }} night{{ nights > 1 ? 's' : '' }} stay
-            </div>
-          </div>
-
-          <!-- STEP: ROOM SELECTION -->
-          <div class="booking-card mb-4">
-            <h5 class="booking-card-title">2. Choose a room</h5>
-
-            <div
-              class="room-option"
-              v-for="r in rooms"
-              :key="r.name"
-              :class="{ active: booking.room === r.name }"
-              @click="booking.room = r.name"
-            >
-              <div>
-                <div class="room-name">{{ r.name }}</div>
-                <div class="room-desc">{{ r.desc }}</div>
-                <div class="stay-amenities mt-1">
-                  <span class="amenity-pill" v-for="a in r.amenities" :key="a">{{ a }}</span>
-                </div>
-              </div>
-
-              <div class="room-price">
-                <div class="price-now">${{ r.price }}</div>
-                <div class="price-unit">/night</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- STEP: GUEST DETAILS -->
-          <div class="booking-card mb-4">
-            <h5 class="booking-card-title">3. Guest details</h5>
-
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label class="form-label-sm">Full name</label>
-                <input type="text" class="form-control" v-model="guest.name" placeholder="Sokha Chan">
-              </div>
-
-              <div class="col-md-6">
-                <label class="form-label-sm">Email</label>
-                <input type="email" class="form-control" v-model="guest.email" placeholder="sokha@email.com">
-              </div>
-
-              <div class="col-md-6">
-                <label class="form-label-sm">Phone</label>
-                <input type="tel" class="form-control" v-model="guest.phone" placeholder="+855 12 345 678">
-              </div>
-
-              <div class="col-md-6">
-                <label class="form-label-sm">Special requests</label>
-                <input type="text" class="form-control" v-model="guest.notes" placeholder="Optional">
-              </div>
-            </div>
-          </div>
-
-          <!-- STEP: PAYMENT -->
           <div class="booking-card">
-            <h5 class="booking-card-title">4. Payment method</h5>
-
+            <h5 class="booking-card-title">Payment method</h5>
             <div class="payment-option" v-for="p in paymentMethods" :key="p.id"
-                 :class="{ active: booking.payment === p.id }"
-                 @click="booking.payment = p.id">
+                 :class="{ active: selectedPayment === p.id }"
+                 @click="selectedPayment = p.id">
               <span>{{ p.icon }}</span>
               <span class="fw-semibold">{{ p.label }}</span>
             </div>
           </div>
-
         </div>
 
         <!-- RIGHT: SUMMARY -->
         <div class="col-lg-5">
           <div class="summary-card">
-
-            <div class="stay-img-wrap summary-img">
-              <img :src="hotel.img" :alt="hotel.name">
-            </div>
-
-            <div class="p-3">
-              <div class="stay-name">{{ hotel.name }}</div>
-              <div class="stay-loc mb-2">📍 {{ hotel.location }}</div>
-              <div class="stay-rating mb-3">★ {{ hotel.rating }}</div>
+            <div class="p-4 mt-2">
+              <div class="stay-name">{{ booking.hotel?.name || 'Hotel Name' }}</div>
+              <div class="stay-loc mb-3">Booking ID: {{ booking.booking_number }}</div>
 
               <hr>
 
               <div class="d-flex justify-content-between summary-line">
                 <span>Room</span>
-                <span class="fw-semibold">{{ booking.room || '—' }}</span>
+                <span class="fw-semibold">{{ booking.room?.room_type || 'Standard Room' }} ({{ booking.room?.room_number || 'TBD' }})</span>
               </div>
 
               <div class="d-flex justify-content-between summary-line">
                 <span>Check-in</span>
-                <span class="fw-semibold">{{ booking.checkin || '—' }}</span>
+                <span class="fw-semibold">{{ booking.check_in || '—' }}</span>
               </div>
 
               <div class="d-flex justify-content-between summary-line">
                 <span>Check-out</span>
-                <span class="fw-semibold">{{ booking.checkout || '—' }}</span>
+                <span class="fw-semibold">{{ booking.check_out || '—' }}</span>
               </div>
 
               <div class="d-flex justify-content-between summary-line">
-                <span>Guests</span>
-                <span class="fw-semibold">{{ booking.guests }}</span>
-              </div>
-
-              <hr>
-
-              <div class="d-flex justify-content-between summary-line">
-                <span>${{ selectedRoomPrice }} x {{ nights }} night{{ nights !== 1 ? 's' : '' }}</span>
-                <span>${{ roomTotal }}</span>
-              </div>
-
-              <div class="d-flex justify-content-between summary-line">
-                <span>Service fee</span>
-                <span>${{ serviceFee }}</span>
+                <span>Nights</span>
+                <span class="fw-semibold">{{ booking.nights }}</span>
               </div>
 
               <hr>
 
               <div class="d-flex justify-content-between summary-total">
-                <span>Total</span>
-                <span>${{ total }}</span>
+                <span>Total Amount</span>
+                <span>${{ booking.total_amount }}</span>
               </div>
 
               <button
-                class="btn btn-primary-brand w-100 mt-3"
-                :disabled="!canConfirm"
-                @click="confirmBooking"
+                class="btn btn-primary-brand w-100 mt-4"
+                :disabled="!selectedPayment || isSubmitting"
+                @click="confirmPayment"
               >
-                Confirm Booking
+                <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Pay Now
               </button>
 
-              <p class="summary-note">
-                You won't be charged yet. Review your details before confirming.
+              <p class="summary-note text-center mt-3">
+                Your payment is secure and encrypted.
               </p>
             </div>
           </div>
         </div>
-
       </div>
     </section>
 
@@ -188,38 +94,20 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import NavbarView from '@/components/layout/customer/NavbarView.vue'
 import FooterView from '@/components/layout/customer/FooterView.vue'
+import { useCustomerStore } from '@/stores/customer'
 
-// In a real app, this would come from route params / an API call
-const hotel = ref({
-  name: 'Riverside Heritage Hotel',
-  location: 'Phnom Penh, Cambodia',
-  rating: 4.7,
-  img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop'
-})
+const route = useRoute()
+const router = useRouter()
+const customerStore = useCustomerStore()
 
-const rooms = ref([
-  {
-    name: 'Standard Room',
-    desc: 'Cozy room with garden view',
-    price: 41,
-    amenities: ['Free WiFi', 'Breakfast Included']
-  },
-  {
-    name: 'Deluxe Room',
-    desc: 'Spacious room with river view',
-    price: 60,
-    amenities: ['Free WiFi', 'Pool Access', 'Breakfast Included']
-  },
-  {
-    name: 'Suite',
-    desc: 'Premium suite with balcony',
-    price: 95,
-    amenities: ['Free WiFi', 'Pool Access', 'Breakfast Included', 'Late Checkout']
-  }
-])
+const isLoading = ref(true)
+const isSubmitting = ref(false)
+const booking = ref(null)
+const selectedPayment = ref('')
 
 const paymentMethods = ref([
   { id: 'card', label: 'Credit / Debit Card', icon: '💳' },
@@ -227,65 +115,72 @@ const paymentMethods = ref([
   { id: 'cash', label: 'Pay at Hotel', icon: '🏨' }
 ])
 
-const booking = reactive({
-  checkin: '',
-  checkout: '',
-  guests: 2,
-  room: '',
-  payment: ''
+onMounted(async () => {
+  const bookingId = route.query.bookingId
+  if (!bookingId) {
+    alert("No booking ID found. Redirecting to home.")
+    router.push('/')
+    return
+  }
+  
+  try {
+    const res = await customerStore.bookingConfirmation(bookingId)
+    booking.value = res.data || res
+  } catch (err) {
+    console.error('Failed to load booking details:', err)
+    alert("Failed to load booking details. You can view it in your profile.")
+    router.push('/settings')
+  } finally {
+    isLoading.value = false
+  }
 })
 
-const guest = reactive({
-  name: '',
-  email: '',
-  phone: '',
-  notes: ''
-})
-
-const nights = computed(() => {
-  if (!booking.checkin || !booking.checkout) return 0
-  const inDate = new Date(booking.checkin)
-  const outDate = new Date(booking.checkout)
-  const diff = (outDate - inDate) / (1000 * 60 * 60 * 24)
-  return diff > 0 ? diff : 0
-})
-
-const selectedRoomPrice = computed(() => {
-  const r = rooms.value.find(r => r.name === booking.room)
-  return r ? r.price : 0
-})
-
-const roomTotal = computed(() => selectedRoomPrice.value * nights.value)
-const serviceFee = computed(() => (roomTotal.value > 0 ? 5 : 0))
-const total = computed(() => roomTotal.value + serviceFee.value)
-
-const canConfirm = computed(() =>
-  booking.checkin &&
-  booking.checkout &&
-  nights.value > 0 &&
-  booking.room &&
-  booking.payment &&
-  guest.name &&
-  guest.email
-)
-
-function confirmBooking() {
-  if (!canConfirm.value) return
-  // Replace with actual API call, e.g. axios.post('/api/bookings', { ...booking, guest })
-  console.log('Booking submitted:', { hotel: hotel.value.name, ...booking, guest, total: total.value })
-  alert(`Booking confirmed for ${guest.name}! Total: $${total.value}`)
+async function confirmPayment() {
+  if (!selectedPayment.value || isSubmitting.value) return
+  
+  isSubmitting.value = true
+  try {
+    const bookingId = route.query.bookingId
+    
+    await customerStore.createPayment({
+      booking_id: bookingId,
+      amount: booking.value.total_amount,
+      payment_method: selectedPayment.value,
+      transaction_id: 'TRX-' + Date.now()
+    })
+    
+    alert(`Payment successful! Your booking is confirmed.`)
+    router.push('/settings')
+  } catch (err) {
+    console.error('Failed to confirm payment:', err)
+    alert('Failed to process payment. ' + (err.response?.data?.message || ''))
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 
 <style scoped>
+/* FIX NAVBAR OVERLAP */
+:deep(nav),
+:deep(.navbar),
+:deep(header) {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1050 !important;
+  background-color: #ffffff !important;
+}
+
 .booking-header {
-  background: var(--bg-soft);
-  padding: 3rem 0 2rem;
+  background: #f8f9fa;
+  padding: 6rem 0 2rem;
   text-align: left;
 }
 
 .booking-header .eyebrow {
-  color: var(--blue);
+  color: #087F68;
   font-weight: 600;
   font-size: 0.85rem;
   letter-spacing: 0.02em;
@@ -293,90 +188,34 @@ function confirmBooking() {
 
 .booking-header h1 {
   font-size: clamp(1.8rem, 3vw, 2.4rem);
-  color: var(--navy);
+  color: #063B32;
   margin: 0.4rem 0 0.4rem;
+  font-family: 'Fraunces', serif;
 }
 
 .booking-header p {
-  color: var(--muted);
+  color: #6B7772;
   margin: 0;
 }
 
 .booking-card {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border: 1px solid #E1E9E5;
+  border-radius: 12px;
   background: #fff;
   padding: 1.4rem;
 }
 
 .booking-card-title {
-  color: var(--navy);
+  color: #063B32;
   font-weight: 700;
   margin-bottom: 1rem;
 }
 
-.form-label-sm {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--muted);
-  margin-bottom: 0.25rem;
-  display: block;
-}
-
-.nights-pill {
-  display: inline-block;
-  background: var(--blue-light);
-  color: var(--blue);
-  font-weight: 600;
-  font-size: 0.82rem;
-  padding: 0.3rem 0.75rem;
-  border-radius: 999px;
-}
-
-/* ROOM OPTIONS */
-.room-option {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 0.9rem 1rem;
-  margin-bottom: 0.75rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.room-option:hover {
-  border-color: var(--sky);
-}
-
-.room-option.active {
-  border-color: var(--blue);
-  background: var(--blue-light);
-}
-
-.room-name {
-  font-weight: 700;
-  color: var(--navy);
-}
-
-.room-desc {
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
-.room-price {
-  text-align: right;
-  white-space: nowrap;
-}
-
-/* PAYMENT OPTIONS */
 .payment-option {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  border: 1px solid var(--line);
+  border: 1px solid #E1E9E5;
   border-radius: 10px;
   padding: 0.8rem 1rem;
   margin-bottom: 0.6rem;
@@ -385,44 +224,71 @@ function confirmBooking() {
 }
 
 .payment-option:hover {
-  border-color: var(--sky);
+  border-color: #087F68;
 }
 
 .payment-option.active {
-  border-color: var(--blue);
-  background: var(--blue-light);
+  border-color: #087F68;
+  background: #E8F6F2;
 }
 
-/* SUMMARY CARD */
 .summary-card {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border: 1px solid #E1E9E5;
+  border-radius: 12px;
   background: #fff;
   overflow: hidden;
   position: sticky;
-  top: 90px;
+  top: 95px;
+  z-index: 10;
 }
 
-.summary-img {
-  aspect-ratio: 16 / 9;
+.stay-name {
+  font-weight: 700;
+  color: #063B32;
+  font-size: 1.1rem;
+}
+
+.stay-loc {
+  font-size: 0.85rem;
+  color: #6B7772;
 }
 
 .summary-line {
   font-size: 0.9rem;
-  color: var(--ink);
+  color: #212529;
   padding: 0.3rem 0;
 }
 
 .summary-total {
   font-weight: 700;
   font-size: 1.1rem;
-  color: var(--navy);
+  color: #063B32;
 }
 
 .summary-note {
   font-size: 0.75rem;
-  color: var(--muted);
+  color: #6B7772;
   margin-top: 0.6rem;
   margin-bottom: 0;
+}
+
+.btn-primary-brand {
+  background: #087F68;
+  color: #fff;
+  border: none;
+  padding: 0.75rem;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.btn-primary-brand:hover {
+  background: #063B32;
+  color: #fff;
+}
+
+.btn-primary-brand:disabled {
+  background: #E1E9E5;
+  color: #6B7772;
+  cursor: not-allowed;
 }
 </style>

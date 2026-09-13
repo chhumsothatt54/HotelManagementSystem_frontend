@@ -34,29 +34,27 @@
             <div class="row g-5">
               <!-- AVATAR COLUMN -->
               <div class="col-12 col-md-4 col-xl-3 d-flex flex-column align-items-center">
-                <div class="avatar-wrapper-premium mb-3">
-                  <div class="avatar-circle-premium">
+                <input type="file" ref="fileInput" @change="handleFileUpload" class="d-none" accept="image/*" />
+                <div class="avatar-wrapper-premium mb-3" @click="triggerFileInput" style="cursor: pointer;">
+                  <div v-if="avatarPreview || (authStore.user && authStore.user.avatar)" class="avatar-circle-premium overflow-hidden border-0">
+                    <img :src="avatarPreview || (authStore.user.avatar.startsWith('http') ? authStore.user.avatar : `http://127.0.0.1:8000/storage/${authStore.user.avatar}`)" class="w-100 h-100 object-fit-cover" />
+                  </div>
+                  <div v-else class="avatar-circle-premium">
                     {{ user.initials }}
                   </div>
                   <button class="camera-btn-premium">
                     <i class="bi bi-camera"></i>
                   </button>
                 </div>
-                <p class="text-muted small text-center px-3">Allowed *.jpeg, *.jpg, *.png, *.gif max size of 3 MB</p>
               </div>
 
               <!-- FORM COLUMN -->
               <div class="col-12 col-md-8 col-xl-9">
                 <div class="row g-4">
                   <!-- First Name -->
-                  <div class="col-md-6 form-group-premium">
-                    <label>First Name</label>
+                  <div class="col-md-12 form-group-premium">
+                    <label>Name</label>
                     <input type="text" class="form-control" v-model="user.firstName" placeholder="Enter your first name">
-                  </div>
-                  <!-- Last Name -->
-                  <div class="col-md-6 form-group-premium">
-                    <label>Last Name</label>
-                    <input type="text" class="form-control" v-model="user.lastName" placeholder="Enter your last name">
                   </div>
 
                   <!-- Email -->
@@ -70,41 +68,37 @@
                     <label>Phone Number</label>
                     <input type="tel" class="form-control" v-model="user.phone" placeholder="+1 (555) 000-0000">
                   </div>
-
-                  <div class="col-12 mt-5">
-                    <h5 class="section-subtitle-premium">Address Details</h5>
-                  </div>
-
-                  <!-- Country -->
-                  <div class="col-md-6 form-group-premium">
-                    <label>Country</label>
-                    <input type="text" class="form-control" v-model="user.country" placeholder="Your country">
-                  </div>
-                  <!-- City -->
-                  <div class="col-md-6 form-group-premium">
-                    <label>City</label>
-                    <input type="text" class="form-control" v-model="user.city" placeholder="Your city">
-                  </div>
-
-                  <!-- Address -->
-                  <div class="col-md-8 form-group-premium">
-                    <label>Street Address</label>
-                    <input type="text" class="form-control" v-model="user.address" placeholder="123 Main St">
-                  </div>
-                  <!-- Zip Code -->
-                  <div class="col-md-4 form-group-premium">
-                    <label>Zip/Postal Code</label>
-                    <input type="text" class="form-control" v-model="user.zipCode" placeholder="Zip code">
-                  </div>
-
                   <!-- Action Buttons -->
                   <div class="col-12 d-flex justify-content-end gap-3 mt-5 pt-3 border-top-premium">
-                    <button class="btn btn-outline-premium">Cancel</button>
-                    <button class="btn btn-save-premium" @click="saveChanges">
-                      <span v-if="!saved">Save Changes</span>
+                    <button class="btn btn-outline-premium" @click="resetForm" :disabled="isSaving">Cancel</button>
+                    <button class="btn btn-save-premium" @click="saveChanges" :disabled="isSaving">
+                      <span v-if="isSaving">
+                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                        Saving...
+                      </span>
+                      <span v-else-if="!saved">Save Changes</span>
                       <span v-else><i class="bi bi-check2 me-1"></i>Saved</span>
                     </button>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECURITY TAB -->
+          <div v-else-if="activeTab === 'preferences'" class="profile-card-premium">
+            <h4 class="card-title-premium mb-4">Security Settings</h4>
+            
+            <div class="row g-4">
+              <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between p-4 border rounded-3 bg-light">
+                  <div>
+                    <h6 class="fw-bold mb-1">Password</h6>
+                    <p class="text-muted mb-0 small">Update your password to keep your account secure.</p>
+                  </div>
+                  <button class="btn btn-outline-premium py-2 px-4" data-bs-toggle="modal" data-bs-target="#passwordModal">
+                    Change Password
+                  </button>
                 </div>
               </div>
             </div>
@@ -121,6 +115,51 @@
         </div>
       </div>
     </div>
+
+    <!-- PASSWORD CHANGE MODAL -->
+    <div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+          <div class="modal-header border-bottom-0 pb-0">
+            <h5 class="modal-title card-title-premium fs-4" id="passwordModalLabel">Change Password</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4">
+            
+            <div v-if="pwdSuccess" class="alert alert-success d-flex align-items-center py-2">
+              <i class="bi bi-check-circle me-2"></i> <span class="ms-1">{{ pwdSuccess }}</span>
+            </div>
+            
+            <div v-if="pwdError" class="alert alert-danger d-flex align-items-center py-2">
+              <i class="bi bi-exclamation-circle me-2"></i> <span class="ms-1">{{ pwdError }}</span>
+            </div>
+
+            <form @submit.prevent="submitPasswordChange">
+              <div class="form-group-premium mb-3">
+                <label>Current Password</label>
+                <input type="password" class="form-control" v-model="pwdForm.current_password" required>
+              </div>
+              
+              <div class="form-group-premium mb-3">
+                <label>New Password</label>
+                <input type="password" class="form-control" v-model="pwdForm.new_password" required minlength="8">
+              </div>
+              
+              <div class="form-group-premium mb-4">
+                <label>Confirm New Password</label>
+                <input type="password" class="form-control" v-model="pwdForm.new_password_confirmation" required minlength="8">
+              </div>
+
+              <button type="submit" class="btn btn-save-premium w-100 py-2" :disabled="isChangingPwd">
+                <span v-if="isChangingPwd" class="spinner-border spinner-border-sm me-2"></span>
+                {{ isChangingPwd ? 'Updating...' : 'Update Password' }}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -128,6 +167,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import NavbarView from '@/components/layout/customer/NavbarView.vue'
 import { useAuthStore } from '@/stores/auth'
+import api from '@/api/http'
 
 const authStore = useAuthStore()
 
@@ -135,9 +175,8 @@ const activeTab = ref('edit_profile')
 
 const tabs = ref([
   { id: 'edit_profile', label: 'Edit Profile', icon: 'bi-person' },
-  { id: 'preferences', label: 'Preferences', icon: 'bi-sliders' },
-  { id: 'security', label: 'Security', icon: 'bi-shield-lock' },
-  { id: 'data_privacy', label: 'Data Privacy', icon: 'bi-file-earmark-lock' }
+  { id: 'preferences', label: 'Security', icon: 'bi-sliders' },
+
 ])
 
 const user = reactive({
@@ -153,8 +192,25 @@ const user = reactive({
 })
 
 const saved = ref(false)
+const isSaving = ref(false)
+const fileInput = ref(null)
+const avatarFile = ref(null)
+const avatarPreview = ref(null)
+
+const pwdForm = reactive({
+  current_password: '',
+  new_password: '',
+  new_password_confirmation: ''
+})
+const isChangingPwd = ref(false)
+const pwdSuccess = ref('')
+const pwdError = ref('')
 
 onMounted(async () => {
+  await loadUserData()
+})
+
+async function loadUserData() {
   try {
     await authStore.getMe()
     if (authStore.user) {
@@ -164,7 +220,6 @@ onMounted(async () => {
       user.email = authStore.user.email || ''
       user.phone = authStore.user.phone || ''
       
-      // Update other fields if backend provides them
       if (authStore.user.country) user.country = authStore.user.country
       if (authStore.user.city) user.city = authStore.user.city
       if (authStore.user.address) user.address = authStore.user.address
@@ -175,11 +230,87 @@ onMounted(async () => {
   } catch (error) {
     console.error("Failed to fetch user profile:", error)
   }
-})
+}
 
-function saveChanges() {
-  saved.value = true
-  setTimeout(() => (saved.value = false), 2000)
+function triggerFileInput() {
+  fileInput.value?.click()
+}
+
+function handleFileUpload(event) {
+  const file = event.target.files[0]
+  if (file) {
+    avatarFile.value = file
+    avatarPreview.value = URL.createObjectURL(file)
+  }
+}
+
+function resetForm() {
+  avatarFile.value = null
+  avatarPreview.value = null
+  loadUserData()
+}
+
+async function saveChanges() {
+  isSaving.value = true
+  try {
+    const formData = new FormData()
+    formData.append('name', `${user.firstName} ${user.lastName}`.trim())
+    formData.append('email', user.email)
+    formData.append('phone', user.phone || '')
+    formData.append('_method', 'PUT') // Required for Laravel PUT with multipart
+
+    if (avatarFile.value) {
+      formData.append('avatar', avatarFile.value)
+    }
+
+    const res = await api.post('/v1/profile', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+
+    saved.value = true
+    await authStore.getMe() // refresh state globally
+    user.initials = user.firstName ? user.firstName.charAt(0).toUpperCase() : 'U'
+    
+    setTimeout(() => {
+      saved.value = false
+    }, 2000)
+  } catch (error) {
+    console.error("Failed to save changes:", error)
+    alert("Failed to save profile: " + (error.response?.data?.message || error.message))
+  } finally {
+    isSaving.value = false
+  }
+}
+
+async function submitPasswordChange() {
+  isChangingPwd.value = true
+  pwdSuccess.value = ''
+  pwdError.value = ''
+  
+  try {
+    const result = await authStore.changePassword({
+      current_password: pwdForm.current_password,
+      password: pwdForm.new_password,
+      password_confirmation: pwdForm.new_password_confirmation
+    })
+    
+    if (!result.success) {
+      pwdError.value = result.message || "Failed to change password."
+      return
+    }
+    
+    pwdSuccess.value = result.message || "Password changed successfully."
+    pwdForm.current_password = ''
+    pwdForm.new_password = ''
+    pwdForm.new_password_confirmation = ''
+    
+  } catch (err) {
+    pwdError.value = "An unexpected error occurred."
+  } finally {
+    isChangingPwd.value = false
+  }
 }
 </script>
 

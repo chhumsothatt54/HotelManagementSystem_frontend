@@ -345,6 +345,17 @@ export const useAdminStore = defineStore('admin', () => {
         }
      }
 
+     async function updateProfile(payload) {
+        try {
+            let res = await api.post('/admin/profile/update', payload, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            return res.data;
+        } catch (error) {
+            throw error;
+        }
+     }
+
     return {
 
         // state
@@ -397,6 +408,7 @@ export const useAdminStore = defineStore('admin', () => {
         getRevenueReport,
         updateReviewstatus,
         getOccupancyReport,
-        getNotification
+        getNotification,
+        updateProfile
     }
 })

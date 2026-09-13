@@ -1,26 +1,7 @@
 <template>
     <div>
         <!-- Topbar -->
-        <div class="topbar bg-white">
-            <div class="ps-4">
-                <div class="page-title">Dashboard</div>
-                <div class="page-subtitle">Platform performance overview</div>
-            </div>
-            <div class="d-flex align-items-center gap-3 pe-4">
-                <button class="icon-btn">
-                   <i class="bi bi-bell"></i>
-                    <span class="dot"></span>
-                </button>
-                <div class="user-chip">
-                    <div class="avatar-circle">P</div>
-                    <div>
-                        <div class="name">Platform Admin</div>
-                        <div class="sub">Administrator</div>
-                    </div>
-                    <i class="fa-solid fa-chevron-down text-muted small ms-1"></i>
-                </div>
-            </div>
-        </div>
+        <AdminTopbar title="Dashboard" subtitle="Platform performance overview" />
 
         <!-- Stat cards row 1 -->
         <div class="row g-3 mt-1">
@@ -137,6 +118,7 @@
 </template>
 
 <script setup>
+import AdminTopbar from '@/components/layout/admin/AdminTopbar.vue'
 import { useAdminStore } from '@/stores/admin';
 import { onMounted, ref, computed } from 'vue';
 

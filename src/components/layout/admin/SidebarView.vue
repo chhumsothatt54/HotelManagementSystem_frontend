@@ -74,11 +74,15 @@
         </div>
 
         <div class="sidebar-footer">
-            <RouterLink to="/admin/ad-profile" class="sidebar-user">
-                <div class="avatar-circle"></div>
+            <RouterLink to="/admin/ad-profile" class="sidebar-user text-decoration-none">
+                <div v-if="userAvatar" class="avatar-circle overflow-hidden border-0 p-0">
+                    <img :src="userAvatar" alt="Admin Avatar" class="w-100 h-100 object-fit-cover" />
+                </div>
+                <div v-else class="avatar-circle">{{ userInitial }}</div>
+                
                 <div class="link-text">
-                    <div class="name">Platform Admin</div>
-                    <div class="role">Administrator</div>
+                    <div class="name">{{ userName }}</div>
+                    <div class="role">{{ userRole }}</div>
                 </div>
                 <i class="fa-solid fa-chevron-right link-text ms-auto text-white-50"></i>
             </RouterLink>
@@ -87,4 +91,34 @@
 </template>
 
 <script setup>
+import { computed, onMounted } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
+
+onMounted(async () => {
+    if (!authStore.user) {
+        await authStore.getMe()
+    }
+})
+
+const userName = computed(() => authStore.user?.name || 'Platform Admin')
+const userRole = computed(() => {
+    const role = authStore.user?.role
+    if (role === 'admin') return 'Administrator'
+    if (role === 'hotel_manager') return 'Hotel Manager'
+    return 'User'
+})
+
+const userAvatar = computed(() => {
+    if (authStore.user?.avatar) {
+        const path = authStore.user.avatar
+        return path.startsWith('http') ? path : `http://127.0.0.1:8000/storage/${path}`
+    }
+    return null
+})
+
+const userInitial = computed(() => {
+    return authStore.user?.name ? authStore.user.name.charAt(0).toUpperCase() : 'A'
+})
 </script>

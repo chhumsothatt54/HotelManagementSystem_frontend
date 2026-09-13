@@ -11,7 +11,7 @@
       <p class="text-muted mt-2">Loading hotel details...</p>
     </div>
 
-    <div class="container py-4 content-container" v-else-if="hotel">
+    <div class="container py-4 content-container mb-5" v-else-if="hotel">
       <!-- BREADCRUMB / BACK LINK -->
       <div class="mb-3">
         <router-link to="/" class="text-decoration-none text-muted small">
@@ -67,7 +67,7 @@
 
           <!-- CHOOSE A ROOM -->
           <div>
-            <h3 class="fw-bold mb-4">Choose a room</h3>
+            <h3 class="fw-bold my-4">Choose a room</h3>
             
             <div class="d-flex flex-column gap-3">
               <div 
@@ -81,7 +81,7 @@
                   <div class="col-md-4 col-12">
                     <img 
                       :src="room.img || 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=600&auto=format&fit=crop'" 
-                      :alt="room.name" 
+                      :alt="room.name" style="max-height: 100px;"
                       class="room-img w-100 h-100 object-fit-cover"
                     />
                   </div>

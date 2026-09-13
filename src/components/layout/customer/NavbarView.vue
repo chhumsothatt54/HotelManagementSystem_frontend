@@ -52,7 +52,10 @@
           <template v-else>
             <div class="dropdown">
               <div class="profile-chip text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
-                <div class="avatar-circle">{{ userInitials }}</div>
+                <div class="avatar-circle overflow-hidden border-0 p-0" v-if="authStore.user?.avatar">
+                  <img :src="authStore.user.avatar.startsWith('http') ? authStore.user.avatar : `http://127.0.0.1:8000/storage/${authStore.user.avatar}`" class="w-100 h-100 object-fit-cover" alt="User Avatar">
+                </div>
+                <div class="avatar-circle" v-else>{{ userInitials }}</div>
                 <span class="fw-semibold small profile-name">{{ authStore.user?.name || 'Profile' }}</span>
                 <i class="bi bi-chevron-down ms-1 text-muted small-chevron"></i>
               </div>

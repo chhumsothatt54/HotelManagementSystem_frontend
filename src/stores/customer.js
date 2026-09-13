@@ -173,11 +173,11 @@ export const useCustomerStore = defineStore("customer", () => {
     }
   };
 
-  const cancelBooking = async (id) => {
+  const cancelBooking = async (id, reason) => {
     loading.value = true;
     error.value = null;
     try {
-      const response = await api.patch(`/v1/customer/bookings/${id}/cancel`);
+      const response = await api.patch(`/v1/customer/bookings/${id}/cancel`, { reason });
       return response.data;
     } catch (err) {
       error.value = getErrorMessage(err, "Failed to cancel booking");

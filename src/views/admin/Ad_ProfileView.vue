@@ -1,26 +1,7 @@
 <template>
     <div class="page-container">
         <!-- Topbar -->
-        <div class="topbar bg-white px-5">
-            <div class="ps-4">
-                <div class="page-title">Profile Settings</div>
-                <div class="page-subtitle">Platform performance overview</div>
-            </div>
-            <div class="d-flex align-items-center gap-3 pe-4">
-                <button class="icon-btn">
-                   <i class="bi bi-bell"></i>
-                    <span class="dot"></span>
-                </button>
-                <div class="user-chip">
-                    <div class="avatar-circle">P</div>
-                    <div>
-                        <div class="name">Platform Admin</div>
-                        <div class="sub">Administrator</div>
-                    </div>
-                    <i class="fa-solid fa-chevron-down text-muted small ms-1"></i>
-                </div>
-            </div>
-        </div>
+        <AdminTopbar title="Profile Settings" subtitle="Platform performance overview" />
 
         <!-- Header Area for Profile -->
         <div class="header-section">
@@ -29,8 +10,10 @@
                 <h2 class="header-title">My Profile</h2>
             </div>
             <div>
-                <button class="btn btn-save">
-                    <i class="fa-solid fa-check me-2"></i> Save Changes
+                <button class="btn btn-save" @click="saveProfile" :disabled="isSaving">
+                    <span v-if="isSaving" class="spinner-border spinner-border-sm me-2"></span>
+                    <i v-else class="fa-solid fa-check me-2"></i> 
+                    {{ isSaving ? 'Saving...' : (saved ? 'Saved!' : 'Save Changes') }}
                 </button>
             </div>
         </div>
@@ -41,9 +24,16 @@
                 <!-- Left Column: Profile Card -->
                 <div class="col-md-4">
                     <div class="profile-card">
-                        <div class="avatar-large mx-auto mb-3">P</div>
-                        <h4 class="profile-name mb-1">Platform Admin</h4>
-                        <div class="profile-role mb-4">Administrator</div>
+                        <input type="file" ref="fileInput" @change="handleFileUpload" class="d-none" accept="image/*" />
+                        <div class="avatar-large mx-auto mb-3 position-relative" @click="triggerFileInput" style="cursor: pointer;">
+                            <img v-if="userAvatar" :src="userAvatar" alt="Admin Avatar" class="w-100 h-100 rounded-circle object-fit-cover" />
+                            <span v-else>{{ userInitial }}</span>
+                            <div class="camera-icon-badge">
+                                <i class="bi bi-camera-fill"></i>
+                            </div>
+                        </div>
+                        <h4 class="profile-name mb-1">{{ user.firstName }} {{ user.lastName }}</h4>
+                        <div class="profile-role mb-4">{{ user.role }}</div>
                         <hr class="card-divider">
                         <div class="d-flex align-items-center justify-content-center text-muted font-sm mt-3">
                             <i class="fa-solid fa-shield-halved me-2"></i> StayLink Platform
@@ -61,23 +51,23 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">First Name</label>
-                                <input type="text" class="form-control" value="Platform">
+                                <input type="text" class="form-control" v-model="user.firstName">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Last Name</label>
-                                <input type="text" class="form-control" value="Admin">
+                                <input type="text" class="form-control" v-model="user.lastName">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Email</label>
-                                <input type="email" class="form-control" value="admin@staylink.com">
+                                <input type="email" class="form-control" v-model="user.email">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Phone</label>
-                                <input type="text" class="form-control" value="+855 12 000 000">
+                                <input type="text" class="form-control" v-model="user.phone">
                             </div>
                             <div class="col-md-12">
                                 <label class="form-label">Role</label>
-                                <input type="text" class="form-control bg-light" value="Administrator" disabled>
+                                <input type="text" class="form-control bg-light" :value="user.role" disabled>
                             </div>
                         </div>
                     </div>
@@ -85,16 +75,27 @@
                     <!-- Security Card -->
                     <div class="form-card">
                         <div class="card-title text-dark">Security</div>
-                        <div class="card-subtitle mb-4">Update your password.</div>
+                        <div class="card-subtitle mb-4">Update your password. Leave blank if unchanged.</div>
                         
+                        <div v-if="pwdSuccess" class="alert alert-success py-2 mb-3">
+                            <i class="bi bi-check-circle me-1"></i> <span class="ms-1 font-sm">{{ pwdSuccess }}</span>
+                        </div>
+                        <div v-if="pwdError" class="alert alert-danger py-2 mb-3">
+                            <i class="bi bi-exclamation-circle me-1"></i> <span class="ms-1 font-sm">{{ pwdError }}</span>
+                        </div>
+
                         <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" class="form-control" v-model="pwdForm.current_password" placeholder="........">
+                            </div>
                             <div class="col-md-6">
                                 <label class="form-label">New Password</label>
-                                <input type="password" class="form-control" placeholder="........">
+                                <input type="password" class="form-control" v-model="pwdForm.new_password" placeholder="........">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Confirm Password</label>
-                                <input type="password" class="form-control" placeholder="........">
+                                <input type="password" class="form-control" v-model="pwdForm.new_password_confirmation" placeholder="........">
                             </div>
                         </div>
                     </div>
@@ -105,7 +106,137 @@
 </template>
 
 <script setup>
-// State could go here (e.g. const profile = ref({...}))
+import AdminTopbar from '@/components/layout/admin/AdminTopbar.vue'
+import { ref, reactive, computed, onMounted } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { useAdminStore } from '@/stores/admin'
+import api from '@/api/http'
+
+const authStore = useAuthStore()
+const adminStore = useAdminStore()
+
+const user = reactive({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    role: ''
+})
+
+const pwdForm = reactive({
+    current_password: '',
+    new_password: '',
+    new_password_confirmation: ''
+})
+
+const fileInput = ref(null)
+const avatarFile = ref(null)
+const avatarPreview = ref(null)
+const isSaving = ref(false)
+const saved = ref(false)
+const pwdError = ref('')
+const pwdSuccess = ref('')
+
+onMounted(async () => {
+    await loadUserData()
+})
+
+async function loadUserData() {
+    try {
+        await authStore.getMe()
+        if (authStore.user) {
+            const names = (authStore.user.name || '').trim().split(' ')
+            user.firstName = names[0] || ''
+            user.lastName = names.slice(1).join(' ') || ''
+            user.email = authStore.user.email || ''
+            user.phone = authStore.user.phone || ''
+            user.role = authStore.user.role === 'admin' ? 'Administrator' : authStore.user.role === 'hotel_manager' ? 'Hotel Manager' : 'User'
+        }
+    } catch (error) {
+        console.error("Failed to load admin profile", error)
+    }
+}
+
+const userAvatar = computed(() => {
+    if (avatarPreview.value) return avatarPreview.value
+    if (authStore.user?.avatar) {
+        const path = authStore.user.avatar
+        return path.startsWith('http') ? path : `http://127.0.0.1:8000/storage/${path}`
+    }
+    return null
+})
+
+const userInitial = computed(() => {
+    return user.firstName ? user.firstName.charAt(0).toUpperCase() : 'A'
+})
+
+function triggerFileInput() {
+    fileInput.value?.click()
+}
+
+function handleFileUpload(event) {
+    const file = event.target.files[0]
+    if (file) {
+        avatarFile.value = file
+        avatarPreview.value = URL.createObjectURL(file)
+    }
+}
+
+async function saveProfile() {
+    isSaving.value = true
+    pwdError.value = ''
+    pwdSuccess.value = ''
+    
+    try {
+        const formData = new FormData()
+        formData.append('name', `${user.firstName} ${user.lastName}`.trim())
+        formData.append('email', user.email)
+        formData.append('phone', user.phone || '')
+
+        if (avatarFile.value) {
+            formData.append('avatar', avatarFile.value)
+        }
+
+        await adminStore.updateProfile(formData)
+
+        if (pwdForm.new_password || pwdForm.new_password_confirmation || pwdForm.current_password) {
+            if (!pwdForm.current_password) {
+                 pwdError.value = "Current password is required to change password."
+                 isSaving.value = false
+                 return
+            }
+            const pwdResult = await authStore.changePassword({
+                current_password: pwdForm.current_password,
+                password: pwdForm.new_password,
+                password_confirmation: pwdForm.new_password_confirmation
+            })
+            if (!pwdResult.success) {
+                pwdError.value = pwdResult.message || "Failed to update password."
+            } else {
+                pwdSuccess.value = "Profile and password updated!"
+                pwdForm.current_password = ''
+                pwdForm.new_password = ''
+                pwdForm.new_password_confirmation = ''
+            }
+        } else {
+            pwdSuccess.value = "Profile updated successfully!"
+        }
+
+        saved.value = true
+        await authStore.getMe() // refresh state globally
+
+        setTimeout(() => {
+            saved.value = false
+            pwdSuccess.value = ''
+        }, 3000)
+
+    } catch (error) {
+        console.error("Failed to save changes", error)
+        pwdError.value = error.response?.data?.message || error.message || "Failed to save profile"
+    } finally {
+        isSaving.value = false
+    }
+}
 </script>
 
 <style scoped>
@@ -291,5 +422,21 @@
 
 .font-sm {
     font-size: 13px;
+}
+
+.camera-icon-badge {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: white;
+    color: #0f766e;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    font-size: 14px;
 }
 </style>
