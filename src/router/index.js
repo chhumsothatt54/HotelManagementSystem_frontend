@@ -45,8 +45,6 @@ import ResetPasswordView from "@/views/auth/ResetPasswordView.vue";
 import HotelMagerView from "@/views/admin/HotelMagerView.vue";
 import HotelView from "@/views/admin/HotelView.vue";
 import ReviewView from "@/views/admin/ReviewView.vue";
-import ChangePasswordView from "@/views/auth/ChangePasswordView.vue";
-
 import Ad_RoomTypeView from "@/views/admin/Ad_RoomTypeView.vue";
 import Ad_RoomView from "@/views/admin/Ad_RoomView.vue";
 import Ad_AmenityView from "@/views/admin/Ad_AmenityView.vue";
