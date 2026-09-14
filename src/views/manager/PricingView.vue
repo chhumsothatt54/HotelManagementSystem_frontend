@@ -400,6 +400,7 @@ const handleSave = async () => {
       max-width: 220px;
     }
 
+
     .price-input:focus {
       outline: none;
       border-color: var(--primary-emerald);
