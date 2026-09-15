@@ -1,91 +1,164 @@
 <template>
-  <div>
+  <div class="payment-page">
     <!-- NAVBAR -->
     <NavbarView />
 
     <!-- PAGE HEADER -->
-    <section class="booking-header">
+    <section class="payment-header-section">
       <div class="container">
-        <div class="eyebrow">FINAL STEP</div>
-        <h1>Complete your payment</h1>
-        <p>Review your booking details and select a payment method.</p>
+        <div class="badge-step mb-2">FINAL STEP</div>
+        <h1 class="page-title">Complete Your Payment</h1>
+        <p class="page-subtitle">Review your booking details and select a preferred payment method.</p>
       </div>
     </section>
 
     <!-- LOADING STATE -->
-    <div class="container py-5 text-center mt-5" v-if="isLoading">
-      <div class="spinner-border text-success" role="status">
+    <div class="container py-5 text-center my-5" v-if="isLoading">
+      <div class="spinner-border text-teal" role="status" style="width: 3rem; height: 3rem;">
         <span class="visually-hidden">Loading...</span>
       </div>
-      <p class="text-muted mt-2">Loading booking details...</p>
+      <p class="text-muted mt-3 fw-medium">Loading booking details...</p>
     </div>
 
-    <section class="container py-5" v-else-if="booking">
+    <!-- MAIN CONTENT -->
+    <section class="container pb-5 mb-5" v-else-if="booking">
       <div class="row g-4">
-        <!-- LEFT: PAYMENT FORM -->
+        
+        <!-- LEFT: PAYMENT METHODS -->
         <div class="col-lg-7">
-          <div class="booking-card">
-            <h5 class="booking-card-title">Payment method</h5>
-            <div class="payment-option" v-for="p in paymentMethods" :key="p.id"
-                 :class="{ active: selectedPayment === p.id }"
-                 @click="selectedPayment = p.id">
-              <span>{{ p.icon }}</span>
-              <span class="fw-semibold">{{ p.label }}</span>
+          <div class="custom-card p-4 p-md-4">
+            <h4 class="section-heading mb-4">
+              <i class="bi bi-wallet2 me-2 text-teal"></i>Payment Method
+            </h4>
+            
+            <div class="payment-options-grid">
+              <div 
+                class="payment-option-card" 
+                v-for="p in paymentMethods" 
+                :key="p.id"
+                :class="{ active: selectedPayment === p.id }"
+                @click="selectedPayment = p.id"
+              >
+                <div class="d-flex align-items-center gap-3">
+                  <div class="payment-icon-wrapper">
+                    <span class="fs-4">{{ p.icon }}</span>
+                  </div>
+                  <div>
+                    <h6 class="mb-1 fw-bold text-dark">{{ p.label }}</h6>
+                    <p class="mb-0 text-muted small">{{ p.desc }}</p>
+                  </div>
+                </div>
+                <div class="form-check custom-radio">
+                  <input class="form-check-input" type="radio" :name="'paymentMethod'" :checked="selectedPayment === p.id" />
+                </div>
+              </div>
             </div>
+
+            <!-- BAKONG QR SECTION -->
+            <div v-if="selectedPayment === 'bakong'" class="qr-container mt-4 animate-fade-in">
+              <div class="text-center p-4 qr-box-inner">
+                <div class="badge bg-teal-subtle text-teal mb-3 px-3 py-2 rounded-pill fw-semibold">
+                  🇰🇭 Bakong KHQR Secure Payment
+                </div>
+                
+                <div v-if="qrLoading" class="py-5">
+                  <div class="spinner-border text-teal" role="status"></div>
+                  <p class="text-muted small mt-2">Generating QR Code...</p>
+                </div>
+
+                <div v-else-if="qrImage" class="qr-content">
+                  <div class="qr-image-wrapper p-3 bg-white shadow-sm rounded-4 d-inline-block border">
+                    <img :src="qrImage" alt="Bakong KHQR" class="img-fluid rounded-2" style="width: 210px; height: 210px;" />
+                  </div>
+                  
+                  <div class="mt-3">
+                    <span class="text-muted small">Total Amount to Pay:</span>
+                    <h3 class="text-danger fw-bold mt-1">${{ booking.total_amount }}</h3>
+                  </div>
+
+                  <div class="alert alert-warning py-2 px-3 mt-3 d-inline-flex align-items-center gap-2 small rounded-pill">
+                    <span class="spinner-grow spinner-grow-sm text-warning" role="status"></span>
+                    <span>Waiting for payment scan...</span>
+                  </div>
+                  
+                  <!-- Demo Simulate Success Button -->
+                  <div class="mt-3">
+                    <button class="btn btn-outline-success btn-sm rounded-pill px-4 fw-semibold" @click="mockPaymentSuccess" type="button">
+                      <i class="bi bi-lightning-charge-fill me-1"></i> [Demo] Simulate Payment Success
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PAY AT HOTEL INFO -->
+            <div v-if="selectedPayment === 'cash'" class="cash-info-box mt-4 p-4 rounded-4 animate-fade-in">
+              <div class="d-flex gap-3">
+                <div class="fs-3 text-warning">🏨</div>
+                <div>
+                  <h6 class="fw-bold text-dark">Pay at Hotel</h6>
+                  <p class="text-muted small mb-0">You can pay with cash or card directly at the hotel upon check-in. Your booking will be safely reserved.</p>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
         <!-- RIGHT: SUMMARY -->
         <div class="col-lg-5">
-          <div class="summary-card">
-            <div class="p-4 mt-2">
-              <div class="stay-name">{{ booking.hotel?.name || 'Hotel Name' }}</div>
-              <div class="stay-loc mb-3">Booking ID: {{ booking.booking_number }}</div>
+          <div class="custom-card summary-card p-4">
+            <h4 class="section-heading mb-3">Booking Summary</h4>
+            
+            <div class="hotel-info-preview mb-3 pb-3 border-bottom">
+              <div class="stay-name text-teal fw-bold fs-5">{{ booking.hotel?.name || 'Hotel Name' }}</div>
+              <div class="stay-loc text-muted small"><i class="bi bi-hash"></i> Booking No: <span class="fw-semibold text-dark">{{ booking.booking_number }}</span></div>
+            </div>
 
-              <hr>
-
-              <div class="d-flex justify-content-between summary-line">
-                <span>Room</span>
-                <span class="fw-semibold">{{ booking.room?.room_type || 'Standard Room' }} ({{ booking.room?.room_number || 'TBD' }})</span>
+            <div class="summary-details">
+              <div class="d-flex justify-content-between summary-line mb-2">
+                <span class="text-muted">Room</span>
+                <span class="fw-semibold text-dark text-end">{{ booking.room?.room_type || 'Standard Room' }} <br><small class="text-muted">({{ booking.room?.room_number || 'TBD' }})</small></span>
               </div>
 
-              <div class="d-flex justify-content-between summary-line">
-                <span>Check-in</span>
-                <span class="fw-semibold">{{ booking.check_in || '—' }}</span>
+              <div class="d-flex justify-content-between summary-line mb-2">
+                <span class="text-muted">Check-in Date</span>
+                <span class="fw-semibold text-dark">{{ booking.check_in || '—' }}</span>
               </div>
 
-              <div class="d-flex justify-content-between summary-line">
-                <span>Check-out</span>
-                <span class="fw-semibold">{{ booking.check_out || '—' }}</span>
+              <div class="d-flex justify-content-between summary-line mb-2">
+                <span class="text-muted">Check-out Date</span>
+                <span class="fw-semibold text-dark">{{ booking.check_out || '—' }}</span>
               </div>
 
-              <div class="d-flex justify-content-between summary-line">
-                <span>Nights</span>
-                <span class="fw-semibold">{{ booking.nights }}</span>
+              <div class="d-flex justify-content-between summary-line mb-3">
+                <span class="text-muted">Duration</span>
+                <span class="fw-semibold text-dark">{{ booking.nights }} Night(s)</span>
               </div>
+            </div>
 
-              <hr>
+            <hr class="text-muted opacity-25">
 
-              <div class="d-flex justify-content-between summary-total">
-                <span>Total Amount</span>
-                <span>${{ booking.total_amount }}</span>
-              </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <span class="fw-bold text-dark fs-6">Total Amount</span>
+              <span class="fs-3 fw-bold text-teal">${{ booking.total_amount }}</span>
+            </div>
 
-              <button
-                class="btn btn-primary-brand w-100 mt-4"
-                :disabled="!selectedPayment || isSubmitting"
-                @click="confirmPayment"
-              >
-                <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Pay Now
-              </button>
+            <button
+              class="btn btn-teal-brand w-100 py-3 rounded-3 shadow-sm fw-bold"
+              :disabled="!selectedPayment || isSubmitting || (selectedPayment === 'bakong' && !qrImage)"
+              @click="confirmPayment"
+            >
+              <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              {{ selectedPayment === 'bakong' ? 'Awaiting KHQR Payment...' : (selectedPayment === 'cash' ? 'Confirm Booking' : 'Please Select Payment Method') }}
+            </button>
 
-              <p class="summary-note text-center mt-3">
-                Your payment is secure and encrypted.
-              </p>
+            <div class="security-note text-center mt-3">
+              <span class="text-muted small"><i class="bi bi-shield-check text-success me-1"></i> Secure and encrypted payment</span>
             </div>
           </div>
         </div>
+
       </div>
     </section>
 
@@ -94,8 +167,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import api from '@/api/http'
 import NavbarView from '@/components/layout/customer/NavbarView.vue'
 import FooterView from '@/components/layout/customer/FooterView.vue'
 import { useCustomerStore } from '@/stores/customer'
@@ -106,13 +180,15 @@ const customerStore = useCustomerStore()
 
 const isLoading = ref(true)
 const isSubmitting = ref(false)
+const qrLoading = ref(false)
 const booking = ref(null)
-const selectedPayment = ref('')
+const selectedPayment = ref('bakong')
+const qrImage = ref('')
+let pollTimer = null
 
 const paymentMethods = ref([
-  { id: 'card', label: 'Credit / Debit Card', icon: '💳' },
-  { id: 'aba', label: 'ABA PayWay', icon: '📱' },
-  { id: 'cash', label: 'Pay at Hotel', icon: '🏨' }
+  { id: 'bakong', label: 'Bakong KHQR', desc: 'Scan and pay using any mobile banking app', icon: '🇰🇭' },
+  { id: 'cash', label: 'Pay at Hotel', desc: 'Pay directly when you arrive at the property', icon: '🏨' }
 ])
 
 onMounted(async () => {
@@ -128,40 +204,108 @@ onMounted(async () => {
     booking.value = res.data || res
   } catch (err) {
     console.error('Failed to load booking details:', err)
-    alert("Failed to load booking details. You can view it in your profile.")
-    router.push('/settings')
+    alert("Failed to load booking details.")
+    router.push('/')
   } finally {
     isLoading.value = false
   }
 })
 
+watch(selectedPayment, async (newVal) => {
+  if (newVal === 'bakong') {
+    await generateBakongQR()
+    startPolling()
+  } else {
+    clearInterval(pollTimer)
+    qrImage.value = ''
+  }
+})
+
+async function generateBakongQR() {
+  qrLoading.value = true
+  try {
+    const bookingId = route.query.bookingId
+    const response = await api.post(`/v1/booking/${bookingId}/generate-qr`)
+
+    if (response.data.success) {
+      qrImage.value = response.data.qr_image
+    }
+  } catch (err) {
+    console.error('Error generating QR:', err)
+    alert('Failed to generate QR Code!')
+  } finally {
+    qrLoading.value = false
+  }
+}
+
+function startPolling() {
+  clearInterval(pollTimer)
+  const bookingId = route.query.bookingId
+
+  pollTimer = setInterval(async () => {
+    try {
+      const response = await api.get(`/v1/booking/${bookingId}/check-status`)
+
+      if (response.data.status === 'paid') {
+        clearInterval(pollTimer)
+        alert('Payment successful!')
+        router.push({ path: '/booking-detail', query: { id: bookingId } })
+      }
+    } catch (err) {
+      console.error('Polling error:', err)
+    }
+  }, 3000)
+}
+
+async function mockPaymentSuccess() {
+  try {
+    const bookingId = route.query.bookingId
+    await api.post(`/v1/booking/${bookingId}/mock-success`)
+
+    clearInterval(pollTimer)
+    alert('Payment successful (Demo)!')
+    router.push({ path: '/booking-detail', query: { id: bookingId } })
+  } catch (err) {
+    console.error('Mock success error:', err)
+  }
+}
+
 async function confirmPayment() {
   if (!selectedPayment.value || isSubmitting.value) return
   
-  isSubmitting.value = true
-  try {
-    const bookingId = route.query.bookingId
-    
-    await customerStore.createPayment({
-      booking_id: bookingId,
-      amount: booking.value.total_amount,
-      payment_method: selectedPayment.value,
-      transaction_id: 'TRX-' + Date.now()
-    })
-    
-    alert(`Payment successful! Your booking is confirmed.`)
-    router.push('/settings')
-  } catch (err) {
-    console.error('Failed to confirm payment:', err)
-    alert('Failed to process payment. ' + (err.response?.data?.message || ''))
-  } finally {
-    isSubmitting.value = false
+  if (selectedPayment.value === 'cash') {
+    isSubmitting.value = true
+    try {
+      const bookingId = route.query.bookingId
+      await customerStore.createPayment({
+        booking_id: bookingId,
+        amount: booking.value.total_amount,
+        payment_method: 'cash',
+        transaction_id: 'TRX-' + Date.now()
+      })
+      
+      alert(`Booking confirmed! You can pay at the hotel.`)
+      router.push({ path: '/booking-detail', query: { id: bookingId } })
+    } catch (err) {
+      console.error('Failed to confirm payment:', err)
+      alert('Failed to process payment. ' + (err.response?.data?.message || ''))
+    } finally {
+      isSubmitting.value = false
+    }
   }
 }
+
+onBeforeUnmount(() => {
+  clearInterval(pollTimer)
+})
 </script>
 
 <style scoped>
-/* FIX NAVBAR OVERLAP */
+.payment-page {
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
 :deep(nav),
 :deep(.navbar),
 :deep(header) {
@@ -171,124 +315,147 @@ async function confirmPayment() {
   right: 0 !important;
   z-index: 1050 !important;
   background-color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-.booking-header {
-  background: #f8f9fa;
-  padding: 6rem 0 2rem;
-  text-align: left;
+.payment-header-section {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  padding: 7rem 0 2.5rem;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-.booking-header .eyebrow {
-  color: #087F68;
+.badge-step {
+  display: inline-block;
+  background-color: #d1fae5;
+  color: #047857;
   font-weight: 600;
-  font-size: 0.85rem;
-  letter-spacing: 0.02em;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 50rem;
+  letter-spacing: 0.03em;
 }
 
-.booking-header h1 {
-  font-size: clamp(1.8rem, 3vw, 2.4rem);
-  color: #063B32;
-  margin: 0.4rem 0 0.4rem;
-  font-family: 'Fraunces', serif;
+.page-title {
+  font-size: clamp(1.7rem, 2.5vw, 2.2rem);
+  color: #0f172a;
+  font-weight: 800;
+  font-family: 'Inter', sans-serif;
+  margin-top: 0.3rem;
 }
 
-.booking-header p {
-  color: #6B7772;
-  margin: 0;
+.page-subtitle {
+  color: #64748b;
+  font-size: 0.95rem;
 }
 
-.booking-card {
-  border: 1px solid #E1E9E5;
-  border-radius: 12px;
-  background: #fff;
-  padding: 1.4rem;
+.custom-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
 }
 
-.booking-card-title {
-  color: #063B32;
+.section-heading {
+  font-size: 1.15rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  color: #1e293b;
 }
 
-.payment-option {
+.payment-options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.payment-option-card {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  border: 1px solid #E1E9E5;
-  border-radius: 10px;
-  padding: 0.8rem 1rem;
-  margin-bottom: 0.6rem;
+  justify-content: space-between;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.85rem;
+  padding: 1rem 1.25rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
+  background-color: #ffffff;
 }
 
-.payment-option:hover {
-  border-color: #087F68;
+.payment-option-card:hover {
+  border-color: #34d399;
+  background-color: #f8fafc;
 }
 
-.payment-option.active {
-  border-color: #087F68;
-  background: #E8F6F2;
+.payment-option-card.active {
+  border-color: #059669;
+  background-color: #f0fdf4;
+  box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.08);
+}
+
+.payment-icon-wrapper {
+  width: 45px;
+  height: 45px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.65rem;
+}
+
+.qr-box-inner {
+  background: #f8fafc;
+  border: 2px dashed #cbd5e1;
+  border-radius: 1rem;
+}
+
+.cash-info-box {
+  background: #fffbeb;
+  border: 1px solid #fef3c7;
 }
 
 .summary-card {
-  border: 1px solid #E1E9E5;
-  border-radius: 12px;
-  background: #fff;
-  overflow: hidden;
   position: sticky;
-  top: 95px;
-  z-index: 10;
+  top: 100px;
 }
 
-.stay-name {
-  font-weight: 700;
-  color: #063B32;
-  font-size: 1.1rem;
+.text-teal {
+  color: #059669 !important;
 }
 
-.stay-loc {
-  font-size: 0.85rem;
-  color: #6B7772;
+.bg-teal-subtle {
+  background-color: #d1fae5 !important;
+  color: #047857 !important;
 }
 
-.summary-line {
-  font-size: 0.9rem;
-  color: #212529;
-  padding: 0.3rem 0;
-}
-
-.summary-total {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: #063B32;
-}
-
-.summary-note {
-  font-size: 0.75rem;
-  color: #6B7772;
-  margin-top: 0.6rem;
-  margin-bottom: 0;
-}
-
-.btn-primary-brand {
-  background: #087F68;
+.btn-teal-brand {
+  background: #059669;
   color: #fff;
   border: none;
-  padding: 0.75rem;
-  font-weight: 600;
-  border-radius: 8px;
+  transition: all 0.2s;
 }
 
-.btn-primary-brand:hover {
-  background: #063B32;
+.btn-teal-brand:hover {
+  background: #047857;
   color: #fff;
+  transform: translateY(-1px);
 }
 
-.btn-primary-brand:disabled {
-  background: #E1E9E5;
-  color: #6B7772;
-  cursor: not-allowed;
+.btn-teal-brand:disabled {
+  background: #cbd5e1;
+  color: #94a3b8;
+  transform: none;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>
