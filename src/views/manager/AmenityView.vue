@@ -220,7 +220,7 @@
 
           <!-- Icon -->
           <div class="form-group">
-            <label>Bootstrap Icon</label>
+            <label>Icon</label>
 
             <input
               v-model="form.icon"
