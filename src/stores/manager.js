@@ -190,10 +190,7 @@ export const useManagerStore = defineStore("manager", {
       this.error = null;
 
       try {
-        const response = await api.post(
-          "/manager/me/profile",
-          formData
-        );
+        const response = await api.post("/manager/me/profile", formData);
 
         this.profile = response.data.user;
 
@@ -201,14 +198,30 @@ export const useManagerStore = defineStore("manager", {
       } catch (error) {
         console.error(
           "Update profile error:",
-          error.response?.data || error.message
+          error.response?.data || error.message,
         );
 
-        this.error = getErrorMessage(
-          error,
-          "Failed to update profile."
-        );
+        this.error = getErrorMessage(error, "Failed to update profile.");
 
+        throw error;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async uploadHotelImages(formData) {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await api.post("/manager/hotel/images", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        if (response.data?.data) {
+          this.images.unshift(response.data.data);
+        }
+        return response.data;
+      } catch (error) {
+        this.error = getErrorMessage(error, "Failed to upload hotel image.");
         throw error;
       } finally {
         this.loading = false;
@@ -739,39 +752,32 @@ export const useManagerStore = defineStore("manager", {
 
     //update profile
     async updateProfile(formData) {
-  this.loading = true;
-  this.error = null;
+      this.loading = true;
+      this.error = null;
 
-  try {
-    const response = await api.post(
-      "/manager/me/profile",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      try {
+        const response = await api.post("/manager/me/profile", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        this.profile = response.data.user;
+
+        return response.data;
+      } catch (error) {
+        console.error(
+          "Update profile error:",
+          error.response?.data || error.message,
+        );
+
+        this.error = getErrorMessage(error, "Failed to update profile.");
+
+        throw error;
+      } finally {
+        this.loading = false;
       }
-    );
-
-    this.profile = response.data.user;
-
-    return response.data;
-  } catch (error) {
-    console.error(
-      "Update profile error:",
-      error.response?.data || error.message
-    );
-
-    this.error = getErrorMessage(
-      error,
-      "Failed to update profile."
-    );
-
-    throw error;
-  } finally {
-    this.loading = false;
-  }
-},
+    },
 
     /* Bookings */
     async getBookings(page = 1) {

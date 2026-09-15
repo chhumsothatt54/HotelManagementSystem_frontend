@@ -1,219 +1,249 @@
 <template>
-  <!-- Top bar -->
-  <div class="topbar bg-white">
-    <div>
-      <h1 class="page-title brand-serif">Rooms</h1>
-      <div class="page-subtitle">
-        Manage your account and property information
+  <div class="rooms-container p-4">
+    <!-- Topbar Section -->
+    <div class="topbar bg-white p-3 rounded-3 shadow-sm d-flex justify-content-between align-items-center mb-4 border">
+      <div>
+        <h1 class="page-title brand-serif h4 mb-1 text-dark fw-bold">Rooms</h1>
+        <div class="page-subtitle text-muted small">
+          Manage your account and property information
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-light position-relative rounded-circle p-2 shadow-sm border-0" type="button">
+          <i class="bi bi-bell text-secondary"></i>
+          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+        </button>
       </div>
     </div>
 
-    <div class="d-flex align-items-center gap-3">
-      <!-- Notification -->
-      <div class="icon-btn">
-        <i class="bi bi-bell"></i>
-        <span class="dot"></span>
-      </div>
-
-      <!-- User -->
-      <!-- <div class="user-chip">
-        <div class="avatar-circle">
-          {{ profileInitial }}
-        </div>
-
+    <!-- Main Content Header -->
+    <div class="page-content">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
         <div>
-          <div class="name">
-            {{ fullName }}
+          <div class="badge bg-emerald-subtle text-emerald text-uppercase fw-bold mb-1 px-2 py-1" style="font-size: 0.725rem; letter-spacing: 0.5px;">
+            ROOM MANAGEMENT
           </div>
+          <h2 class="fw-bold text-dark mb-1">Property Rooms</h2>
+          <p class="text-muted small mb-0">Manage individual rooms, layout specs, and their real-time availability.</p>
+        </div>
 
-          <div class="sub">
-            {{ hotelName }}
+        <!-- Add Room Button -->
+        <button
+          type="button"
+          class="btn btn-emerald d-flex align-items-center justify-content-center gap-2 px-3 py-2 shadow-sm fw-semibold"
+          @click="openAddModal"
+        >
+          <i class="bi bi-plus-lg fs-6"></i>
+          <span>Add Room</span>
+        </button>
+      </div>
+
+      <!-- Stats Summary Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+          <div class="card border-0 shadow-sm rounded-3 bg-white p-3">
+            <span class="text-muted micro-text fw-bold text-uppercase">Total Rooms</span>
+            <h3 class="fw-bold text-dark mb-0 mt-1">{{ rooms.length }}</h3>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card border-0 shadow-sm rounded-3 bg-white p-3 border-start border-4 border-success">
+            <span class="text-muted micro-text fw-bold text-uppercase">Available</span>
+            <h3 class="fw-bold text-success mb-0 mt-1">{{ countStatus('available') }}</h3>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card border-0 shadow-sm rounded-3 bg-white p-3 border-start border-4 border-warning">
+            <span class="text-muted micro-text fw-bold text-uppercase">Maintenance</span>
+            <h3 class="fw-bold text-warning mb-0 mt-1">{{ countStatus('maintenance') }}</h3>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card border-0 shadow-sm rounded-3 bg-white p-3 border-start border-4 border-secondary">
+            <span class="text-muted micro-text fw-bold text-uppercase">Inactive</span>
+            <h3 class="fw-bold text-secondary mb-0 mt-1">{{ countStatus('inactive') }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alert Messages -->
+      <div v-if="managerStore.error" class="alert alert-danger alert-dismissible fade show mb-4 shadow-sm" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ managerStore.error }}
+        <button type="button" class="btn-close" @click="managerStore.clearError?.()"></button>
+      </div>
+
+      <div v-if="successMessage" class="alert alert-success alert-dismissible fade show mb-4 shadow-sm" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> {{ successMessage }}
+        <button type="button" class="btn-close" @click="successMessage = ''"></button>
+      </div>
+
+      <!-- Data Table Card Wrapper -->
+      <div class="card border-0 shadow-sm rounded-3 bg-white overflow-hidden">
+        <!-- Filter & Search Bar -->
+        <div class="p-3 border-bottom bg-light d-flex flex-column flex-md-row gap-2 justify-content-between align-items-md-center">
+          <div class="input-group search-input-group style-search">
+            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+            <input v-model="searchQuery" type="text" class="form-control border-start-0" placeholder="Search room number..." />
+          </div>
+          <div class="d-flex gap-2">
+            <select v-model="statusFilter" class="form-select form-select-sm" style="width: 150px;">
+              <option value="">All Statuses</option>
+              <option value="available">Available</option>
+              <option value="maintenance">Maintenance</option>
+              <option value="inactive">Inactive</option>
+            </select>
           </div>
         </div>
 
-        <i class="bi bi-chevron-down text-muted small"></i>
-      </div> -->
-    </div>
-  </div>
-
-  <div class="page-content">
-    <!-- Section Title -->
-    <div
-      class="mb-1 text-uppercase text-emerald fw-bold"
-      style="font-size: 0.725rem; letter-spacing: 0.5px; color: var(--blue);"
-    >
-      ROOM MANAGEMENT
-    </div>
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="fw-bold mb-0" style="color: #1f2937;">Rooms</h2>
-      <button class="btn btn-emerald d-flex align-items-center gap-2" @click="openAddModal">
-        <i class="bi bi-plus-lg"></i> Add Room
-      </button>
-    </div>
-
-    <p class="text-muted mb-4" style="font-size: 0.875rem;">
-      Manage individual rooms and their availability.
-    </p>
-
-    <!-- Error Alert -->
-    <div
-      v-if="managerStore.error"
-      class="alert alert-danger alert-dismissible fade show mb-4"
-      role="alert"
-    >
-      {{ managerStore.error }}
-      <button type="button" class="btn-close" @click="managerStore.clearError?.()"></button>
-    </div>
-
-    <!-- Success Alert -->
-    <div
-      v-if="successMessage"
-      class="alert alert-success alert-dismissible fade show mb-4"
-      role="alert"
-    >
-      {{ successMessage }}
-      <button type="button" class="btn-close" @click="successMessage = ''"></button>
-    </div>
-
-    <!-- Loading State -->
-    <div v-if="loading" class="text-center py-5">
-      <div class="spinner-border text-emerald" role="status"></div>
-      <p class="text-muted mt-2">Loading rooms data...</p>
-    </div>
-
-    <!-- Data Table Card Container -->
-    <div v-else class="card-table-wrapper border rounded bg-white shadow-sm">
-      <div class="table-responsive">
-        <table class="table align-middle mb-0">
-          <thead>
-            <tr class="text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">
-              <th scope="col" style="width: 15%;">ROOM</th>
-              <th scope="col" style="width: 20%;">FLOOR</th>
-              <th scope="col" style="width: 25%;">ROOM TYPE</th>
-              <th scope="col" style="width: 25%;">STATUS</th>
-              <th scope="col" class="text-end" style="width: 15%;">ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="!rooms.length">
-              <td colspan="5" class="text-center py-4 text-muted">
-                No rooms found. Click "Add Room" to create one.
-              </td>
-            </tr>
-            <tr v-for="room in rooms" :key="room.id">
-              <td class="fw-bold">{{ room.room_number || room.number || room.name }}</td>
-              <td class="text-muted">Floor {{ room.floor || 1 }}</td>
-              <td class="text-muted">
-                {{ getRoomTypeName(room.room_type_id || room.type_id || room.room_type) }}
-              </td>
-              <td>
-                <span :class="getStatusBadgeClass(room.status)">
-                  {{ formatStatus(room.status) }}
-                </span>
-              </td>
-              <td class="text-end">
-                <button
-                  class="btn btn-icon-action me-1"
-                  title="Edit"
-                  @click="openEditModal(room)"
-                >
-                  <i class="bi bi-pencil text-success"></i>
-                </button>
-                <button
-                  class="btn btn-icon-action"
-                  title="Delete"
-                  @click="deleteRoom(room.id)"
-                >
-                  <i class="bi bi-trash text-danger"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Add/Edit Room Modal -->
-  <div
-    v-if="showModal"
-    class="modal fade show d-block"
-    tabindex="-1"
-    style="background-color: rgba(0,0,0,0.5);"
-  >
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title fw-bold">
-            {{ isEditing ? 'Edit Room' : 'Add Room' }}
-          </h5>
-          <button type="button" class="btn-close" @click="closeModal"></button>
+        <!-- Loading State -->
+        <div v-if="loading" class="text-center py-5">
+          <div class="spinner-border text-emerald" role="status"></div>
+          <p class="text-muted mt-2 small">Loading rooms data...</p>
         </div>
 
-        <form @submit.prevent="handleSubmit">
-          <div class="modal-body">
-            <div class="row g-3 mb-3">
-              <div class="col-6">
-                <label class="form-label fw-semibold small">Room Number</label>
-                <input
-                  v-model="form.room_number"
-                  type="text"
-                  class="form-control"
-                  placeholder="e.g. 101"
-                  required
-                />
-              </div>
-
-              <div class="col-6">
-                <label class="form-label fw-semibold small">Floor</label>
-                <input
-                  v-model.number="form.floor"
-                  type="number"
-                  min="1"
-                  class="form-control"
-                  required
-                />
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label fw-semibold small">Room Type</label>
-              <select v-model="form.room_type_id" class="form-select" required>
-                <option value="" disabled>Select room type</option>
-                <option
-                  v-for="type in roomTypes"
-                  :key="type.id"
-                  :value="type.id"
-                >
-                  {{ type.name }}
-                </option>
-              </select>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label fw-semibold small">Status</label>
-              <select v-model="form.status" class="form-select" required>
-                <option value="available">Available</option>
-                <!-- <option value="occupied">Occupied</option> -->
-                <option value="maintenance">Maintenance</option>
-                <option value="inactive">Inactive</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-light" @click="closeModal">
-              Cancel
-            </button>
-            <button type="submit" class="btn btn-emerald" :disabled="submitting">
-              <span v-if="submitting" class="spinner-border spinner-border-sm me-1"></span>
-              {{ submitting ? 'Saving...' : (isEditing ? 'Update Room' : 'Create Room') }}
-            </button>
-          </div>
-        </form>
+        <!-- Table Content -->
+        <div v-else class="table-responsive">
+          <table class="table align-middle mb-0 table-hover">
+            <thead class="bg-light border-bottom">
+              <tr class="text-uppercase text-secondary" style="font-size: 0.725rem; letter-spacing: 0.6px;">
+                <th scope="col" class="py-3 px-4">ROOM NUMBER</th>
+                <th scope="col" class="py-3">FLOOR</th>
+                <th scope="col" class="py-3">ROOM TYPE</th>
+                <th scope="col" class="py-3">STATUS</th>
+                <th scope="col" class="py-3 px-4 text-end">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="!filteredRooms.length">
+                <td colspan="5" class="text-center py-5 text-muted">
+                  <i class="bi bi-inbox display-6 d-block text-muted mb-2"></i>
+                  <span>No rooms found matching your criteria.</span>
+                </td>
+              </tr>
+              <tr v-for="room in filteredRooms" :key="room.id || room._id">
+                <td class="px-4 py-3">
+                  <div class="d-flex align-items-center">
+                    <div class="room-icon-box me-3 rounded-2 d-flex align-items-center justify-content-center bg-light text-emerald fw-bold">
+                      <i class="bi bi-door-closed fs-5"></i>
+                    </div>
+                    <div>
+                      <span class="fw-bold text-dark d-block">Room {{ room.room_number || room.number || room.name }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-secondary fw-medium">Floor {{ room.floor || 1 }}</td>
+                <td>
+                  <span class="badge bg-light text-dark border fw-normal px-2 py-1">
+                    {{ getRoomTypeName(room.room_type_id || room.type_id || room.room_type) }}
+                  </span>
+                </td>
+                <td>
+                  <span :class="getStatusBadgeClass(room.status)">
+                    {{ formatStatus(room.status) }}
+                  </span>
+                </td>
+                <td class="text-end px-4">
+                  <button
+                    type="button"
+                    class="btn btn-icon me-1 text-secondary"
+                    title="Edit Room"
+                    @click="openEditModal(room)"
+                  >
+                    <i class="bi bi-pencil-square fs-6"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-icon text-danger"
+                    title="Delete Room"
+                    @click="deleteRoom(room.id || room._id)"
+                  >
+                    <i class="bi bi-trash3 fs-6"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
+
+    <!-- Custom Vue Teleport Modal -->
+    <Teleport to="body">
+      <div v-if="showModal" class="custom-modal-overlay" @click.self="closeModal">
+        <div class="custom-modal-dialog">
+          <div class="custom-modal-content">
+            <div class="modal-header px-4 py-3 bg-light border-bottom d-flex justify-content-between align-items-center">
+              <h5 class="modal-title fw-bold text-dark m-0">
+                {{ isEditing ? 'Edit Room Specification' : 'Add New Room' }}
+              </h5>
+              <button type="button" class="btn-close" @click="closeModal"></button>
+            </div>
+
+            <form @submit.prevent="handleSubmit">
+              <div class="modal-body p-4">
+                <div class="row g-3 mb-3">
+                  <div class="col-6">
+                    <label class="form-label fw-semibold small text-dark">Room Number</label>
+                    <input
+                      v-model="form.room_number"
+                      type="text"
+                      class="form-control"
+                      placeholder="e.g. 101"
+                      required
+                    />
+                  </div>
+
+                  <div class="col-6">
+                    <label class="form-label fw-semibold small text-dark">Floor</label>
+                    <input
+                      v-model.number="form.floor"
+                      type="number"
+                      min="1"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label fw-semibold small text-dark">Room Type</label>
+                  <select v-model="form.room_type_id" class="form-select" required>
+                    <option value="" disabled>Select room type</option>
+                    <option
+                      v-for="type in roomTypes"
+                      :key="type.id || type._id"
+                      :value="type.id || type._id"
+                    >
+                      {{ type.name }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label fw-semibold small text-dark">Current Status</label>
+                  <select v-model="form.status" class="form-select" required>
+                    <option value="available">Available</option>
+                    <option value="maintenance">Maintenance</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="modal-footer px-4 py-3 bg-light border-top d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-outline-secondary px-3" @click="closeModal">
+                  Cancel
+                </button>
+                <button type="submit" class="btn btn-emerald px-4" :disabled="submitting">
+                  <span v-if="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                  {{ submitting ? 'Saving...' : (isEditing ? 'Update Room' : 'Create Room') }}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -229,45 +259,69 @@ const showModal = ref(false)
 const isEditing = ref(false)
 const selectedRoomId = ref(null)
 const successMessage = ref('')
+const searchQuery = ref('')
+const statusFilter = ref('')
 
 const form = reactive({
   room_number: '',
   floor: 1,
   room_type_id: '',
-  status: 'Available'
+  status: 'available'
 })
 
 // Mapped Pinia Store Data
-const profile = computed(() => managerStore.profile || {})
-const hotel = computed(() => managerStore.hotel || {})
 const rooms = computed(() => managerStore.rooms || [])
 const roomTypes = computed(() => managerStore.roomTypes || [])
 
-const managerName = computed(() => {
-  if (profile.value.first_name || profile.value.last_name) {
-    return `${profile.value.first_name || ''} ${profile.value.last_name || ''}`.trim()
-  }
-  return 'Sokha Manager'
+const filteredRooms = computed(() => {
+  return rooms.value.filter((room) => {
+    const roomNum = String(room.room_number || room.number || room.name || '').toLowerCase()
+    const matchesSearch = roomNum.includes(searchQuery.value.toLowerCase())
+    const matchesStatus = statusFilter.value ? (room.status || '').toLowerCase() === statusFilter.value : true
+    return matchesSearch && matchesStatus
+  })
 })
 
-const userInitial = computed(() => {
-  return profile.value?.first_name?.charAt(0).toUpperCase() || 'M'
-})
+const countStatus = (statusKey) => {
+  return rooms.value.filter(r => (r.status || '').toLowerCase() === statusKey).length
+}
 
-const hotelName = computed(() => {
-  return hotel.value?.name || 'Mekong Riverside Hotel'
-})
+const openAddModal = () => {
+  isEditing.value = false
+  selectedRoomId.value = null
+  Object.assign(form, {
+    room_number: '',
+    floor: 1,
+    room_type_id: roomTypes.value[0]?.id || roomTypes.value[0]?._id || '',
+    status: 'available'
+  })
+  showModal.value = true
+}
 
-// Room type ID to Name Resolver
+const openEditModal = (room) => {
+  isEditing.value = true
+  selectedRoomId.value = room.id || room._id
+  Object.assign(form, {
+    room_number: room.room_number || room.number || room.name || '',
+    floor: room.floor || 1,
+    room_type_id: typeof room.room_type === 'object' ? (room.room_type?.id || room.room_type?._id) : (room.room_type_id || room.type_id || ''),
+    status: (room.status || 'available').toLowerCase()
+  })
+  showModal.value = true
+}
+
+const closeModal = () => {
+  showModal.value = false
+}
+
 const getRoomTypeName = (typeIdOrObject) => {
   if (typeof typeIdOrObject === 'object' && typeIdOrObject?.name) {
     return typeIdOrObject.name
   }
-  const match = roomTypes.value.find((t) => t.id === typeIdOrObject)
+  const match = roomTypes.value.find((t) => (t.id || t._id) === typeIdOrObject)
   return match ? match.name : typeIdOrObject || 'Standard'
 }
 
-// Status Formatting Helpers
 const formatStatus = (status) => {
   if (!status) return 'Available'
   return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()
@@ -282,43 +336,23 @@ const getStatusBadgeClass = (status) => {
   return 'badge bg-secondary-subtle text-secondary border border-secondary-subtle'
 }
 
-// Modal Handlers
-const openAddModal = () => {
-  isEditing.value = false
-  selectedRoomId.value = null
-  form.room_number = ''
-  form.floor = 1
-  form.room_type_id = roomTypes.value[0]?.id || ''
-  form.status = 'Available'
-  showModal.value = true
-}
-
-const openEditModal = (room) => {
-  isEditing.value = true
-  selectedRoomId.value = room.id
-  form.room_number = room.room_number || room.number || room.name
-  form.floor = room.floor || 1
-  form.room_type_id = typeof room.room_type === 'object' ? room.room_type?.id : (room.room_type_id || room.type_id || '')
-  form.status = formatStatus(room.status)
-  showModal.value = true
-}
-
-const closeModal = () => {
-  showModal.value = false
-}
-
-// Create & Edit Actions
 const handleSubmit = async () => {
   submitting.value = true
+  successMessage.value = ''
+  if (managerStore.clearError) managerStore.clearError()
+
+  const payload = { ...form }
+
   try {
     if (isEditing.value) {
-      await managerStore.updateRoom?.(selectedRoomId.value, { ...form })
+      await managerStore.updateRoom?.(selectedRoomId.value, payload)
       successMessage.value = 'Room updated successfully!'
     } else {
-      await managerStore.createRoom?.({ ...form })
+      await managerStore.createRoom?.(payload)
       successMessage.value = 'Room created successfully!'
     }
     closeModal()
+    if (managerStore.getRooms) await managerStore.getRooms()
   } catch (err) {
     console.error('Failed to save room:', err)
   } finally {
@@ -326,18 +360,18 @@ const handleSubmit = async () => {
   }
 }
 
-// Delete Action
 const deleteRoom = async (id) => {
   if (!confirm('Are you sure you want to delete this room?')) return
+  successMessage.value = ''
   try {
     await managerStore.deleteRoom?.(id)
     successMessage.value = 'Room deleted successfully.'
+    if (managerStore.getRooms) await managerStore.getRooms()
   } catch (err) {
     console.error('Failed to delete room:', err)
   }
 }
 
-// Initial Fetch
 onMounted(async () => {
   loading.value = true
   try {
@@ -356,26 +390,89 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-
-.btn-emerald:hover {
-  background-color: var(--primary-emerald, #10b981);
-  color: #ffffff;
-  border: none;
-}
+/* Theme & Emerald UI Colors */
 .btn-emerald {
   background-color: #059669;
   color: #ffffff;
+  border: none;
+  border-radius: 0.375rem;
 }
+
+.btn-emerald:hover {
+  background-color: #047857;
+  color: #ffffff;
+}
+
+.bg-emerald-subtle {
+  background-color: #d1fae5;
+}
+
 .text-emerald {
-  color: var(--primary-emerald, #10b981);
+  color: #059669;
 }
-.btn-icon-action {
+
+.btn-icon {
   background: transparent;
   border: none;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0.4rem;
   border-radius: 0.25rem;
+  transition: background-color 0.2s;
 }
-.btn-icon-action:hover {
+
+.btn-icon:hover {
   background-color: #f3f4f6;
+}
+
+.room-icon-box {
+  width: 38px;
+  height: 38px;
+}
+
+.micro-text {
+  font-size: 0.725rem;
+}
+
+.style-search {
+  max-width: 280px;
+}
+
+/* Custom Vue Teleport Modal Overlay */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+.custom-modal-dialog {
+  width: 100%;
+  max-width: 500px;
+  margin: 1rem;
+}
+
+.custom-modal-content {
+  background: #ffffff;
+  border-radius: 0.625rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: modalScale 0.2s ease-out;
+}
+
+@keyframes modalScale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 </style>
