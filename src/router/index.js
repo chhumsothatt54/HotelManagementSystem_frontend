@@ -15,6 +15,7 @@ import BookingdetailView from "@/views/customer/BookingdetailView.vue";
 import PaymentView from "@/views/customer/PaymentView.vue";
 import ContactView from "@/views/customer/ContactView.vue";
 import AboutView from "@/views/customer/AboutView.vue";
+import Cus_ProfileView from "@/views/customer/Cus_ProfileView.vue";
 
 // Manager Views
 import ProfileView from "@/views/manager/ProfileView.vue";
@@ -27,22 +28,13 @@ import PricingView from "@/views/manager/PricingView.vue";
 import RevenView from "@/views/manager/RevenView.vue";
 import OccupancyView from "@/views/manager/OccupancyView.vue";
 import BookingsView from "@/views/manager/BookingsView.vue";
-import ConnectAmenityView from '@/views/manager/ConnectAmenityView.vue'
+import ConnectAmenityView from '@/views/manager/ConnectAmenityView.vue';
+import MangeHotelView from "@/views/manager/MangeHotelView.vue";
 
 // Admin Views
 import DashboardAdmin from "@/views/DashboardAdmin.vue";
 import DashAdView from "@/views/admin/DashAdView.vue";
 import UserView from "@/views/admin/UserView.vue";
-
-// Auth Views
-import LoginView from "@/views/auth/LoginView.vue";
-import RegisterView from "@/views/auth/RegisterView.vue";
-import ForgotPasswordView from "@/views/auth/ForgotPasswordView.vue";
-import GoogleCallbackView from "@/views/GoogleCallbackView.vue"; // 🟢 ថែម Import ត្រង់នេះ
-
-import { useAuthStore } from "@/stores/auth.js";
-import InputOtp from "@/views/auth/InputOtp.vue";
-import ResetPasswordView from "@/views/auth/ResetPasswordView.vue";
 import HotelMagerView from "@/views/admin/HotelMagerView.vue";
 import HotelView from "@/views/admin/HotelView.vue";
 import ReviewView from "@/views/admin/ReviewView.vue";
@@ -54,10 +46,17 @@ import Ad_PaymentView from "@/views/admin/Ad_PaymentView.vue";
 import Ad_RevenueReportView from "@/views/admin/Ad_RevenueReportView.vue";
 import Ad_OccupancyReport from "@/views/admin/Ad_OccupancyReport.vue";
 import Ad_ProfileView from "@/views/admin/Ad_ProfileView.vue";
-import ChangePasswordView from "@/views/auth/ChangePasswordView.vue";
-import MangeHotelView from "@/views/manager/MangeHotelView.vue";
-import Cus_ProfileView from "@/views/customer/cus_ProfileView.vue";
 
+// Auth Views
+import LoginView from "@/views/auth/LoginView.vue";
+import RegisterView from "@/views/auth/RegisterView.vue";
+import ForgotPasswordView from "@/views/auth/ForgotPasswordView.vue";
+import GoogleCallbackView from "@/views/GoogleCallbackView.vue";
+import InputOtp from "@/views/auth/InputOtp.vue";
+import ResetPasswordView from "@/views/auth/ResetPasswordView.vue";
+import ChangePasswordView from "@/views/auth/ChangePasswordView.vue";
+
+import { useAuthStore } from "@/stores/auth.js";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -77,7 +76,7 @@ const router = createRouter({
       component: LoginView,
     },
     {
-      path: "/auth/google/callback", // 🟢 ថែម Google Callback Route ត្រង់នេះ (Public)
+      path: "/auth/google/callback",
       name: "google-callback",
       component: GoogleCallbackView,
     },
@@ -91,7 +90,6 @@ const router = createRouter({
       name: "resend-password",
       component: ResetPasswordView,
     },
-
     {
       path: "/change-password",
       name: "change-password",
@@ -117,18 +115,15 @@ const router = createRouter({
       name: "about",
       component: AboutView,
     },
-    
 
     // =============================
     // Demo Routes
     // =============================
-
     {
       path: "/demomg",
       name: "demo-manager",
       component: DemoMg,
     },
-
     {
       path: "/demoadmin",
       name: "demo-admin",
@@ -146,12 +141,12 @@ const router = createRouter({
     {
       path: "/booking/:id?",
       name: "customer-booking",
-      component: BookingView, // 🟢 ទំព័រ Form បំពេញការកក់ (Checkout)
+      component: BookingView,
     },
     {
       path: "/booking-detail",
       name: "customer-booking-detail",
-      component: BookingdetailView, // 🟢 ទំព័រ Table ប្រវត្តិការកក់
+      component: BookingdetailView,
     },
     {
       path: "/payment",
@@ -167,21 +162,6 @@ const router = createRouter({
         roles: ['customer']
       },
     },
-
-    // =============================
-    // Demo Routes
-    // =============================
-    {
-      path: "/demomg",
-      name: "demo-manager",
-      component: DemoMg,
-    },
-    {
-      path: "/demoadmin",
-      name: "demo-admin",
-      component: DemoAdmin,
-    },
-    
 
     // =============================
     // Admin Routes
@@ -257,7 +237,7 @@ const router = createRouter({
         {
           path: "ad-amenity",
           name: "ad-amenity",
-          component:Ad_AmenityView,
+          component: Ad_AmenityView,
           meta: {
             requireAuth: true,
             roles: ["admin"],
@@ -454,8 +434,6 @@ const router = createRouter({
             roles: ["hotel_manager"],
           },
         },
-        
-        
       ],
     },
   ],

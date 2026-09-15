@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="booking-page bg-light min-vh-100">
     <!-- NAVBAR -->
     <NavbarView />
 
@@ -7,13 +7,13 @@
       <!-- HEADER -->
       <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
-          <h2 class="section-title mb-1">My Bookings</h2>
-          <p class="section-sub mb-0">View and manage your hotel reservation history</p>
+          <h2 class="section-title fw-bold text-dark mb-1">My Bookings</h2>
+          <p class="section-sub text-muted small mb-0">View and manage your hotel reservation history</p>
         </div>
 
         <!-- SEARCH & FILTER -->
         <div class="d-flex gap-2 flex-wrap">
-          <select class="form-select form-select-sm status-filter" v-model="statusFilter">
+          <select class="form-select form-select-sm status-filter shadow-sm" v-model="statusFilter">
             <option value="ALL">All Status</option>
             <option value="Confirmed">Confirmed</option>
             <option value="Pending">Pending</option>
@@ -24,18 +24,18 @@
       </div>
 
       <!-- BOOKINGS TABLE CARD -->
-      <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
         <div class="table-responsive">
           <table class="table table-hover align-middle mb-0 custom-table">
             <thead>
               <tr>
-                <th scope="col">Booking ID</th>
+                <th scope="col" class="ps-4">Booking ID</th>
                 <th scope="col">Hotel & Room</th>
                 <th scope="col">Dates</th>
                 <th scope="col">Guests</th>
                 <th scope="col">Total Price</th>
                 <th scope="col">Status</th>
-                <th scope="col" class="text-end">Actions</th>
+                <th scope="col" class="text-end pe-4">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -43,51 +43,51 @@
               <tr v-if="filteredBookings.length === 0">
                 <td colspan="7" class="text-center py-5 text-muted">
                   <div class="fs-1 mb-2">🏨</div>
-                  <p class="mb-0 fw-medium">No booking records found.</p>
+                  <p class="mb-0 fw-medium text-dark">No booking records found.</p>
                 </td>
               </tr>
 
               <!-- BOOKING ROW -->
-              <tr v-for="b in filteredBookings" :key="b.id">
-                <td class="fw-bold text-brand">
+              <tr v-for="b in filteredBookings" :key="b.id" class="booking-row">
+                <td class="ps-4 fw-bold text-brand">
                   #{{ b.id }}
                 </td>
                 <td>
                   <div class="d-flex align-items-center gap-3">
-                    <img :src="getHotelImage(b)" :alt="b.hotel?.name || 'Hotel'" class="hotel-thumb rounded-3" />
+                    <img :src="getHotelImage(b)" :alt="b.hotel?.name || 'Hotel'" class="hotel-thumb rounded-3 shadow-sm" />
                     <div>
-                      <div class="fw-bold text-dark">{{ b.hotel?.name || 'Unknown Hotel' }}</div>
+                      <div class="fw-bold text-dark text-truncate" style="max-width: 200px;">{{ b.hotel?.name || 'Unknown Hotel' }}</div>
                       <div class="small text-muted">{{ b.room?.roomType?.name || 'Standard Room' }}</div>
                     </div>
                   </div>
                 </td>
                 <td>
-                  <div class="small font-monospace">
-                    <div><strong>In:</strong> {{ formatDate(b.check_in) }}</div>
-                    <div><strong>Out:</strong> {{ formatDate(b.check_out) }}</div>
+                  <div class="date-box p-2 rounded-3 bg-light border">
+                    <div class="small text-secondary"><strong>In:</strong> {{ formatDate(b.check_in) }}</div>
+                    <div class="small text-secondary"><strong>Out:</strong> {{ formatDate(b.check_out) }}</div>
                   </div>
                 </td>
                 <td>
-                  <span class="badge bg-light text-dark border">
+                  <span class="badge bg-light text-dark border px-2 py-1 rounded-2">
                     👤 {{ b.total_guests || 1 }} Guest(s)
                   </span>
                 </td>
                 <td>
-                  <span class="fw-bold text-success">${{ b.total_amount }}</span>
+                  <span class="fw-bold text-emerald fs-6">${{ b.total_amount }}</span>
                 </td>
                 <td>
                   <span class="badge status-badge" :class="getStatusClass(b.status)">
                     ● {{ formatStatus(b.status) }}
                   </span>
                 </td>
-                <td class="text-end">
+                <td class="text-end pe-4">
                   <div class="dropdown">
-                    <button class="btn btn-light btn-sm rounded-circle icon-btn" type="button" data-bs-toggle="dropdown">
+                    <button class="btn btn-light btn-sm rounded-circle icon-btn shadow-sm" type="button" data-bs-toggle="dropdown">
                       ⋮
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
+                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow rounded-3">
                       <li v-if="b.status === 'confirmed' || b.status === 'pending'">
-                        <button class="dropdown-menu-item dropdown-item text-danger" @click="handleCancel(b.id)" :disabled="customerStore.loading">
+                        <button class="dropdown-menu-item dropdown-item text-danger py-2" @click="handleCancel(b.id)" :disabled="customerStore.loading">
                           ❌ Cancel Booking
                         </button>
                       </li>
@@ -193,54 +193,82 @@ async function handleCancel(id) {
   color: #087F68;
 }
 
-.search-input, .status-filter {
-  min-width: 180px;
-  border-color: #E1E9E5;
-  border-radius: 8px;
+.text-emerald {
+  color: #0d9488;
 }
 
-.search-input:focus, .status-filter:focus {
+.status-filter {
+  min-width: 170px;
+  border-color: #E2E8F0;
+  border-radius: 10px;
+  padding: 0.5rem 0.8rem;
+  background-color: #ffffff;
+}
+
+.status-filter:focus {
   border-color: #087F68;
-  box-shadow: 0 0 0 3px #E8F6F2;
+  box-shadow: 0 0 0 3px rgba(8, 127, 104, 0.15);
 }
 
 .custom-table {
-  font-size: 0.92rem;
+  font-size: 0.9rem;
 }
 
 .custom-table thead th {
-  background-color: #F8FAF9;
-  color: #063B32;
+  background-color: #F8FAFC;
+  color: #475569;
   font-weight: 600;
-  padding: 1rem;
-  border-bottom: 1px solid #E1E9E5;
+  padding: 1.1rem 1rem;
+  border-bottom: 1px solid #E2E8F0;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
 }
 
 .custom-table tbody td {
   padding: 1rem;
-  border-bottom: 1px solid #EEF2F0;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.booking-row {
+  transition: background-color 0.15s ease-in-out;
+}
+
+.booking-row:hover {
+  background-color: #F8FAF9 !important;
 }
 
 .hotel-thumb {
-  width: 52px;
-  height: 52px;
+  width: 54px;
+  height: 54px;
   object-fit: cover;
 }
 
+.date-box {
+  min-width: 135px;
+}
+
 .status-badge {
-  padding: 0.4em 0.75em;
+  padding: 0.45em 0.8em;
   font-weight: 600;
   border-radius: 20px;
   font-size: 0.78rem;
 }
 
 .icon-btn {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   padding: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  background-color: #F1F5F9;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+  background-color: #E2E8F0;
 }
 
 .dropdown-menu-item {
