@@ -45,7 +45,7 @@
                                 </td>
                                 <td class="text-secondary">{{ formatDate(booking.check_in_date || booking.check_in) }}</td>
                                 <td class="text-secondary">{{ formatDate(booking.check_out_date || booking.check_out) }}</td>
-                                <td class="fw-bold text-success">${{ booking.total_price || booking.amount }}</td>
+                                <td class="fw-bold text-success">${{ booking.total_amount || booking.total_price || booking.amount }}</td>
                                 <td>
                                     <span class="status-badge" :class="booking.status">
                                         {{ booking.status }}

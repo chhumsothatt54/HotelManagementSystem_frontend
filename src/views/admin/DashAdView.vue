@@ -92,18 +92,20 @@
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody v-if="admin.dashboard?.data?.pending_hotels_list?.length">
-                        <tr v-for="hotel in admin.dashboard.data.pending_hotels_list" :key="hotel.id">
-                            <td class="guest-name">{{ hotel.name }}</td>
-                            <td>{{ hotel.manager?.name || 'N/A' }}</td>
-                            <td>{{ hotel.address || hotel.location || 'N/A' }}</td>
-                            <td>{{ hotel.rooms_count ?? 0 }}</td>
-                            <td>
-                                <span class="badge-status badge-pending">
-                                    {{ hotel.status }}
-                                </span>
-                            </td>
-                        </tr>
+                    <tbody v-if="admin.dashboard?.data?.pending_hotels_list">
+                        <template v-for="(hotel, index) in admin.dashboard.data.pending_hotels_list" :key="hotel.id">
+                            <tr v-if="index < 5">
+                                <td class="guest-name">{{ hotel.name }}</td>
+                                <td>{{ hotel.manager?.name || 'N/A' }}</td>
+                                <td>{{ hotel.address || hotel.location || 'N/A' }}</td>
+                                <td>{{ hotel.rooms_count ?? 0 }}</td>
+                                <td>
+                                    <span class="badge-status badge-pending">
+                                        {{ hotel.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </template>
                     </tbody>
                 </table>
                 <div 

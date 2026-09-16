@@ -2,7 +2,9 @@
   <nav class="navbar navbar-expand-lg sticky-top py-3 custom-glass-navbar">
     <div class="container">
       <RouterLink to="/" class="navbar-brand navbar-brand-custom d-flex align-items-center gap-2">
-        <div class="brand-logo-mark">A</div>
+        <div class="brand-logo-mark overflow-hidden border-0 p-0" style="background: transparent; box-shadow: none;">
+          <img src="@/assets/image/hotel_logo.jpg" alt="logo" class="w-100 h-100 object-fit-cover">
+        </div>
         <span class="brand-text">Angkor<span class="dot">Stay</span></span>
       </RouterLink>
 

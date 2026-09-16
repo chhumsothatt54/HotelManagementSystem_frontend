@@ -4,15 +4,10 @@
     <RouterLink to="/" class="brand-box">
       <div class="brand-logo">
         <img
-          v-if="hotelImageUrl"
-          :src="hotelImageUrl"
-          :alt="hotelName"
-          class="hotel-logo-image"
+          src="@/assets/image/hotel_logo.jpg"
+          alt="AngkorStay"
+          class="hotel-logo-image w-100 h-100 object-fit-cover"
         />
-
-        <span v-else>
-          {{ hotelInitial }}
-        </span>
       </div>
 
       <div class="brand-text">
