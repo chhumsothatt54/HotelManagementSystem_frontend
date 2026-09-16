@@ -65,6 +65,22 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
+  async function registermg(name, phone, email, password, password_confirmation) {
+    try {
+      const response = await api.post("/auth/register-mg", {
+        name,
+        phone,
+        email,
+        password,
+        password_confirmation,
+      });
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async function forgotPassword(email) {
     try {
       let res = await api.post("/auth/forgot-password", {
@@ -169,6 +185,7 @@ export const useAuthStore = defineStore("auth", () => {
     getRoleDashboard,
     logout,
     register,
+    registermg,
     forgotPassword,
     confirmOtp,
     resetPassword,

@@ -71,6 +71,34 @@
           </p>
         </div>
 
+        <!-- Role Selection -->
+        <div class="form-group mb-4">
+          <label>I want to register as a:</label>
+          <div class="role-options">
+            <div 
+              class="role-card" 
+              :class="{ selected: form.role === 'customer' }"
+              @click="form.role = 'customer'"
+            >
+              <div class="role-icon">
+                <i class="bi bi-person"></i>
+              </div>
+              <div class="ms-2">Customer</div>
+            </div>
+            
+            <div 
+              class="role-card" 
+              :class="{ selected: form.role === 'hotel_manager' }"
+              @click="form.role = 'hotel_manager'"
+            >
+              <div class="role-icon">
+                <i class="bi bi-building"></i>
+              </div>
+              <div class="ms-2">Hotel Manager</div>
+            </div>
+          </div>
+        </div>
+
         <!-- Name + Phone -->
         <div class="two-columns">
 
@@ -361,13 +389,23 @@ const confirmRegister = async () => {
 
     isLoading.value = true
 
-    await auth.register(
-      form.value.name,
-      form.value.phone,
-      form.value.email,
-      form.value.password,
-      form.value.confirmPassword
-    )
+    if (form.value.role === 'hotel_manager') {
+      await auth.registermg(
+        form.value.name,
+        form.value.phone,
+        form.value.email,
+        form.value.password,
+        form.value.confirmPassword
+      )
+    } else {
+      await auth.register(
+        form.value.name,
+        form.value.phone,
+        form.value.email,
+        form.value.password,
+        form.value.confirmPassword
+      )
+    }
 
     showConfirmModal.value = false
 

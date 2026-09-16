@@ -42,7 +42,7 @@
               <!-- EMPTY STATE -->
               <tr v-if="filteredBookings.length === 0">
                 <td colspan="7" class="text-center py-5 text-muted">
-                  <div class="fs-1 mb-2">🏨</div>
+                  <!-- <div class="fs-1 mb-2">🏨</div> -->
                   <p class="mb-0 fw-medium">No booking records found.</p>
                 </td>
               </tr>
