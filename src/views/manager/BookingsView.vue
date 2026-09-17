@@ -112,8 +112,8 @@
                                     >
                                         <option value="pending">Pending</option>
                                         <option value="confirmed">Confirmed</option>
-                                        <option value="checked-in">Checked-in</option>
-                                        <option value="checked-out">Checked-out</option>
+                                        <option value="checked_in">Checked-in</option>
+                                        <option value="checked_out">Checked-out</option>
                                         <option value="cancelled">Cancelled</option>
                                         <option value="rejected">Rejected</option>
                                     </select>
@@ -136,7 +136,7 @@ const managerStore = useManagerStore()
 const currentFilter = ref('All')
 const updatingId = ref(null)
 
-const filterOptions = ['All', 'Pending', 'Confirmed', 'Checked-in', 'Checked-out', 'Cancelled', 'Rejected']
+const filterOptions = ['All', 'Pending', 'Confirmed', 'Checked_in', 'Checked_out', 'Cancelled', 'Rejected']
 
 // Fetch ទិន្នន័យពី API នៅពេល Component Mount
 onMounted(async () => {
@@ -150,10 +150,25 @@ onMounted(async () => {
 // Dynamic Filter Bookings
 const filteredBookings = computed(() => {
     const list = managerStore.bookings || []
-    if (currentFilter.value === 'All') return list
 
-    const targetStatus = currentFilter.value.toLowerCase()
-    return list.filter(b => b.status?.toLowerCase() === targetStatus)
+    if (currentFilter.value === 'All') {
+        return list
+    }
+
+    const statusMap = {
+        'Pending': 'pending',
+        'Confirmed': 'confirmed',
+        'Checked-in': 'checked_in',
+        'Checked-out': 'checked_out',
+        'Cancelled': 'cancelled',
+        'Rejected': 'rejected'
+    }
+
+    const targetStatus = statusMap[currentFilter.value]
+
+    return list.filter(
+        booking => booking.status === targetStatus
+    )
 })
 
 const setFilter = (status) => {
@@ -175,7 +190,17 @@ const handleStatusChange = async (bookingId, newStatus) => {
 // Utility Helpers សម្រាប់ Styling
 const formatStatus = (status = '') => {
     if (!status) return ''
-    return status.charAt(0).toUpperCase() + status.slice(1)
+
+    const labels = {
+        pending: 'Pending',
+        confirmed: 'Confirmed',
+        checked_in: 'Checked-in',
+        checked_out: 'Checked-out',
+        cancelled: 'Cancelled',
+        rejected: 'Rejected'
+    }
+
+    return labels[status] || status
 }
 
 const getStatusClass = (status = '') => {

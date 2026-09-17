@@ -38,7 +38,7 @@
         <button 
           class="btn-emerald d-inline-flex align-items-center gap-2" 
           @click="exportCSV" 
-          :disabled="managerStore.loading || !confirmedBookings.length"
+          :disabled="managerStore.loading || !reportBookings.length"
         >
           <i class="bi bi-download"></i>
           <span>Export CSV</span>
@@ -96,7 +96,7 @@
                 <th scope="col" style="width: 15%;">CHECK-OUT</th>
                 <th scope="col" style="width: 15%;">STATUS</th>
                 <th scope="col" style="width: 11%;">AMOUNT</th>
-                <th scope="col" class="text-end" style="width: 12%;">ACTION</th>
+                <!-- <th scope="col" class="text-end" style="width: 12%;">ACTION</th> -->
               </tr>
             </thead>
             <tbody>
@@ -109,7 +109,7 @@
               </tr>
 
               <!-- Empty State -->
-              <tr v-else-if="confirmedBookings.length === 0">
+              <tr v-else-if="reportBookings.length === 0">
                 <td colspan="7" class="text-center py-5 text-muted">
                   <i class="bi bi-journal-x fs-2 d-block mb-2 text-secondary"></i>
                   No confirmed bookings found.
@@ -117,7 +117,7 @@
               </tr>
 
               <!-- Live Confirmed Data Rows -->
-              <tr v-else v-for="booking in confirmedBookings" :key="booking.id">
+              <tr v-else v-for="booking in reportBookings" :key="booking.id">
                 <td>
                   <div class="d-flex align-items-center gap-3">
                     <div 
@@ -136,12 +136,15 @@
                 <td class="text-muted">{{ formatDate(booking.check_in) }}</td>
                 <td class="text-muted">{{ formatDate(booking.check_out) }}</td>
                 <td>
-                  <span class="status-badge status-confirmed">
-                    Confirmed
+                  <span
+                    class="status-badge"
+                    :class="`status-${booking.status}`"
+                  >
+                    {{ formatStatus(booking.status) }}
                   </span>
                 </td>
                 <td class="fw-bold text-ink">${{ booking.total_amount }}</td>
-                <td class="text-end">
+                <!-- <td class="text-end">
                   <select 
                     class="action-select" 
                     :value="booking.status" 
@@ -150,12 +153,12 @@
                   >
                     <option value="pending">Pending</option>
                     <option value="confirmed">Confirmed</option>
-                    <option value="checked-in">Checked-in</option>
-                    <option value="checked-out">Checked-out</option>
+                    <option value="checked_in">Checked-in</option>
+                    <option value="checked_out">Checked-out</option>
                     <option value="cancelled">Cancelled</option>
                     <option value="rejected">Rejected</option>
                   </select>
-                </td>
+                </td> -->
               </tr>
             </tbody>
           </table>
@@ -189,10 +192,59 @@ onMounted(() => {
 })
 
 /* Filter exclusively confirmed bookings from real store data */
-const confirmedBookings = computed(() => {
+const reportBookings = computed(() => {
   const list = managerStore.bookings || []
-  return list.filter(b => b.status?.toLowerCase() === 'confirmed')
+
+  return list.filter((booking) => {
+    const status = booking.status?.toLowerCase()
+
+    // Only show confirmed and completed booking stages
+    const validStatus = [
+      'confirmed',
+      'checked_in',
+      'checked_out'
+    ].includes(status)
+
+    if (!validStatus) {
+      return false
+    }
+
+    // If no start/end date is selected, show all
+    if (!startDate.value && !endDate.value) {
+      return true
+    }
+
+    // Booking must have a check-in date
+    if (!booking.check_in) {
+      return false
+    }
+
+    // Get YYYY-MM-DD
+    const bookingDate = booking.check_in.substring(0, 10)
+
+    // Start Date
+    if (startDate.value && bookingDate < startDate.value) {
+      return false
+    }
+
+    // End Date
+    if (endDate.value && bookingDate > endDate.value) {
+      return false
+    }
+
+    return true
+  })
 })
+
+const formatStatus = (status = '') => {
+  const labels = {
+    confirmed: 'Confirmed',
+    checked_in: 'Checked-in',
+    checked_out: 'Checked-out'
+  }
+
+  return labels[status] || status
+}
 
 /* Status Update Handler */
 const handleStatusChange = async (bookingId, newStatus) => {
@@ -228,10 +280,10 @@ const formatDate = (dateString) => {
 
 /* CSV Exporter for Live Data */
 function exportCSV() {
-  if (!confirmedBookings.value.length) return;
+  if (!reportBookings.value.length) return;
 
   const headers = ["Guest Name,Room,Check-In,Check-Out,Status,Amount"];
-  const rows = confirmedBookings.value.map(b => 
+  const rows = reportBookings.value.map(b => 
     `"${b.guest_name || ''}","${b.room?.room_number || b.room_id || ''}","${b.check_in || ''}","${b.check_out || ''}","Confirmed",${b.total_amount || 0}`
   );
 
