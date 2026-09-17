@@ -1,8 +1,13 @@
 <template>
-    <div class="topbar bg-white px-5">
-        <div class="ps-4">
-            <div class="page-title">{{ title }}</div>
-            <div class="page-subtitle">{{ subtitle }}</div>
+    <div class="topbar">
+        <div class="d-flex align-items-center gap-3 ps-4">
+            <button class="icon-btn" @click="toggleSidebar" title="Toggle Sidebar">
+                <i class="bi bi-layout-sidebar"></i>
+            </button>
+            <div>
+                <div class="page-title">{{ title }}</div>
+                <div class="page-subtitle">{{ subtitle }}</div>
+            </div>
         </div>
         <div class="d-flex align-items-center gap-3 pe-4">
             <button class="icon-btn">
@@ -35,6 +40,15 @@ defineProps({
 
 const authStore = useAuthStore()
 
+const toggleSidebar = () => {
+    if (window.innerWidth <= 991) {
+        document.getElementById('sidebar')?.classList.toggle('show')
+    } else {
+        document.getElementById('sidebar')?.classList.toggle('collapsed')
+        document.getElementById('main')?.classList.toggle('expanded')
+    }
+}
+
 onMounted(async () => {
     if (!authStore.user) {
         await authStore.getMe()
@@ -63,13 +77,6 @@ const userInitial = computed(() => {
 </script>
 
 <style scoped>
-.topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 0;
-    border-bottom: 1px solid #eef2f0;
-}
 .page-title {
     font-size: 1.25rem;
     font-weight: 700;

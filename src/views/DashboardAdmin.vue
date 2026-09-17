@@ -602,9 +602,24 @@ table.bookings tr:last-child td {
 
 @media (max-width: 991px) {
     #sidebar {
-        position: static;
-        width: 100%;
-        min-height: auto;
+        position: fixed;
+        left: -100%;
+        top: 0;
+        width: 260px;
+        height: 100vh;
+        z-index: 1050;
+        transition: left 0.3s ease;
+        padding: 1.25rem 1rem;
+    }
+    
+    #sidebar.show {
+        left: 0;
+    }
+
+    #sidebar.collapsed .brand-text,
+    #sidebar.collapsed .link-text,
+    #sidebar.collapsed .nav-section-label {
+        display: block; /* Override desktop collapse behavior if it gets applied */
     }
 
     #main,

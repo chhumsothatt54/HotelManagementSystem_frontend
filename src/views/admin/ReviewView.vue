@@ -97,27 +97,10 @@ const reviewList = computed(() => {
     const data = adminStore.reviews;
     if (!data) return [];
     
-    // Recursive search for the first array in the object
-    const findArray = (obj) => {
-        if (Array.isArray(obj)) return obj;
-        if (obj && typeof obj === 'object') {
-            if (obj.data && Array.isArray(obj.data)) return obj.data;
-            if (obj.reviews && Array.isArray(obj.reviews)) return obj.reviews;
-            for (const key in obj) {
-                if (Array.isArray(obj[key])) return obj[key];
-            }
-            // If we still haven't found an array, let's look deeper
-            for (const key in obj) {
-                if (typeof obj[key] === 'object' && obj[key] !== null) {
-                    const deep = findArray(obj[key]);
-                    if (deep && deep.length > 0) return deep;
-                }
-            }
-        }
-        return [];
-    };
-    
-    return findArray(data);
+    if (Array.isArray(data)) return data;
+    if (Array.isArray(data.data)) return data.data;
+    if (Array.isArray(data.reviews)) return data.reviews;
+    return [];
 });
 
 const changeStatus = async (id, status) => {
