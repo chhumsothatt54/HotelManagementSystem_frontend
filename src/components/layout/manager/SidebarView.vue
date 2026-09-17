@@ -146,7 +146,7 @@
       <!-- INSIGHTS -->
       <div class="nav-section-label">INSIGHTS</div>
 
-      <RouterLink
+      <!-- <RouterLink
         to="/manager/revenue"
         class="sidebar-link"
         active-class="active"
@@ -162,10 +162,10 @@
       >
         <i class="bi bi-pie-chart"></i>
         <span class="link-text"> Occupancy </span>
-      </RouterLink>
+      </RouterLink> -->
 
       <RouterLink
-        to="/manager/booking-reports"
+        to="/manager/BookingReport"
         class="sidebar-link"
         active-class="active"
       >
@@ -174,7 +174,7 @@
       </RouterLink>
 
       <RouterLink
-        to="/manager/revenue-reports"
+        to="/manager/RevenueReport"
         class="sidebar-link"
         active-class="active"
       >

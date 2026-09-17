@@ -14,25 +14,6 @@
         <i class="bi bi-bell"></i>
         <span class="dot"></span>
       </div>
-
-      <!-- User -->
-      <!-- <div class="user-chip">
-        <div class="avatar-circle">
-          {{ profileInitial }}
-        </div>
-
-        <div>
-          <div class="name">
-            {{ fullName }}
-          </div>
-
-          <div class="sub">
-            {{ hotelName }}
-          </div>
-        </div>
-
-        <i class="bi bi-chevron-down text-muted small"></i>
-      </div> -->
     </div>
   </div>
 
@@ -225,51 +206,7 @@
           <!-- ========================= -->
           <!-- HOTEL INFORMATION -->
           <!-- ========================= -->
-          <div class="col-12">
-            <div class="card-panel">
-              <h2>Hotel Information</h2>
-
-              <p class="panel-desc">Information about your managed property.</p>
-
-              <div class="row g-3">
-                <!-- Hotel Name -->
-                <div class="col-md-6">
-                  <label class="form-label"> Hotel Name </label>
-
-                  <input
-                    :value="hotelName"
-                    type="text"
-                    class="form-control"
-                    disabled
-                  />
-                </div>
-
-                <!-- Hotel ID -->
-                <div class="col-md-6">
-                  <label class="form-label"> Hotel ID </label>
-
-                  <input
-                    :value="hotel?.id || 'N/A'"
-                    type="text"
-                    class="form-control"
-                    disabled
-                  />
-                </div>
-
-                <!-- Address -->
-                <div class="col-md-12">
-                  <label class="form-label"> Address </label>
-
-                  <input
-                    :value="hotel?.address || 'No address available'"
-                    type="text"
-                    class="form-control"
-                    disabled
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+          
 
           <!-- ========================= -->
           <!-- SECURITY -->

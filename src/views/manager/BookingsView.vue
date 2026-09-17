@@ -220,7 +220,7 @@ const formatDate = (dateString) => {
     .filter-btn {
       border: 1px solid #e5e7eb;
       background-color: #ffffff;
-      color: #4b5563;
+      color: #087F68;
       border-radius: 20px;
       padding: 0.35rem 1rem;
       font-size: 0.8125rem;
@@ -229,12 +229,12 @@ const formatDate = (dateString) => {
     }
 
     .filter-btn:hover {
-      background-color: #f9fafb;
-      color: #111827;
+      background-color: #087F68;
+      color: #112711;
     }
 
     .filter-btn.active {
-      background-color: var(--primary-emerald);
+      background-color: #087F68;
       color: #ffffff;
       border-color: var(--primary-emerald);
     }

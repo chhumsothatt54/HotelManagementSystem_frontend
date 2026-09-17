@@ -57,6 +57,8 @@ import ResetPasswordView from "@/views/auth/ResetPasswordView.vue";
 import ChangePasswordView from "@/views/auth/ChangePasswordView.vue";
 
 import { useAuthStore } from "@/stores/auth.js";
+import BookingReport from "@/views/manager/BookingReport.vue";
+import RevenueReport from "@/views/manager/RevenueReport.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -431,7 +433,25 @@ const router = createRouter({
           component: OccupancyView,
           meta: {
             requireAuth: true,
+            roles: ["hotel_manager"],    
+          },
+        },
+          {
+          path: "RevenueReport",
+          name: "manager-revenue-report",
+          component: RevenueReport,
+          meta: {
+            requireAuth: true,
             roles: ["hotel_manager"],
+          },
+        },
+        {
+          path: "BookingReport",
+          name: "manager-occupancy-report",
+          component: BookingReport,
+          meta: {
+            requireAuth: true,
+            roles: ["hotel_manager"],    
           },
         },
       ],

@@ -1,32 +1,30 @@
 <template>
   <div class="amenity-page">
-
     <!-- Top bar -->
-  <div class="topbar bg-white">
-    <div>
-      <h1 class="page-title brand-serif">Booking</h1>
-      <div class="page-subtitle">
-        Manage your account and property information
-      </div>
-    </div>
-
-    <div class="d-flex align-items-center gap-3">
-      <!-- Notification -->
-      <div class="icon-btn">
-        <i class="bi bi-bell"></i>
-        <span class="dot"></span>
+    <div class="topbar bg-white">
+      <div>
+        <h1 class="page-title brand-serif">Booking</h1>
+        <div class="page-subtitle">
+          Manage your account and property information
+        </div>
       </div>
 
-      <button class="add-btn"  @click="openCreateModal">
-        <i class="bi bi-plus-lg"></i>
-        Add Amenity
-      </button>
+      <div class="d-flex align-items-center gap-3">
+        <!-- Notification -->
+        <div class="icon-btn">
+          <i class="bi bi-bell"></i>
+          <span class="dot"></span>
+        </div>
+
+        <button class="add-btn" @click="openCreateModal">
+          <i class="bi bi-plus-lg"></i>
+          Add Amenity
+        </button>
+      </div>
     </div>
-  </div>
 
     <!-- Content -->
     <div class="content">
-
       <!-- Loading -->
       <div v-if="manager.loading" class="loading-box">
         <div class="spinner"></div>
@@ -41,13 +39,10 @@
 
       <!-- Amenity Card -->
       <div v-else class="amenity-card">
-
         <div class="card-header">
           <div>
             <h2>Amenity List</h2>
-            <p>
-              Manage the amenities that can be assigned to rooms.
-            </p>
+            <p>Manage the amenities that can be assigned to rooms.</p>
           </div>
 
           <span class="count-badge">
@@ -56,19 +51,14 @@
         </div>
 
         <!-- Empty -->
-        <div
-          v-if="manager.amenityList.length === 0"
-          class="empty-state"
-        >
+        <div v-if="manager.amenityList.length === 0" class="empty-state">
           <div class="empty-icon">
             <i class="bi bi-stars"></i>
           </div>
 
           <h3>No amenities yet</h3>
 
-          <p>
-            Create your first amenity to use it with your rooms.
-          </p>
+          <p>Create your first amenity to use it with your rooms.</p>
 
           <button class="add-btn" @click="openCreateModal">
             <i class="bi bi-plus-lg"></i>
@@ -79,7 +69,6 @@
         <!-- Table -->
         <div v-else class="table-wrapper">
           <table class="amenity-table">
-
             <thead>
               <tr>
                 <th>#</th>
@@ -103,9 +92,7 @@
                 <td>
                   <div class="amenity-name">
                     <div class="amenity-icon">
-                      <i
-                        :class="amenity.icon || 'bi bi-stars'"
-                      ></i>
+                      <i :class="amenity.icon || 'bi bi-stars'"></i>
                     </div>
 
                     <span>{{ amenity.name }}</span>
@@ -114,28 +101,25 @@
 
                 <td>
                   <span class="icon-text">
-                    {{ amenity.icon || '—' }}
+                    {{ amenity.icon || "—" }}
                   </span>
                 </td>
 
                 <td class="description">
-                  {{ amenity.description || 'No description' }}
+                  {{ amenity.description || "No description" }}
                 </td>
 
                 <td>
                   <span
                     class="status"
-                    :class="amenity.status === 'active'
-                      ? 'active'
-                      : 'inactive'"
+                    :class="amenity.status === 'active' ? 'active' : 'inactive'"
                   >
-                    {{ amenity.status || 'active' }}
+                    {{ amenity.status || "active" }}
                   </span>
                 </td>
 
                 <td>
                   <div class="actions">
-
                     <button
                       class="action-btn edit"
                       title="Edit"
@@ -151,58 +135,39 @@
                     >
                       <i class="bi bi-trash3"></i>
                     </button>
-
                   </div>
                 </td>
-
               </tr>
             </tbody>
-
           </table>
         </div>
-
       </div>
     </div>
 
     <!-- Modal -->
-    <div
-      v-if="showModal"
-      class="modal-overlay"
-      @click.self="closeModal"
-    >
-
+    <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
       <div class="modal-card">
-
         <div class="modal-header">
-
           <div>
             <h2>
-              {{ editingAmenity
-                ? 'Edit Amenity'
-                : 'Create Amenity'
-              }}
+              {{ editingAmenity ? "Edit Amenity" : "Create Amenity" }}
             </h2>
 
             <p>
               {{
                 editingAmenity
-                  ? 'Update amenity information'
-                  : 'Add a new amenity to your hotel'
+                  ? "Update amenity information"
+                  : "Add a new amenity to your hotel"
               }}
             </p>
           </div>
 
-          <button
-            class="close-btn"
-            @click="closeModal"
-          >
+          <button class="close-btn" @click="closeModal">
             <i class="bi bi-x-lg"></i>
           </button>
-
         </div>
 
         <form @submit.prevent="saveAmenity">
-
           <!-- Name -->
           <div class="form-group">
             <label>
@@ -257,40 +222,21 @@
 
           <!-- Footer -->
           <div class="modal-footer">
-
-            <button
-              type="button"
-              class="cancel-btn"
-              @click="closeModal"
-            >
+            <button type="button" class="cancel-btn" @click="closeModal">
               Cancel
             </button>
 
-            <button
-              type="submit"
-              class="save-btn"
-              :disabled="manager.loading"
-            >
-              <i
-                v-if="manager.loading"
-                class="bi bi-arrow-repeat spin"
-              ></i>
+            <button type="submit" class="save-btn" :disabled="manager.loading">
+              <i v-if="manager.loading" class="bi bi-arrow-repeat spin"></i>
 
-              <i
-                v-else
-                class="bi bi-check-lg"
-              ></i>
+              <i v-else class="bi bi-check-lg"></i>
 
-              {{ editingAmenity ? 'Update Amenity' : 'Create Amenity' }}
+              {{ editingAmenity ? "Update Amenity" : "Create Amenity" }}
             </button>
-
           </div>
-
         </form>
-
       </div>
     </div>
-
   </div>
 </template>
 
@@ -358,10 +304,7 @@ async function saveAmenity() {
     };
 
     if (editingAmenity.value) {
-      await manager.updateAmenity(
-        editingAmenity.value.id,
-        payload
-      );
+      await manager.updateAmenity(editingAmenity.value.id, payload);
     } else {
       await manager.createAmenity(payload);
     }
@@ -373,7 +316,6 @@ async function saveAmenity() {
         ? "Amenity updated successfully."
         : "Amenity created successfully."
     );
-
   } catch (error) {
     console.error(error);
   }
@@ -390,7 +332,6 @@ async function deleteAmenity(amenity) {
     await manager.deleteAmenity(amenity.id);
 
     alert("Amenity deleted successfully.");
-
   } catch (error) {
     console.error(error);
   }
