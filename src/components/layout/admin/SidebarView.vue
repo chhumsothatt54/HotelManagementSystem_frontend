@@ -1,9 +1,7 @@
 <template>
 
     <aside id="sidebar">
-        <button class="sidebar-toggle" id="sidebarToggle" title="Collapse sidebar">
-            <i class="fa-solid fa-chevron-left"></i>
-        </button>
+
 
         <RouterLink to="/" class="brand-box text-decoration-none text-dark">
             <div class="brand-logo overflow-hidden border-0 p-0" style="background: transparent;">
