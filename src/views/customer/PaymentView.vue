@@ -37,7 +37,7 @@
                 v-for="p in paymentMethods" 
                 :key="p.id"
                 :class="{ active: selectedPayment === p.id }"
-                @click="selectedPayment = p.id"
+                @click="selectPaymentMethod(p.id)"
               >
                 <div class="d-flex align-items-center gap-3">
                   <div class="payment-icon-wrapper">
@@ -50,43 +50,6 @@
                 </div>
                 <div class="form-check custom-radio">
                   <input class="form-check-input" type="radio" :name="'paymentMethod'" :checked="selectedPayment === p.id" />
-                </div>
-              </div>
-            </div>
-
-            <!-- BAKONG QR SECTION -->
-            <div v-if="selectedPayment === 'bakong'" class="qr-container mt-4 animate-fade-in">
-              <div class="text-center p-4 qr-box-inner">
-                <div class="badge bg-teal-subtle text-teal mb-3 px-3 py-2 rounded-pill fw-semibold">
-                  🇰🇭 Bakong KHQR Secure Payment
-                </div>
-                
-                <div v-if="qrLoading" class="py-5">
-                  <div class="spinner-border text-teal" role="status"></div>
-                  <p class="text-muted small mt-2">Generating QR Code...</p>
-                </div>
-
-                <div v-else-if="qrImage" class="qr-content">
-                  <div class="qr-image-wrapper p-3 bg-white shadow-sm rounded-4 d-inline-block border">
-                    <img :src="qrImage" alt="Bakong KHQR" class="img-fluid rounded-2" style="width: 210px; height: 210px;" />
-                  </div>
-                  
-                  <div class="mt-3">
-                    <span class="text-muted small">Total Amount to Pay:</span>
-                    <h3 class="text-danger fw-bold mt-1">${{ booking.total_amount }}</h3>
-                  </div>
-
-                  <div class="alert alert-warning py-2 px-3 mt-3 d-inline-flex align-items-center gap-2 small rounded-pill">
-                    <span class="spinner-grow spinner-grow-sm text-warning" role="status"></span>
-                    <span>Waiting for payment scan...</span>
-                  </div>
-                  
-                  <!-- Demo Simulate Success Button -->
-                  <div class="mt-3">
-                    <button class="btn btn-outline-success btn-sm rounded-pill px-4 fw-semibold" @click="mockPaymentSuccess" type="button">
-                      <i class="bi bi-lightning-charge-fill me-1"></i> [Demo] Simulate Payment Success
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
@@ -146,11 +109,11 @@
 
             <button
               class="btn btn-teal-brand w-100 py-3 rounded-3 shadow-sm fw-bold"
-              :disabled="!selectedPayment || isSubmitting || (selectedPayment === 'bakong' && !qrImage)"
+              :disabled="!selectedPayment || isSubmitting"
               @click="confirmPayment"
             >
               <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-              {{ selectedPayment === 'bakong' ? 'Awaiting KHQR Payment...' : (selectedPayment === 'cash' ? 'Confirm Booking' : 'Please Select Payment Method') }}
+              {{ selectedPayment === 'bakong' ? 'Proceed with Bakong KHQR' : (selectedPayment === 'cash' ? 'Confirm Booking' : 'Please Select Payment Method') }}
             </button>
 
             <div class="security-note text-center mt-3">
@@ -162,17 +125,63 @@
       </div>
     </section>
 
+    <!-- BAKONG QR MODAL -->
+    <div class="modal fade" id="bakongQrModal" tabindex="-1" aria-labelledby="bakongQrModalLabel" aria-hidden="true" ref="qrModalRef">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title fw-bold text-dark" id="bakongQrModalLabel">Scan with Mobile Banking</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="stopPolling"></button>
+          </div>
+          <div class="modal-body text-center p-4">
+            <div class="badge bg-teal-subtle text-teal mb-3 px-3 py-2 rounded-pill fw-semibold">
+              🇰🇭 Bakong KHQR Secure Payment
+            </div>
+            
+            <div v-if="qrLoading" class="py-5">
+              <div class="spinner-border text-teal" role="status"></div>
+              <p class="text-muted small mt-2">Generating QR Code...</p>
+            </div>
+
+            <div v-else-if="qrImage" class="qr-content">
+              <div class="qr-image-wrapper p-3 bg-white shadow-sm rounded-4 d-inline-block border">
+                <img :src="qrImage" alt="Bakong KHQR" class="img-fluid rounded-2" style="width: 230px; height: 230px;" />
+              </div>
+              
+              <div class="mt-3">
+                <span class="text-muted small">Total Amount to Pay:</span>
+                <h3 class="text-danger fw-bold mt-1">${{ booking?.total_amount }}</h3>
+              </div>
+
+              <div class="alert alert-warning py-2 px-3 mt-3 d-inline-flex align-items-center gap-2 small rounded-pill">
+                <span class="spinner-grow spinner-grow-sm text-warning" role="status"></span>
+                <span>Waiting for payment scan...</span>
+              </div>
+              
+              <!-- Demo Simulate Success Button -->
+              <div class="mt-3">
+                <button class="btn btn-outline-success btn-sm rounded-pill px-4 fw-semibold" @click="mockPaymentSuccess" type="button">
+                  <i class="bi bi-lightning-charge-fill me-1"></i> [Demo] Simulate Payment Success
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <FooterView />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '@/api/http'
 import NavbarView from '@/components/layout/customer/NavbarView.vue'
 import FooterView from '@/components/layout/customer/FooterView.vue'
 import { useCustomerStore } from '@/stores/customer'
+import { Modal } from 'bootstrap'
 
 const route = useRoute()
 const router = useRouter()
@@ -182,9 +191,11 @@ const isLoading = ref(true)
 const isSubmitting = ref(false)
 const qrLoading = ref(false)
 const booking = ref(null)
-const selectedPayment = ref('bakong')
+const selectedPayment = ref(null) 
 const qrImage = ref('')
 let pollTimer = null
+let modalInstance = null
+const qrModalRef = ref(null)
 
 const paymentMethods = ref([
   { id: 'bakong', label: 'Bakong KHQR', desc: 'Scan and pay using any mobile banking app', icon: '🇰🇭' },
@@ -209,22 +220,36 @@ onMounted(async () => {
   } finally {
     isLoading.value = false
   }
-})
 
-watch(selectedPayment, async (newVal) => {
-  if (newVal === 'bakong') {
-    await generateBakongQR()
-    startPolling()
-  } else {
-    clearInterval(pollTimer)
-    qrImage.value = ''
+  if (qrModalRef.value) {
+    modalInstance = new Modal(qrModalRef.value)
   }
 })
+
+async function selectPaymentMethod(id) {
+  selectedPayment.value = id
+  if (id === 'bakong') {
+    await openQrModal()
+  } else {
+    stopPolling()
+  }
+}
+
+async function openQrModal() {
+  if (!qrImage.value) {
+    await generateBakongQR()
+  }
+  if (modalInstance) {
+    modalInstance.show()
+    startPolling()
+  }
+}
 
 async function generateBakongQR() {
   qrLoading.value = true
   try {
     const bookingId = route.query.bookingId
+    // កែប្រែពី api.get មកជា api.post វិញដើម្បីដំណោះស្រាយបញ្ហា Method Not Allowed (405)
     const response = await api.post(`/v1/booking/${bookingId}/generate-qr`)
 
     if (response.data.success) {
@@ -232,14 +257,14 @@ async function generateBakongQR() {
     }
   } catch (err) {
     console.error('Error generating QR:', err)
-    alert('Failed to generate QR Code!')
+    alert('Failed to generate QR Code from Bakong!')
   } finally {
     qrLoading.value = false
   }
 }
 
 function startPolling() {
-  clearInterval(pollTimer)
+  stopPolling()
   const bookingId = route.query.bookingId
 
   pollTimer = setInterval(async () => {
@@ -247,7 +272,8 @@ function startPolling() {
       const response = await api.get(`/v1/booking/${bookingId}/check-status`)
 
       if (response.data.status === 'paid') {
-        clearInterval(pollTimer)
+        stopPolling()
+        if (modalInstance) modalInstance.hide()
         alert('Payment successful!')
         router.push({ path: '/booking-detail', query: { id: bookingId } })
       }
@@ -257,12 +283,18 @@ function startPolling() {
   }, 3000)
 }
 
+function stopPolling() {
+  clearInterval(pollTimer)
+  pollTimer = null
+}
+
 async function mockPaymentSuccess() {
   try {
     const bookingId = route.query.bookingId
     await api.post(`/v1/booking/${bookingId}/mock-success`)
 
-    clearInterval(pollTimer)
+    stopPolling()
+    if (modalInstance) modalInstance.hide()
     alert('Payment successful (Demo)!')
     router.push({ path: '/booking-detail', query: { id: bookingId } })
   } catch (err) {
@@ -273,7 +305,9 @@ async function mockPaymentSuccess() {
 async function confirmPayment() {
   if (!selectedPayment.value || isSubmitting.value) return
   
-  if (selectedPayment.value === 'cash') {
+  if (selectedPayment.value === 'bakong') {
+    openQrModal()
+  } else if (selectedPayment.value === 'cash') {
     isSubmitting.value = true
     try {
       const bookingId = route.query.bookingId
@@ -296,7 +330,7 @@ async function confirmPayment() {
 }
 
 onBeforeUnmount(() => {
-  clearInterval(pollTimer)
+  stopPolling()
 })
 </script>
 
@@ -398,17 +432,6 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   border-radius: 0.65rem;
-}
-
-.qr-box-inner {
-  background: #f8fafc;
-  border: 2px dashed #cbd5e1;
-  border-radius: 1rem;
-}
-
-.cash-info-box {
-  background: #fffbeb;
-  border: 1px solid #fef3c7;
 }
 
 .summary-card {
