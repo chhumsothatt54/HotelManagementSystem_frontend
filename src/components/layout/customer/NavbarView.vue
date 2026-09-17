@@ -52,17 +52,17 @@
           </template>
 
           <template v-else>
-            <div class="dropdown">
-              <div class="profile-chip text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="dropdown profile-dropdown-container">
+              <a href="#" class="profile-chip text-decoration-none" @click.prevent="toggleDropdown" :aria-expanded="isDropdownOpen" role="button">
                 <div class="avatar-circle overflow-hidden border-0 p-0" v-if="authStore.user?.avatar">
                   <img :src="authStore.user.avatar.startsWith('http') ? authStore.user.avatar : `http://127.0.0.1:8000/storage/${authStore.user.avatar}`" class="w-100 h-100 object-fit-cover" alt="User Avatar">
                 </div>
                 <div class="avatar-circle" v-else>{{ userInitials }}</div>
                 <span class="fw-semibold small profile-name">{{ authStore.user?.name || 'Profile' }}</span>
                 <i class="bi bi-chevron-down ms-1 text-muted small-chevron"></i>
-              </div>
+              </a>
               
-              <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-3 rounded-4 custom-dropdown p-2">
+              <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-3 rounded-4 custom-dropdown p-2" :class="{ 'show': isDropdownOpen }">
                 <li class="dropdown-header">
                   <div class="fw-bold text-dark">{{ authStore.user?.name || 'User' }}</div>
                   <div class="text-muted small">{{ authStore.user?.email || 'Logged in' }}</div>
@@ -99,12 +99,34 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 
 const authStore = useAuthStore();
 const router = useRouter();
+
+const isDropdownOpen = ref(false);
+
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value;
+};
+
+const closeDropdown = (e) => {
+  if (!e.target.closest('.profile-dropdown-container')) {
+    isDropdownOpen.value = false;
+  } else if (e.target.closest('.dropdown-item')) {
+    isDropdownOpen.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('click', closeDropdown);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', closeDropdown);
+});
 
 const userInitials = computed(() => {
   if (authStore.user && authStore.user.name) {
