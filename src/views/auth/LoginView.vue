@@ -147,12 +147,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
-import axios from "axios";
 
 const router = useRouter();
+const route = useRoute();
 const auth = useAuthStore();
 
 const form = ref({
@@ -168,15 +168,30 @@ const errors = ref({
 const loginError = ref("");
 const loading = ref(false);
 
-async function loginWithGoogle() {
-  try {
-    const response = await axios.get("http://localhost:8000/api/v1/auth/google");
-    if (response.data.url) {
-      window.location.href = response.data.url;
+// ចាប់យក Token ពី URL ពេល Google Redirect មកវិញ រួចហៅទាញយក Profile របស់ User
+onMounted(async () => {
+  const token = route.query.token;
+  if (token) {
+    loading.value = true;
+    try {
+      localStorage.setItem("token", token);
+      auth.token = token;
+
+      // ហៅ getMe() ដើម្បីទាញយកព័ត៌មាន User មកដាក់ក្នុង Pinia store និង LocalStorage
+      await auth.getMe();
+
+      router.push(auth.getRoleDashboard());
+    } catch (err) {
+      console.error("Google login error:", err);
+      loginError.value = "Failed to process Google login data.";
+    } finally {
+      loading.value = false;
     }
-  } catch (err) {
-    loginError.value = "Failed to connect with Google. Please try again.";
   }
+});
+
+function loginWithGoogle() {
+  window.location.href = "http://localhost:8000/api/v1/auth/google";
 }
 
 function validateForm() {

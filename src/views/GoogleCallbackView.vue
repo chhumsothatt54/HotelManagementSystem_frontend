@@ -16,29 +16,25 @@ const route = useRoute();
 const router = useRouter();
 const auth = useAuthStore();
 
-onMounted(() => {
+onMounted(async () => {
   const token = route.query.token;
-  const userParam = route.query.user;
 
-  if (token && userParam) {
+  if (token) {
     try {
-      const user = JSON.parse(decodeURIComponent(userParam));
+      // 1. រក្សាទុក Token ទុកក្នុង LocalStorage និង Pinia មុនគេ
+      localStorage.setItem("token", token);
+      auth.token = token;
 
-      // 1. Save ចូល LocalStorage / Pinia Store
-      if (auth.setAuthData) {
-        auth.setAuthData(user, token);
-      } else {
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
-        if (auth.user) auth.user = user;
-        if (auth.token) auth.token = token;
+      // 2. ហៅ function getMe() ដែលមានស្រាប់ក្នុង auth store របស់អ្នក ដើម្បីទាញយកข้อมูล User
+      if (typeof auth.getMe === 'function') {
+        await auth.getMe();
       }
 
-      // 2. Redirect ទៅកាន់ទំព័រ HomeView ជានិច្ច
+      // 3. Redirect ទៅកាន់ទំព័រដើម (Home) 
       router.push("/");
     } catch (e) {
-      console.error("Failed to parse user data:", e);
-      router.push("/login?error=invalid_user_data");
+      console.error("Failed to get user details after Google login:", e);
+      router.push("/login?error=fetch_user_failed");
     }
   } else {
     // បើគ្មាន Token ទេ Redirect ទៅ Login វិញ
