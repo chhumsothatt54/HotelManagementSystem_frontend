@@ -6,10 +6,21 @@
         <!-- Bookings Panel -->
         <div class="p-4">
             <div class="panel-card">
-                <div class="d-flex justify-content-between align-items-start mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <div class="panel-title fw-bold fs-6">All Bookings</div>
                         <div class="panel-sub text-muted font-sm">Recent booking activities</div>
+                    </div>
+                    
+                    <div class="d-flex gap-3">
+                        <input type="text" class="form-control search-input" placeholder="Search ID, guest, hotel..." v-model="searchQuery">
+                        <select class="form-select status-select" v-model="statusFilter">
+                            <option value="All">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
                     </div>
                 </div>
 
@@ -30,10 +41,10 @@
                             <tr v-if="loading">
                                 <td colspan="7" class="text-center py-4 text-muted">Loading bookings...</td>
                             </tr>
-                            <tr v-else-if="!bookingList.length">
+                            <tr v-else-if="!filteredBookings.length">
                                 <td colspan="7" class="text-center py-4 text-muted">No bookings found.</td>
                             </tr>
-                            <tr v-for="booking in bookingList" :key="booking.id" v-else>
+                            <tr v-for="booking in filteredBookings" :key="booking.id" v-else>
                                 <td class="fw-bold text-dark">#{{ booking.id || booking.booking_number }}</td>
                                 <td>
                                     <div class="text-dark fw-semibold">{{ booking.user?.name || booking.guest_name || 'N/A' }}</div>
@@ -67,6 +78,8 @@ import { useAdminStore } from '@/stores/admin';
 
 const adminStore = useAdminStore();
 const loading = ref(false);
+const searchQuery = ref('');
+const statusFilter = ref('All');
 
 const loadBookings = async () => {
     loading.value = true;
@@ -104,6 +117,27 @@ const bookingList = computed(() => {
     };
     
     return findArray(data);
+});
+
+const filteredBookings = computed(() => {
+    let result = bookingList.value;
+
+    if (statusFilter.value !== 'All') {
+        result = result.filter(b => b.status === statusFilter.value);
+    }
+
+    if (searchQuery.value) {
+        const query = searchQuery.value.toLowerCase();
+        result = result.filter(b => {
+            const idMatch = String(b.id || b.booking_number || '').toLowerCase().includes(query);
+            const guestNameMatch = String(b.user?.name || b.guest_name || '').toLowerCase().includes(query);
+            const hotelMatch = String(b.hotel?.name || '').toLowerCase().includes(query);
+            const roomMatch = String(b.room?.room_number || b.room_type?.name || '').toLowerCase().includes(query);
+            return idMatch || guestNameMatch || hotelMatch || roomMatch;
+        });
+    }
+
+    return result;
 });
 
 const formatDate = (dateString) => {
@@ -178,6 +212,27 @@ onMounted(() => {
 .font-xs { font-size: 11px; }
 
 /* Panel & Table Styles */
+.search-input {
+    width: 250px;
+    border-radius: 8px;
+    border: 1px solid #eef2f0;
+    font-size: 14px;
+}
+.search-input:focus {
+    box-shadow: none;
+    border-color: #035e4e;
+}
+.status-select {
+    width: 140px;
+    border-radius: 8px;
+    border: 1px solid #eef2f0;
+    font-size: 14px;
+}
+.status-select:focus {
+    box-shadow: none;
+    border-color: #035e4e;
+}
+
 .panel-card {
     background: #ffffff;
     border-radius: 16px;

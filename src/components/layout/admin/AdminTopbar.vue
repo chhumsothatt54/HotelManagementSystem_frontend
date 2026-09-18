@@ -10,10 +10,10 @@
             </div>
         </div>
         <div class="d-flex align-items-center gap-3 pe-4">
-            <button class="icon-btn">
+            <router-link to="/admin/ad-notification" class="icon-btn position-relative">
                <i class="bi bi-bell"></i>
-                <span class="dot"></span>
-            </button>
+               <span class="notification-badge">{{ notificationCount }}</span>
+            </router-link>
             <div class="user-chip">
                 <div v-if="userAvatar" class="avatar-circle p-0 overflow-hidden border-0">
                     <img :src="userAvatar" alt="Avatar" class="w-100 h-100 object-fit-cover" />
@@ -32,6 +32,7 @@
 <script setup>
 import { computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { useAdminStore } from '@/stores/admin'
 
 defineProps({
     title: { type: String, required: true },
@@ -39,6 +40,7 @@ defineProps({
 })
 
 const authStore = useAuthStore()
+const adminStore = useAdminStore()
 
 const toggleSidebar = () => {
     if (window.innerWidth <= 991) {
@@ -53,6 +55,26 @@ onMounted(async () => {
     if (!authStore.user) {
         await authStore.getMe()
     }
+    // Fetch notifications to show the count in the topbar
+    adminStore.getNotification()
+})
+
+const notificationCount = computed(() => {
+    let responseData = adminStore.notification;
+    let list = [];
+    
+    // Safely extract the notifications array
+    if (responseData && responseData.data && Array.isArray(responseData.data.data)) {
+        list = responseData.data.data;
+    } else if (responseData && Array.isArray(responseData.data)) {
+        list = responseData.data;
+    } else if (Array.isArray(responseData)) {
+        list = responseData;
+    }
+    
+    // Count how many are unread
+    const unread = list.filter(notif => notif.read_at === null || notif.is_read === false);
+    return unread.length;
 })
 
 const userName = computed(() => authStore.user?.name || 'Platform Admin')
@@ -94,14 +116,22 @@ const userInitial = computed(() => {
     position: relative;
     cursor: pointer;
 }
-.dot {
+.notification-badge {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 8px;
-    height: 8px;
+    top: -2px;
+    right: -2px;
     background-color: #ef4444;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    min-width: 18px;
+    height: 18px;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid #ffffff;
 }
 .user-chip {
     display: flex;

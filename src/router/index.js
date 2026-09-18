@@ -59,6 +59,7 @@ import ChangePasswordView from "@/views/auth/ChangePasswordView.vue";
 import { useAuthStore } from "@/stores/auth.js";
 import BookingReport from "@/views/manager/BookingReport.vue";
 import RevenueReport from "@/views/manager/RevenueReport.vue";
+import NotificationsView from "@/views/admin/NotificationsView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -299,6 +300,11 @@ const router = createRouter({
             roles: ["admin"],
           },
         },
+        {
+          path: "ad-notification",
+          name: "ad-notification",
+          component: NotificationsView
+        }
       ],
     },
 

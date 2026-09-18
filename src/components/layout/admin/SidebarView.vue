@@ -71,6 +71,10 @@
                 <i class="bi bi-pie-chart"></i>
                 <span class="link-text">Occupancy Report</span>
             </RouterLink>
+            <RouterLink to="/admin/ad-notification" class="sidebar-link" active-class="active" exact-active-class="active">
+                <i class="bi bi-bell"></i>
+                <span class="link-text">Notification</span>
+            </RouterLink>
         </div>
 
         <div class="sidebar-footer">

@@ -1,66 +1,60 @@
 <template>
     <div class="page-container">
         <!-- Topbar -->
-        <AdminTopbar title="Revenue Report" subtitle="Platform performance overview" />
+        <AdminTopbar title="Revenue Report" subtitle="Revenue by day, month, year, hotel" />
 
         <!-- Report Panel -->
         <div class="p-4">
-            <!-- Summary Cards -->
-            <div class="row g-3 mb-4">
-                <div class="col-md-4">
-                    <div class="panel-card h-100 p-4">
-                        <div class="text-muted font-sm mb-1 fw-bold text-uppercase">Total Revenue</div>
-                        <h3 class="fw-bold mb-0 text-success">${{ revenueData?.total_revenue || revenueData?.total || '0.00' }}</h3>
-                    </div>
+            <!-- Custom Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <div class="text-success font-xs fw-bold text-uppercase mb-1" style="letter-spacing: 1px;">REPORTS</div>
+                    <div class="fw-bold fs-4 text-dark mb-1">Revenue Report</div>
+                    <div class="text-muted font-sm">Revenue performance by hotel.</div>
                 </div>
-                <div class="col-md-4">
-                    <div class="panel-card h-100 p-4">
-                        <div class="text-muted font-sm mb-1 fw-bold text-uppercase">This Month</div>
-                        <h3 class="fw-bold mb-0 text-primary">${{ thisMonthRevenue }}</h3>
+                <button class="btn btn-success fw-bold d-flex align-items-center gap-2 export-btn">
+                    <i class="bi bi-download"></i> Export CSV
+                </button>
+            </div>
+
+            <!-- Filter Card -->
+            <div class="panel-card p-4 mb-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label font-sm fw-bold mb-2">From</label>
+                        <input type="date" class="form-control custom-input" v-model="fromDate">
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="panel-card h-100 p-4">
-                        <div class="text-muted font-sm mb-1 fw-bold text-uppercase">Avg. Booking Value</div>
-                        <h3 class="fw-bold mb-0 text-dark">${{ revenueData?.average_booking_value || revenueData?.avg_booking || '0.00' }}</h3>
+                    <div class="col-md-6">
+                        <label class="form-label font-sm fw-bold mb-2">To</label>
+                        <input type="date" class="form-control custom-input" v-model="toDate">
                     </div>
                 </div>
             </div>
 
-            <!-- Report Table -->
-            <div class="panel-card">
-                <div class="d-flex justify-content-between align-items-start mb-4">
-                    <div>
-                        <div class="panel-title fw-bold fs-6">Revenue Breakdown</div>
-                        <div class="panel-sub text-muted font-sm">Detailed revenue statistics per hotel/property</div>
-                    </div>
+            <!-- Revenue by Hotel Card -->
+            <div class="panel-card p-4">
+                <div class="mb-4">
+                    <div class="panel-title fw-bold fs-5 text-dark mb-1">Revenue by Hotel</div>
+                    <div class="panel-sub text-muted font-sm">{{ fromDate || '2026-08-01' }} to {{ toDate || '2026-08-31' }}</div>
                 </div>
 
-                <div class="table-responsive">
-                    <table class="table custom-table align-middle mb-0">
-                        <thead>
-                            <tr>
-                                <th>HOTEL / PROPERTY</th>
-                                <th>TOTAL BOOKINGS</th>
-                                <th>REVENUE</th>
-                                <th>COMMISSION (PLATFORM)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-if="loading">
-                                <td colspan="4" class="text-center py-4 text-muted">Loading report...</td>
-                            </tr>
-                            <tr v-else-if="!breakdownList.length">
-                                <td colspan="4" class="text-center py-4 text-muted">No revenue data available.</td>
-                            </tr>
-                            <tr v-for="(item, index) in breakdownList" :key="index" v-else>
-                                <td class="fw-bold text-dark">{{ item.hotel_name || item.name || 'Unknown Property' }}</td>
-                                <td>{{ item.total_bookings || item.bookings_count || 0 }}</td>
-                                <td class="text-success fw-bold">${{ item.revenue || item.total_revenue || 0 }}</td>
-                                <td class="text-primary fw-bold">${{ item.commission || (item.revenue * 0.1) || 0 }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="hotel-list">
+                    <div v-if="loading" class="text-center py-4 text-muted">Loading report...</div>
+                    <div v-else-if="!breakdownList.length" class="text-center py-4 text-muted">No revenue data available.</div>
+                    <div v-for="(item, index) in breakdownList" :key="index" v-else class="hotel-item d-flex align-items-center justify-content-between py-3 border-bottom">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="hotel-icon-box">
+                                <i class="bi bi-building"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold text-dark mb-1">{{ item.hotel_name || item.name || 'Unknown Property' }}</div>
+                                <div class="text-muted font-xs">{{ item.total_bookings || item.bookings_count || 0 }} bookings</div>
+                            </div>
+                        </div>
+                        <div class="fw-bold fs-5 text-dark">
+                            ${{ item.revenue || item.total_revenue || 0 }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -74,6 +68,9 @@ import { useAdminStore } from '@/stores/admin';
 
 const adminStore = useAdminStore();
 const loading = ref(false);
+
+const fromDate = ref('2026-08-01');
+const toDate = ref('2026-08-31');
 
 const revenueData = computed(() => {
     const data = adminStore.revenueReport;
@@ -90,14 +87,6 @@ const breakdownList = computed(() => {
         list = revenueData.value.data;
     }
     return list;
-});
-
-const thisMonthRevenue = computed(() => {
-    const monthly = revenueData.value.monthly_revenue;
-    if (monthly && Array.isArray(monthly) && monthly.length > 0) {
-        return monthly[0].total || monthly[0].revenue || '0.00';
-    }
-    return revenueData.value.this_month || '0.00';
 });
 
 const loadReport = async () => {
@@ -122,75 +111,52 @@ onMounted(() => {
     min-height: 100vh;
 }
 
-/* Topbar Styles */
-.topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 0;
-    border-bottom: 1px solid #eef2f0;
-}
-.icon-btn {
-    background: #f1f5f9;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    position: relative;
-    cursor: pointer;
-}
-.dot {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 8px;
-    height: 8px;
-    background-color: #ef4444;
-    border-radius: 50%;
-}
-.user-chip {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 6px 12px;
-    border-radius: 30px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    cursor: pointer;
-}
-.avatar-circle {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: #035e4e;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
-}
-.font-sm { font-size: 13px; }
-.font-xs { font-size: 11px; }
-
-/* Panel & Table Styles */
 .panel-card {
     background: #ffffff;
     border-radius: 16px;
     border: 1px solid #eef2f0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
-.custom-table th {
-    font-size: 11px;
-    font-weight: 700;
-    color: #64748b;
-    padding: 16px 20px;
-    border-bottom: 1px solid #f1f5f9;
-    text-transform: uppercase;
-}
-.custom-table td {
-    padding: 16px 20px;
-    border-bottom: 1px solid #f8fafc;
+
+.export-btn {
+    background-color: #035e4e;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
     font-size: 14px;
 }
+.export-btn:hover {
+    background-color: #024a3e;
+}
+
+.custom-input {
+    border-radius: 8px;
+    border: 1px solid #eef2f0;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #475569;
+}
+.custom-input:focus {
+    box-shadow: none;
+    border-color: #035e4e;
+}
+
+.hotel-icon-box {
+    width: 48px;
+    height: 48px;
+    background-color: #def7ec;
+    color: #035e4e;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.hotel-item:last-child {
+    border-bottom: none !important;
+}
+
+.font-sm { font-size: 13px; }
+.font-xs { font-size: 11px; }
 </style>
