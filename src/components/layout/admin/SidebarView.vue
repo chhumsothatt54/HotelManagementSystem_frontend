@@ -57,10 +57,10 @@
                 <i class="bi bi-credit-card"></i>
                 <span class="link-text">Payments</span>
             </RouterLink>
-            <RouterLink to="/admin/review" class="sidebar-link" active-class="active" exact-active-class="active">
+            <!-- <RouterLink to="/admin/review" class="sidebar-link" active-class="active" exact-active-class="active">
                 <i class="bi bi-star"></i>
                 <span class="link-text">Reviews</span>
-            </RouterLink>
+            </RouterLink> -->
             <div class="nav-section-label">Report</div>
 
             <RouterLink to="/admin/ad-revenue" class="sidebar-link" active-class="active" exact-active-class="active">

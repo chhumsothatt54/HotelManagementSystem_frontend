@@ -154,10 +154,7 @@
                 <span>${{ roomTotal }}</span>
               </div>
 
-              <div class="d-flex justify-content-between summary-line">
-                <span>Service fee</span>
-                <span>${{ serviceFee }}</span>
-              </div>
+
 
               <hr>
 
@@ -323,8 +320,7 @@ const selectedRoomPrice = computed(() => {
 })
 
 const roomTotal = computed(() => selectedRoomPrice.value * nights.value)
-const serviceFee = computed(() => (roomTotal.value > 0 ? 5 : 0))
-const total = computed(() => roomTotal.value + serviceFee.value)
+const total = computed(() => roomTotal.value)
 
 const canConfirm = computed(() =>
   booking.checkin &&

@@ -299,30 +299,6 @@
 
               </div>
 
-
-              <!-- PROVINCE -->
-              <div class="form-group">
-
-                <label>
-                  Province / State <span>*</span>
-                </label>
-
-                <div class="input-box">
-
-                  <i class="bi bi-map"></i>
-
-                  <input
-                    type="text"
-                    v-model="form.province"
-                    placeholder="Enter province"
-                    required
-                  />
-
-                </div>
-
-              </div>
-
-
               <!-- LATITUDE -->
               <div class="form-group">
 

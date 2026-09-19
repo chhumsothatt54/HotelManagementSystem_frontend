@@ -59,7 +59,7 @@
               <i class="bi bi-building"></i>
             </div>
 
-            <span>StayNest</span>
+            <span>AngkorStay</span>
           </div>
 
           <span class="form-eyebrow">GET STARTED</span>

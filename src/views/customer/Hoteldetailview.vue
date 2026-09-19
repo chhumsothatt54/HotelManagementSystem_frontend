@@ -24,6 +24,9 @@
         <h1 class="hotel-title">{{ hotel.name }}</h1>
         <div class="d-flex align-items-center gap-3 text-muted small">
           <span>📍 {{ hotel.location }}</span>
+          <a v-if="hotel.address" :href="hotel.address" target="_blank" rel="noopener noreferrer" class="text-primary text-decoration-none">
+            🗺️ View Map
+          </a>
           <span>★ {{ hotel.rating }} ({{ hotel.reviewsCount }} reviews)</span>
         </div>
       </div>
@@ -219,6 +222,7 @@ async function loadHotelData(id) {
       id: h.id,
       name: h.name,
       location: `${h.city || ''}, ${h.country || ''}`.replace(/^, |, $/g, ''),
+      address: h.address || '',
       rating: h.rating || 4.5,
       reviewsCount: h.reviews_count || 42,
       price: h.price || 50,

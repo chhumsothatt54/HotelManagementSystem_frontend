@@ -9,7 +9,7 @@
           <div class="brand-icon">
             <i class="bi bi-building"></i>
           </div>
-          <span>StayNest</span>
+          <span>AngkorStay</span>
         </router-link>
 
         <div class="showcase-center">
@@ -50,7 +50,7 @@
             <i class="bi bi-building"></i>
           </div>
 
-          <span>StayNest</span>
+          <span>AngkorStay</span>
         </div>
 
         <div class="header">

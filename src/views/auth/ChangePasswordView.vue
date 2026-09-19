@@ -13,7 +13,7 @@
           <div class="brand-icon">
             <i class="bi bi-building"></i>
           </div>
-          <span>StayNest</span>
+          <span>AngkkorStay</span>
         </router-link>
 
         <!-- CENTER -->
