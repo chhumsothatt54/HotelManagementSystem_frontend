@@ -330,7 +330,7 @@ const formatStatus = (status) => {
 const getStatusBadgeClass = (status) => {
   const normalized = (status || '').toLowerCase()
   if (normalized === 'available') return 'badge bg-success-subtle text-success border border-success-subtle'
-  if (normalized === 'occupied') return 'badge bg-primary-subtle text-primary border border-primary-subtle'
+  // if (normalized === 'occupied') return 'badge bg-primary-subtle text-primary border border-primary-subtle'
   if (normalized === 'maintenance') return 'badge bg-warning-subtle text-warning border border-warning-subtle'
   if (normalized === 'inactive') return 'badge bg-secondary-subtle text-secondary border border-secondary-subtle'
   return 'badge bg-secondary-subtle text-secondary border border-secondary-subtle'
