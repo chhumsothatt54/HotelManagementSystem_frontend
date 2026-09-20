@@ -163,12 +163,10 @@
                 <span>${{ total }}</span>
               </div>
 
-              <button
-                class="btn btn-primary-brand w-100 mt-3"
-                :disabled="!canConfirm || isSubmitting"
-                @click="confirmBooking"
-              >
-                <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              <button class="btn btn-primary-brand w-100 mt-3" :disabled="!canConfirm || isSubmitting"
+                @click="confirmBooking">
+                <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"
+                  aria-hidden="true"></span>
                 Continue to Payment
               </button>
 
@@ -183,11 +181,53 @@
     </section>
 
     <FooterView />
+
+    <!-- Error Modal -->
+    <div class="modal fade" id="bookingErrorModal" tabindex="-1" aria-hidden="true" ref="errorModalRef">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title">Booking Notice</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body py-4 text-center">
+            <p class="mb-0">{{ errorMessage }}</p>
+          </div>
+          <div class="modal-footer justify-content-center border-0">
+            <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="bookingSuccessModal" tabindex="-1" aria-hidden="true" ref="successModalRef" data-bs-backdrop="static">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title">
+              <i class="bi bi-check-circle-fill me-2"></i> Booking Successful!
+            </h5>
+          </div>
+          <div class="modal-body py-4 text-center">
+            <div class="display-1 text-success mb-3">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <p class="fs-5 text-dark mb-1">Your room has been booked successfully.</p>
+            <p class="text-muted">Please proceed to payment to confirm your reservation.</p>
+          </div>
+          <div class="modal-footer justify-content-center border-0">
+            <button type="button" class="btn btn-success px-5" @click="proceedToPayment">Continue to Payment</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
+import * as bootstrap from 'bootstrap'
 import { useRoute, useRouter } from 'vue-router'
 import NavbarView from '@/components/layout/customer/NavbarView.vue'
 import FooterView from '@/components/layout/customer/FooterView.vue'
@@ -222,6 +262,13 @@ const guest = reactive({
 })
 
 const isSubmitting = ref(false)
+const errorMessage = ref('')
+const errorModalRef = ref(null)
+let errorModalInstance = null
+
+const successModalRef = ref(null)
+let successModalInstance = null
+let createdBookingId = null
 
 async function loadData(hotelId) {
   isLoading.value = true;
@@ -301,6 +348,13 @@ onMounted(() => {
   if (queryHotelId) {
     loadData(queryHotelId)
   }
+
+  if (errorModalRef.value) {
+    errorModalInstance = new bootstrap.Modal(errorModalRef.value)
+  }
+  if (successModalRef.value) {
+    successModalInstance = new bootstrap.Modal(successModalRef.value)
+  }
 })
 
 const nights = computed(() => {
@@ -334,9 +388,30 @@ const canConfirm = computed(() =>
 
 async function confirmBooking() {
   if (!canConfirm.value || isSubmitting.value) return
-  
+
   isSubmitting.value = true
   try {
+    // Check room availability first
+    const availRes = await customerStore.checkAvailability({
+      hotel_id: hotel.value.id,
+      check_in: booking.checkin,
+      check_out: booking.checkout
+    });
+
+    const availableRooms = availRes.rooms || [];
+    const isAvailable = availableRooms.some(r => r.id === booking.roomId);
+
+    if (!isAvailable) {
+      errorMessage.value = "Sorry, the selected room is already booked for these dates. Please choose different dates or another room.";
+      if (errorModalInstance) {
+        errorModalInstance.show();
+      } else {
+        alert(errorMessage.value);
+      }
+      isSubmitting.value = false;
+      return;
+    }
+
     const payload = {
       hotel_id: hotel.value.id,
       room_id: booking.roomId,
@@ -347,19 +422,37 @@ async function confirmBooking() {
       check_out: booking.checkout,
       total_guests: booking.guests
     }
-    
+
     const res = await customerStore.createBooking(payload)
     const newBooking = res.data?.data || res.data || res;
-    const newBookingId = newBooking.id;
-    
-    if (newBookingId) {
-      router.push({ path: '/payment', query: { bookingId: newBookingId } })
+    createdBookingId = newBooking.id;
+
+    if (createdBookingId) {
+      if (successModalInstance) {
+        successModalInstance.show()
+      } else {
+        proceedToPayment()
+      }
     }
   } catch (err) {
     console.error('Failed to create booking:', err)
-    alert('Failed to create booking. Please check your details. ' + (err.response?.data?.message || ''))
+    errorMessage.value = 'Failed to create booking. Please check your details. ' + (err.response?.data?.message || '')
+    if (errorModalInstance) {
+      errorModalInstance.show();
+    } else {
+      alert(errorMessage.value);
+    }
   } finally {
     isSubmitting.value = false
+  }
+}
+
+function proceedToPayment() {
+  if (successModalInstance) {
+    successModalInstance.hide()
+  }
+  if (createdBookingId) {
+    router.push({ path: '/payment', query: { bookingId: createdBookingId } })
   }
 }
 </script>
@@ -506,10 +599,12 @@ async function confirmBooking() {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .room-img-wrap {
     width: 100%;
     height: 140px;
   }
+
   .room-price {
     text-align: left;
     margin-top: 0.5rem;
@@ -561,7 +656,8 @@ async function confirmBooking() {
   font-size: 1.1rem;
 }
 
-.stay-loc, .stay-rating {
+.stay-loc,
+.stay-rating {
   font-size: 0.85rem;
   color: #6B7772;
 }

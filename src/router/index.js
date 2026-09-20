@@ -122,16 +122,16 @@ const router = createRouter({
     // =============================
     // Demo Routes
     // =============================
-    {
-      path: "/demomg",
-      name: "demo-manager",
-      component: DemoMg,
-    },
-    {
-      path: "/demoadmin",
-      name: "demo-admin",
-      component: DemoAdmin,
-    },
+    // {
+    //   path: "/demomg",
+    //   name: "demo-manager",
+    //   component: DemoMg,
+    // },
+    // {
+    //   path: "/demoadmin",
+    //   name: "demo-admin",
+    //   component: DemoAdmin,
+    // },
 
     // =============================
     // Customer Routes
@@ -140,21 +140,37 @@ const router = createRouter({
       path: "/hotel/:id",
       name: "hotel-detail",
       component: HoteldetailView,
+      meta: {
+        requireAuth: true,
+        roles: ['customer']
+      },
     },
     {
       path: "/booking/:id?",
       name: "customer-booking",
       component: BookingView,
+      meta: {
+        requireAuth: true,
+        roles: ['customer']
+      },
     },
     {
       path: "/booking-detail",
       name: "customer-booking-detail",
       component: BookingdetailView,
+      meta: {
+        requireAuth: true,
+        roles: ['customer']
+      },
     },
     {
       path: "/payment",
       name: "customer-payment",
       component: PaymentView,
+      meta: {
+        requireAuth: true,
+        roles: ['customer']
+      },
     },
     {
       path: '/settings',

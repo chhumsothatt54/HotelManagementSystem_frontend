@@ -33,13 +33,15 @@
 
       <!-- GALLERY / MAIN IMAGE -->
       <div class="hotel-gallery mb-5">
-        <div class="row g-3">
-          <div class="col-md-8" style="overflow: hidden; max-height: 500px;">
-            <img :src="hotel.img" :alt="hotel.name" class="main-img rounded-3 w-100 h-100 object-fit-cover" />
+        <div class="gallery-grid">
+          <div class="gallery-main">
+            <img :src="hotel.images[0]" :alt="hotel.name" class="gallery-img rounded-4 w-100 h-100 object-fit-cover shadow-sm" />
           </div>
-          <div class="col-md-4 d-none d-md-flex flex-column gap-3" style="overflow: hidden; max-height: 500px;">
-            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=800&auto=format&fit=crop" class="sub-img rounded-3 w-100 h-50 object-fit-cover" />
-            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=800&auto=format&fit=crop" class="sub-img rounded-3 w-100 h-50 object-fit-cover" />
+          <div class="gallery-sub">
+            <img :src="hotel.images[1]" :alt="hotel.name" class="gallery-img rounded-4 w-100 h-100 object-fit-cover shadow-sm" />
+          </div>
+          <div class="gallery-sub">
+            <img :src="hotel.images[2]" :alt="hotel.name" class="gallery-img rounded-4 w-100 h-100 object-fit-cover shadow-sm" />
           </div>
         </div>
       </div>
@@ -76,49 +78,60 @@
               <div 
                 v-for="room in hotel.rooms" 
                 :key="room.id"
-                class="room-card border rounded-3 overflow-hidden transition-all"
-                :class="{ 'border-emerald bg-light-emerald': selectedRoom?.id === room.id }"
+                class="room-card border-0 rounded-4 overflow-hidden mb-4 shadow-sm position-relative"
+                :class="{ 'selected-room-ring': selectedRoom?.id === room.id, 'unavailable-room': room.status !== 'available' }"
               >
+                <!-- UNAVAILABLE OVERLAY -->
+                <div v-if="room.status !== 'available'" class="unavailable-overlay">
+                  <div class="unavailable-badge">
+                    <i class="bi bi-lock-fill me-1"></i> Booked / Unavailable
+                  </div>
+                </div>
+
                 <div class="row g-0 align-items-stretch">
                   <!-- ROOM IMAGE -->
                   <div class="col-md-4 col-12">
                     <img 
                       :src="room.img || 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=600&auto=format&fit=crop'" 
-                      :alt="room.name" style="max-height: 100px;"
+                      :alt="room.name" 
                       class="room-img w-100 h-100 object-fit-cover"
                     />
                   </div>
 
                   <!-- ROOM DETAILS -->
-                  <div class="col-md-8 col-12 p-3 d-flex flex-column justify-content-between">
+                  <div class="col-md-8 col-12 p-4 d-flex flex-column justify-content-between bg-white">
                     <div>
                       <div class="d-flex justify-content-between align-items-start mb-2">
                         <div>
-                          <h5 class="fw-bold mb-1">{{ room.name }}</h5>
-                          <div class="text-muted small mb-2">
-                            {{ room.bed }} · {{ room.view }} · {{ room.size }}
+                          <h4 class="fw-bold mb-1 room-title">{{ room.name }}</h4>
+                          <div class="text-muted small mb-3 d-flex align-items-center gap-2 flex-wrap">
+                            <span><i class="bi bi-moon-stars me-1"></i> {{ room.bed }}</span> &bull; 
+                            <span><i class="bi bi-window me-1"></i> {{ room.view }}</span> &bull; 
+                            <span><i class="bi bi-arrows-fullscreen me-1"></i> {{ room.size }}</span>
                           </div>
                         </div>
-                        <div class="text-end ms-2">
-                          <span class="fs-4 fw-bold text-dark">${{ room.price }}</span>
-                          <span class="text-muted small"> /night</span>
+                        <div class="text-end ms-2 price-tag">
+                          <span class="fs-3 fw-bold text-dark">${{ room.price }}</span>
+                          <span class="text-muted small d-block"> /night</span>
                         </div>
                       </div>
+                      <p class="text-secondary small mb-3">Experience comfort and luxury in our elegantly designed {{ room.name.toLowerCase() }}.</p>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
-                      <div class="d-flex flex-wrap gap-1">
-                        <span class="badge bg-light text-secondary border" v-for="f in room.features" :key="f">
+                    <div class="d-flex justify-content-between align-items-end mt-2 pt-3 border-top">
+                      <div class="d-flex flex-wrap gap-2">
+                        <span class="badge bg-light text-secondary border rounded-pill px-3 py-2 fw-normal" v-for="f in room.features.slice(0,4)" :key="f">
                           {{ f }}
                         </span>
                       </div>
 
                       <button 
-                        class="btn btn-sm px-3 fw-semibold"
+                        class="btn px-4 py-2 fw-semibold rounded-pill select-btn shadow-sm"
                         :class="selectedRoom?.id === room.id ? 'btn-emerald' : 'btn-outline-emerald'"
+                        :disabled="room.status !== 'available'"
                         @click="selectRoom(room)"
                       >
-                        {{ selectedRoom?.id === room.id ? 'Selected' : 'Book This Room' }}
+                        {{ room.status !== 'available' ? 'Unavailable' : (selectedRoom?.id === room.id ? 'Selected' : 'Select Room') }}
                       </button>
                     </div>
                   </div>
@@ -204,18 +217,33 @@ async function loadHotelData(id) {
     const h = hotelData.data || hotelData;
     const roomsList = roomsData.data || roomsData;
 
-    // Get the first image or a default fallback
-    let image = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop';
-    if (h.images && h.images.length > 0) {
-      const primaryImage = h.images.find(img => img.is_primary);
-      const imgObj = primaryImage || h.images[0];
-      const imgPath = imgObj.image || imgObj.image_url;
+    // Get up to 3 images or default fallbacks
+    let imageList = [
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=800&auto=format&fit=crop'
+    ];
 
-      if (imgPath && !imgPath.startsWith('http')) {
-        image = `http://127.0.0.1:8000/storage/${imgPath}`;
-      } else if (imgPath) {
-        image = imgPath;
+    if (h.images && h.images.length > 0) {
+      // Sort to put primary image first, if available
+      const sortedImages = [...h.images].sort((a, b) => (b.is_primary ? 1 : 0) - (a.is_primary ? 1 : 0));
+      
+      const fetchedImages = sortedImages.slice(0, 3).map(imgObj => {
+        let imgPath = imgObj.image || imgObj.image_url;
+        if (imgPath && !imgPath.startsWith('http')) {
+          return `http://127.0.0.1:8000/storage/${imgPath}`;
+        }
+        return imgPath;
+      });
+
+      // Fill in remaining slots if less than 3 images
+      for (let i = 0; i < fetchedImages.length; i++) {
+        imageList[i] = fetchedImages[i];
       }
+      while (fetchedImages.length > 0 && imageList.length > 3) {
+        imageList.pop(); // just in case
+      }
+      // If they only have 1 or 2 images, the remaining slots will use the fallback images
     }
 
     hotel.value = {
@@ -227,7 +255,8 @@ async function loadHotelData(id) {
       reviewsCount: h.reviews_count || 42,
       price: h.price || 50,
       oldPrice: null,
-      img: image,
+      images: imageList,
+      img: imageList[0],
       description: h.description || 'Welcome to our beautiful property. Experience refined elegance and top-tier services.',
       amenities: h.amenities || ['Free WiFi', 'Pool', 'Breakfast Included', 'River View', 'Spa'],
       rooms: []
@@ -259,13 +288,17 @@ async function loadHotelData(id) {
           size: rt.size ? `${rt.size} m²` : (r.size ? `${r.size} m²` : '28 m²'),
           price: rt.price_per_night || r.price_per_night || r.price || 50,
           img: rImage,
-          features: rt.features || r.features || ['Free WiFi', 'AC', 'TV']
+          features: rt.features || r.features || ['Free WiFi', 'AC', 'TV'],
+          status: r.status || 'available'
         }
       })
     }
 
-    if (hotel.value.rooms.length > 0) {
-      selectedRoom.value = hotel.value.rooms[0]
+    const availableRooms = hotel.value.rooms.filter(r => r.status === 'available');
+    if (availableRooms.length > 0) {
+      selectedRoom.value = availableRooms[0];
+    } else if (hotel.value.rooms.length > 0) {
+      selectedRoom.value = hotel.value.rooms[0];
     }
   } catch (err) {
     console.error('Failed to load hotel detail:', err);
@@ -320,7 +353,8 @@ function goToBooking() {
   left: 0 !important;
   right: 0 !important;
   z-index: 1050 !important;
-  background-color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
 }
 
 /* 🟢 ២. រុញ Content ចុះក្រោមឱ្យផុតពី Navbar */
@@ -328,36 +362,52 @@ function goToBooking() {
   padding-top: 100px !important;
 }
 
-/* សម្រាប់អេក្រង់ទូរស័ព្ទ (Mobile View) */
 @media (max-width: 767.98px) {
   .content-container {
-    padding-top: 100px !important;
+    padding-top: 80px !important;
   }
 }
 
 /* 🟢 ៣. កំណត់ Sticky Booking Card ឱ្យអណ្តែតក្រោម Navbar យ៉ាងមានរបៀប */
 .booking-card-wrapper {
   position: sticky;
-  top: 95px;
+  top: 110px;
   z-index: 10;
+}
+
+/* Premium Typography */
+.hotel-title {
+  font-family: 'Fraunces', Georgia, serif;
+  color: #063b32;
+  font-weight: 800;
+  font-size: 2.5rem;
+  letter-spacing: -0.02em;
+}
+
+.room-title {
+  font-family: 'Fraunces', Georgia, serif;
+  color: #063b32;
 }
 
 /* EMERALD / GREEN THEME COLORS */
 .btn-emerald {
-  background-color: #087f68;
+  background: linear-gradient(135deg, #087f68 0%, #065b4a 100%);
   color: #ffffff;
-  border: 1px solid #087f68;
+  border: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-emerald:hover {
-  background-color: #063b32;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(8, 127, 104, 0.3);
   color: #ffffff;
 }
 
 .btn-outline-emerald {
   background-color: transparent;
   color: #087f68;
-  border: 1px solid #087f68;
+  border: 1.5px solid #087f68;
+  transition: all 0.2s ease;
 }
 
 .btn-outline-emerald:hover {
@@ -365,51 +415,88 @@ function goToBooking() {
   color: #ffffff;
 }
 
-.border-emerald {
-  border-color: #087f68 !important;
-}
-
-.bg-light-emerald {
-  background-color: #e8f6f2 !important;
-}
-
 .alert-emerald {
   background-color: #e8f6f2;
   color: #063b32;
   border: 1px solid #b8d9ce;
+  border-radius: 12px;
 }
 
-.main-img {
-  height: 380px;
+/* GALLERY GRID */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 250px 250px;
+  gap: 15px;
+}
+.gallery-main {
+  grid-row: 1 / span 2;
+  overflow: hidden;
+  border-radius: 16px;
+}
+.gallery-sub {
+  overflow: hidden;
+  border-radius: 16px;
+}
+.gallery-img {
+  transition: transform 0.5s ease;
+  cursor: pointer;
+}
+.gallery-img:hover {
+  transform: scale(1.03);
 }
 
-.sub-img {
-  height: 182px;
+@media (max-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: 300px 150px 150px;
+  }
 }
 
-/* ROOM CARD & IMAGE STYLES */
+/* ROOM CARD STYLES */
 .room-card {
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background: #ffffff;
+}
+.room-card:hover {
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important;
+  transform: translateY(-3px);
+}
+.selected-room-ring {
+  box-shadow: 0 0 0 3px #087f68, 0 10px 25px rgba(0,0,0,0.08) !important;
 }
 
 .room-img {
-  min-height: 150px;
-  height: 100%;
+  min-height: 220px;
 }
 
-@media (max-width: 767.98px) {
-  .content-container {
-    padding-top: 75px;
-  }
-  
-  .room-img {
-    height: 180px;
-  }
+.select-btn {
+  transition: all 0.2s ease;
 }
 
-.hotel-title {
-  font-family: 'Fraunces', serif;
-  color: #063b32;
-  font-weight: 700;
+/* UNAVAILABLE ROOM STYLES */
+.unavailable-room {
+  opacity: 0.8;
+}
+.unavailable-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.unavailable-badge {
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+  pointer-events: auto;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <body>
+    <div class="dashboard-wrapper">
 
       <!-- ===================== SIDEBAR ===================== -->
       <SidebarView />
@@ -10,7 +10,7 @@
         <RouterView />
       </main>
 
-    </body>
+    </div>
   </div>
 </template>
 

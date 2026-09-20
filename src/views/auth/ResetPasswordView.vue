@@ -9,7 +9,7 @@
           <div class="brand-icon">
             <i class="bi bi-building"></i>
           </div>
-          <span>StayNest</span>
+          <span>AngkorStay</span>
         </router-link>
         <div class="showcase-center">
           <span>
@@ -77,9 +77,9 @@
             New password
           </label>
 
-          <div class="input-wrapper">
+          <div class="input-wrapper ps-5">
 
-            <i class="bi bi-lock input-icon"></i>
+      
 
             <input v-model="password" :type="showPassword
                 ? 'text'
@@ -108,12 +108,11 @@
             Confirm new password
           </label>
 
-          <div class="input-wrapper" :class="{
+          <div class="input-wrapper ps-5"  :class="{
             error:
               confirmError
           }">
 
-            <i class="bi bi-shield-lock input-icon"></i>
 
             <input v-model="confirmPassword" :type="showConfirm
                 ? 'text'

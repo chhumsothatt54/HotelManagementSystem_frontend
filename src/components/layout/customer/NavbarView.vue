@@ -19,11 +19,11 @@
               Hotel
             </RouterLink>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <RouterLink to="/booking-detail" class="nav-link custom-link" active-class="active">
               Bookings
             </RouterLink>
-          </li>
+          </li> -->
           <li class="nav-item">
             <RouterLink to="/contact" class="nav-link custom-link" active-class="active">
               Contact

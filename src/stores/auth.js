@@ -36,7 +36,7 @@ export const useAuthStore = defineStore("auth", () => {
       case "hotel_manager":
         return "/manager/dashboard";
       case "customer":
-        return "/booking";
+        return "/";
       default:
         return "/";
     }

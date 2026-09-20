@@ -318,7 +318,7 @@ async function confirmPayment() {
         transaction_id: 'TRX-' + Date.now()
       })
       
-      alert(`Booking confirmed! You can pay at the hotel.`)
+      alert(`Booking submitted successfully! It is now pending manager confirmation. You can pay at the hotel.`)
       router.push({ path: '/booking-detail', query: { id: bookingId } })
     } catch (err) {
       console.error('Failed to confirm payment:', err)

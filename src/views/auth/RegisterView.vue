@@ -11,7 +11,7 @@
             <i class="bi bi-building"></i>
           </div>
 
-          <span>StayNest</span>
+          <span>AngkorStay</span>
         </div>
 
         <div class="showcase-text">
