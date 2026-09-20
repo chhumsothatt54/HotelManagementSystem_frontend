@@ -47,8 +47,30 @@
                             <tr v-for="booking in filteredBookings" :key="booking.id" v-else>
                                 <td class="fw-bold text-dark">#{{ booking.id || booking.booking_number }}</td>
                                 <td>
-                                    <div class="text-dark fw-semibold">{{ booking.user?.name || booking.guest_name || 'N/A' }}</div>
-                                    <div class="text-muted font-xs">{{ booking.user?.email || booking.guest_email }}</div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div
+                                            v-if="(booking.customer || booking.user)?.avatar"
+                                            class="border-0"
+                                            style="width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; overflow: hidden;"
+                                        >
+                                            <img
+                                                :src="(booking.customer || booking.user).avatar.startsWith('http') ? (booking.customer || booking.user).avatar : ((booking.customer || booking.user).avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${(booking.customer || booking.user).avatar}` : `http://127.0.0.1:8000/storage/${(booking.customer || booking.user).avatar}`)"
+                                                style="width: 100%; height: 100%; object-fit: cover;"
+                                                alt="Guest Avatar"
+                                            />
+                                        </div>
+                                        <div
+                                            v-else
+                                            class="bg-light text-dark d-flex align-items-center justify-content-center"
+                                            style="width: 32px; height: 32px; border-radius: 50%; font-weight: 600; font-size: 13px; flex-shrink: 0; border: 1px solid #e5e7eb;"
+                                        >
+                                            {{ ((booking.customer || booking.user)?.name || booking.guest_name || 'G').charAt(0).toUpperCase() }}
+                                        </div>
+                                        <div>
+                                            <div class="text-dark fw-semibold">{{ (booking.customer || booking.user)?.name || booking.guest_name || 'N/A' }}</div>
+                                            <div class="text-muted font-xs">{{ (booking.customer || booking.user)?.email || booking.guest_email }}</div>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>
                                     <div class="text-dark">{{ booking.hotel?.name || 'N/A' }}</div>

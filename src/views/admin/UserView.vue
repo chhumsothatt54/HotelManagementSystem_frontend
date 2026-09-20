@@ -107,6 +107,17 @@
                                 >
 
                                     <div
+                                        v-if="u.avatar"
+                                        class="avatar-circle-sm overflow-hidden border-0"
+                                    >
+                                        <img
+                                            :src="u.avatar.startsWith('http') ? u.avatar : (u.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${u.avatar}` : `http://127.0.0.1:8000/storage/${u.avatar}`)"
+                                            style="width: 100%; height: 100%; object-fit: cover;"
+                                            alt="User Avatar"
+                                        />
+                                    </div>
+                                    <div
+                                        v-else
                                         class="avatar-circle-sm"
                                         :class="
                                             roleAvatarClass(
@@ -298,6 +309,17 @@
                     <div class="detail-profile">
 
                         <div
+                            v-if="selectedUser.avatar"
+                            class="detail-avatar overflow-hidden border-0"
+                        >
+                            <img
+                                :src="selectedUser.avatar.startsWith('http') ? selectedUser.avatar : (selectedUser.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${selectedUser.avatar}` : `http://127.0.0.1:8000/storage/${selectedUser.avatar}`)"
+                                style="width: 100%; height: 100%; object-fit: cover;"
+                                alt="User Avatar"
+                            />
+                        </div>
+                        <div
+                            v-else
                             class="detail-avatar"
                             :class="
                                 roleAvatarClass(

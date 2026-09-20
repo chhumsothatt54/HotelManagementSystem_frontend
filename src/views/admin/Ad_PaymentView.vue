@@ -6,10 +6,20 @@
         <!-- Payments Panel -->
         <div class="p-4">
             <div class="panel-card">
-                <div class="d-flex justify-content-between align-items-start mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <div class="panel-title fw-bold fs-6">Transactions List</div>
                         <div class="panel-sub text-muted font-sm">Recent payments and transactions across the platform</div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <input type="text" class="form-control shadow-sm" placeholder="Search ID, customer, booking..." v-model="searchQuery" style="max-width: 250px;">
+                        <select class="form-select shadow-sm" v-model="statusFilter" style="max-width: 150px;">
+                            <option value="All">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="paid">Paid</option>
+                            <option value="failed">Failed</option>
+                            <option value="refunded">Refunded</option>
+                        </select>
                     </div>
                 </div>
 
@@ -18,6 +28,7 @@
                         <thead>
                             <tr>
                                 <th>PAYMENT ID</th>
+                                <th>CUSTOMER</th>
                                 <th>BOOKING ID</th>
                                 <th>AMOUNT</th>
                                 <th>METHOD</th>
@@ -27,13 +38,39 @@
                         </thead>
                         <tbody>
                             <tr v-if="loading">
-                                <td colspan="6" class="text-center py-4 text-muted">Loading payments...</td>
+                                <td colspan="7" class="text-center py-4 text-muted">Loading payments...</td>
                             </tr>
-                            <tr v-else-if="!paymentList.length">
-                                <td colspan="6" class="text-center py-4 text-muted">No payments found.</td>
+                            <tr v-else-if="!filteredPayments.length">
+                                <td colspan="7" class="text-center py-4 text-muted">No payments found.</td>
                             </tr>
-                            <tr v-for="payment in paymentList" :key="payment.id" v-else>
+                            <tr v-for="payment in filteredPayments" :key="payment.id" v-else>
                                 <td class="fw-bold text-dark">#{{ payment.id || payment.transaction_id }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div
+                                            v-if="payment.booking?.customer?.avatar"
+                                            class="border-0"
+                                            style="width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; overflow: hidden;"
+                                        >
+                                            <img
+                                                :src="payment.booking.customer.avatar.startsWith('http') ? payment.booking.customer.avatar : (payment.booking.customer.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${payment.booking.customer.avatar}` : `http://127.0.0.1:8000/storage/${payment.booking.customer.avatar}`)"
+                                                style="width: 100%; height: 100%; object-fit: cover;"
+                                                alt="Customer Avatar"
+                                            />
+                                        </div>
+                                        <div
+                                            v-else
+                                            class="bg-light text-dark d-flex align-items-center justify-content-center"
+                                            style="width: 32px; height: 32px; border-radius: 50%; font-weight: 600; font-size: 13px; flex-shrink: 0; border: 1px solid #e5e7eb;"
+                                        >
+                                            {{ (payment.booking?.customer?.name || payment.booking?.guest_name || 'C').charAt(0).toUpperCase() }}
+                                        </div>
+                                        <div>
+                                            <div class="text-dark fw-semibold" style="font-size: 14px;">{{ payment.booking?.customer?.name || payment.booking?.guest_name || 'N/A' }}</div>
+                                            <div class="text-muted" style="font-size: 12px;" v-if="payment.booking?.customer?.email || payment.booking?.guest_email">{{ payment.booking?.customer?.email || payment.booking?.guest_email }}</div>
+                                        </div>
+                                    </div>
+                                </td>
                                 <td class="text-muted">#{{ payment.booking_id }}</td>
                                 <td class="fw-bold text-success">${{ payment.amount }}</td>
                                 <td>
@@ -63,6 +100,8 @@ import { useAdminStore } from '@/stores/admin';
 
 const adminStore = useAdminStore();
 const loading = ref(false);
+const searchQuery = ref('');
+const statusFilter = ref('All');
 
 const loadPayments = async () => {
     loading.value = true;
@@ -100,6 +139,27 @@ const paymentList = computed(() => {
     };
     
     return findArray(data);
+});
+
+const filteredPayments = computed(() => {
+    let result = paymentList.value;
+
+    if (statusFilter.value !== 'All') {
+        result = result.filter(p => p.status?.toLowerCase() === statusFilter.value.toLowerCase());
+    }
+
+    if (searchQuery.value) {
+        const query = searchQuery.value.toLowerCase();
+        result = result.filter(p => {
+            const idMatch = String(p.id || p.transaction_id || '').toLowerCase().includes(query);
+            const bookingMatch = String(p.booking_id || '').toLowerCase().includes(query);
+            const customerNameMatch = String(p.booking?.customer?.name || p.booking?.guest_name || '').toLowerCase().includes(query);
+            const methodMatch = String(p.method || p.payment_method || '').toLowerCase().includes(query);
+            return idMatch || bookingMatch || customerNameMatch || methodMatch;
+        });
+    }
+
+    return result;
 });
 
 const formatDate = (dateString) => {

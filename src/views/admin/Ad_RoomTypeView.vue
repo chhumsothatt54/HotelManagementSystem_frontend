@@ -45,7 +45,29 @@
                             </tr>
                             <tr v-for="type in filteredRoomTypes" :key="type.id" v-else>
                                 <td class="text-muted">#{{ type.id }}</td>
-                                <td class="fw-bold text-dark">{{ type.name }}</td>
+                                <td class="fw-bold text-dark">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div
+                                            v-if="type.images && type.images.length"
+                                            class="border-0 rounded overflow-hidden flex-shrink-0"
+                                            style="width: 48px; height: 48px;"
+                                        >
+                                            <img
+                                                :src="type.images[0].image.startsWith('http') ? type.images[0].image : (type.images[0].image.startsWith('uploads/') ? `http://127.0.0.1:8000/${type.images[0].image}` : `http://127.0.0.1:8000/storage/${type.images[0].image}`)"
+                                                style="width: 100%; height: 100%; object-fit: cover;"
+                                                alt="Room Type Image"
+                                            />
+                                        </div>
+                                        <div
+                                            v-else
+                                            class="bg-light text-dark d-flex align-items-center justify-content-center rounded flex-shrink-0"
+                                            style="width: 48px; height: 48px; font-weight: 600; font-size: 16px; border: 1px solid #e5e7eb;"
+                                        >
+                                            R
+                                        </div>
+                                        <span>{{ type.name }}</span>
+                                    </div>
+                                </td>
                                 <td class="fw-bold text-success">${{ type.price_per_night || type.base_price || type.price || 0 }}</td>
                                 <td>
                                     <span class="badge bg-light text-dark border">

@@ -37,7 +37,29 @@
                             <td colspan="5" class="text-center py-4 text-muted">No managers match your search.</td>
                         </tr>
                         <tr v-for="manager in filteredManagers" :key="manager.id" v-else>
-                            <td class="fw-bold text-dark">{{ manager.name }}</td>
+                            <td class="fw-bold text-dark">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div
+                                        v-if="manager.avatar"
+                                        class="border-0"
+                                        style="width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; overflow: hidden;"
+                                    >
+                                        <img
+                                            :src="manager.avatar.startsWith('http') ? manager.avatar : (manager.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${manager.avatar}` : `http://127.0.0.1:8000/storage/${manager.avatar}`)"
+                                            style="width: 100%; height: 100%; object-fit: cover;"
+                                            alt="Manager Avatar"
+                                        />
+                                    </div>
+                                    <div
+                                        v-else
+                                        class="bg-light text-dark d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; border-radius: 50%; font-weight: 600; font-size: 13px; flex-shrink: 0; border: 1px solid #e5e7eb;"
+                                    >
+                                        {{ manager.name ? manager.name.charAt(0).toUpperCase() : 'M' }}
+                                    </div>
+                                    <span>{{ manager.name }}</span>
+                                </div>
+                            </td>
                             <td class="text-secondary">{{ manager.email }}</td>
                             <td>
                                 <span class="badge bg-light text-dark border">

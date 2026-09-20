@@ -35,7 +35,7 @@
                 <input type="file" ref="fileInput" @change="handleFileUpload" class="d-none" accept="image/*" />
                 <div class="avatar-wrapper-premium mb-3" @click="triggerFileInput" style="cursor: pointer;">
                   <div v-if="avatarPreview || (authStore.user && authStore.user.avatar)" class="avatar-circle-premium overflow-hidden border-0">
-                    <img :src="avatarPreview || (authStore.user.avatar.startsWith('http') ? authStore.user.avatar : `http://127.0.0.1:8000/storage/${authStore.user.avatar}`)" class="w-100 h-100 object-fit-cover" />
+                    <img :src="avatarPreview || (authStore.user.avatar.startsWith('http') ? authStore.user.avatar : (authStore.user.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${authStore.user.avatar}` : `http://127.0.0.1:8000/storage/${authStore.user.avatar}`))" class="w-100 h-100 object-fit-cover" />
                   </div>
                   <div v-else class="avatar-circle-premium">
                     {{ user.initials }}

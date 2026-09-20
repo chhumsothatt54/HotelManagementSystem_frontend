@@ -12,7 +12,7 @@
                     <div class="fw-bold fs-4 text-dark mb-1">Notifications</div>
                     <div class="text-muted font-sm">System-level notifications for admins.</div>
                 </div>
-                <button class="btn fw-bold d-flex align-items-center gap-2 mark-all-btn">
+                <button class="btn fw-bold d-flex align-items-center gap-2 mark-all-btn" @click="markAllAsRead">
                     <i class="bi bi-check2-all"></i> Mark all read
                 </button>
             </div>
@@ -39,7 +39,7 @@
                                     <h6 class="mb-0 fw-bold text-dark">{{ getTitle(notif) }}</h6>
                                     <div class="text-end">
                                         <div class="text-muted font-xs">{{ formatDate(notif.created_at || notif.date || notif.updated_at) }}</div>
-                                        <div v-if="isUnread(notif)" class="mt-2 text-success fw-bold font-sm cursor-pointer mark-read-text">
+                                        <div v-if="isUnread(notif)" class="mt-2 text-success fw-bold font-sm cursor-pointer mark-read-text" @click="markAsRead(notif.id)">
                                             Mark read
                                         </div>
                                     </div>
@@ -122,7 +122,26 @@ const formatDate = (dateString) => {
 
 // Helper function to check if a notification is unread
 const isUnread = (notif) => {
-    return notif.read_at === null || notif.is_read === false;
+    return notif.read_at === null || notif.is_read === false || notif.is_read == 0;
+};
+
+const markAsRead = async (id) => {
+    if (!id) return;
+    try {
+        await adminStore.markNotificationAsRead(id);
+        await loadNotifications(); // Refresh list to get updated status
+    } catch (error) {
+        console.error('Failed to mark notification as read:', error);
+    }
+};
+
+const markAllAsRead = async () => {
+    try {
+        await adminStore.markAllNotificationsAsRead();
+        await loadNotifications(); // Refresh list
+    } catch (error) {
+        console.error('Failed to mark all notifications as read:', error);
+    }
 };
 
 // --- LIFECYCLE HOOKS ---

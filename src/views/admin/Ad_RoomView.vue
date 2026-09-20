@@ -51,7 +51,29 @@
                                 <td colspan="6" class="text-center py-4 text-muted">No rooms found.</td>
                             </tr>
                             <tr v-for="room in roomList" :key="room.id" v-else>
-                                <td class="fw-bold text-dark">{{ room.room_number || room.name || `#${room.id}` }}</td>
+                                <td class="fw-bold text-dark">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div
+                                            v-if="room.room_type?.images && room.room_type.images.length"
+                                            class="border-0 rounded overflow-hidden flex-shrink-0"
+                                            style="width: 48px; height: 48px;"
+                                        >
+                                            <img
+                                                :src="room.room_type.images[0].image.startsWith('http') ? room.room_type.images[0].image : (room.room_type.images[0].image.startsWith('uploads/') ? `http://127.0.0.1:8000/${room.room_type.images[0].image}` : `http://127.0.0.1:8000/storage/${room.room_type.images[0].image}`)"
+                                                style="width: 100%; height: 100%; object-fit: cover;"
+                                                alt="Room Image"
+                                            />
+                                        </div>
+                                        <div
+                                            v-else
+                                            class="bg-light text-dark d-flex align-items-center justify-content-center rounded flex-shrink-0"
+                                            style="width: 48px; height: 48px; font-weight: 600; font-size: 16px; border: 1px solid #e5e7eb;"
+                                        >
+                                            R
+                                        </div>
+                                        <span>{{ room.room_number || room.name || `#${room.id}` }}</span>
+                                    </div>
+                                </td>
                                 <td class="text-secondary">{{ room.hotel?.name || 'N/A' }}</td>
                                 <td class="text-secondary">{{ room.room_type?.name || 'Standard' }}</td>
                                 <td>

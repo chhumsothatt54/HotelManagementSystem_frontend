@@ -345,6 +345,24 @@ export const useAdminStore = defineStore('admin', () => {
         }
      }
 
+     async function markNotificationAsRead(id) {
+        try {
+            let res = await api.patch(`/admin/notifications/${id}/read`);
+            return res.data;
+        } catch (error) {
+            throw error;
+        }
+     }
+
+     async function markAllNotificationsAsRead() {
+        try {
+            let res = await api.patch('/admin/notifications/read-all');
+            return res.data;
+        } catch (error) {
+            throw error;
+        }
+     }
+
      async function updateProfile(payload) {
         try {
             let res = await api.post('/admin/profile/update', payload, {
@@ -409,6 +427,8 @@ export const useAdminStore = defineStore('admin', () => {
         updateReviewstatus,
         getOccupancyReport,
         getNotification,
+        markNotificationAsRead,
+        markAllNotificationsAsRead,
         updateProfile
     }
-})
+});

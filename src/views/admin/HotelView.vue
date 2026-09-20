@@ -46,10 +46,65 @@
 
                             <!-- Data Rows -->
                             <tr v-for="hotel in filteredHotels" :key="hotel.id" v-else>
-                                <td class="fw-bold hotel-name">{{ hotel.name }}</td>
-                                <td class="text-secondary">{{ hotel.manager?.name || hotel.manager_name || 'N/A' }}</td>
-                                <td class="text-secondary">{{ hotel.address || hotel.location || 'N/A' }}</td>
-                                <td class="text-secondary">{{ hotel.rooms_count ?? hotel.rooms ?? 0 }}</td>
+                                <td class="fw-bold hotel-name">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div
+                                            v-if="hotel.images && hotel.images.length"
+                                            class="border-0 rounded text-center overflow-hidden"
+                                            style="width: 48px; height: 48px; flex-shrink: 0;"
+                                        >
+                                            <img
+                                                :src="hotel.images[0].image.startsWith('http') ? hotel.images[0].image : (hotel.images[0].image.startsWith('uploads/') ? `http://127.0.0.1:8000/${hotel.images[0].image}` : `http://127.0.0.1:8000/storage/${hotel.images[0].image}`)"
+                                                style="width: 100%; height: 100%; object-fit: cover;"
+                                                alt="Hotel Image"
+                                            />
+                                        </div>
+                                        <div
+                                            v-else
+                                            class="bg-light text-dark d-flex align-items-center justify-content-center rounded"
+                                            style="width: 48px; height: 48px; font-weight: 600; font-size: 16px; flex-shrink: 0; border: 1px solid #e5e7eb;"
+                                        >
+                                            H
+                                        </div>
+                                        <span>{{ hotel.name }}</span>
+                                    </div>
+                                </td>
+                                <td class="text-secondary">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div
+                                            v-if="hotel.manager && hotel.manager.avatar"
+                                            class="border-0"
+                                            style="width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; overflow: hidden;"
+                                        >
+                                            <img
+                                                :src="hotel.manager.avatar.startsWith('http') ? hotel.manager.avatar : (hotel.manager.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${hotel.manager.avatar}` : `http://127.0.0.1:8000/storage/${hotel.manager.avatar}`)"
+                                                style="width: 100%; height: 100%; object-fit: cover;"
+                                                alt="Manager Avatar"
+                                            />
+                                        </div>
+                                        <div
+                                            v-else
+                                            class="bg-light text-dark d-flex align-items-center justify-content-center"
+                                            style="width: 32px; height: 32px; border-radius: 50%; font-weight: 600; font-size: 13px; flex-shrink: 0; border: 1px solid #e5e7eb;"
+                                        >
+                                            {{ (hotel.manager?.name || hotel.manager_name || 'M').charAt(0).toUpperCase() }}
+                                        </div>
+                                        <span>{{ hotel.manager?.name || hotel.manager_name || 'N/A' }}</span>
+                                    </div>
+                                </td>
+                                <td class="text-secondary">
+                                    <a
+                                        v-if="hotel.address || hotel.location"
+                                        :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotel.address || hotel.location)}`"
+                                        target="_blank"
+                                        class="text-decoration-none text-primary"
+                                    >
+                                        <i class="bi bi-geo-alt-fill me-1"></i>
+                                        {{ hotel.address || hotel.location }}
+                                    </a>
+                                    <span v-else>N/A</span>
+                                </td>
+                                <td class="text-secondary fw-semibold">{{ hotel.rooms_count ?? hotel.rooms?.length ?? 0 }} Rooms</td>
                                 <td>
                                     <span class="status-badge" :class="hotel.status?.toLowerCase()">
                                         {{ hotel.status }}
