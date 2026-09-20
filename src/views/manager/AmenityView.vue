@@ -3,7 +3,7 @@
     <!-- Top bar -->
     <div class="topbar bg-white">
       <div>
-        <h1 class="page-title brand-serif">Booking</h1>
+        <h1 class="page-title brand-serif">Amenity</h1>
         <div class="page-subtitle">
           Manage your account and property information
         </div>
@@ -16,15 +16,12 @@
           <span class="dot"></span>
         </div>
 
-        <button class="add-btn" @click="openCreateModal">
-          <i class="bi bi-plus-lg"></i>
-          Add Amenity
-        </button>
+        
       </div>
     </div>
 
     <!-- Content -->
-    <div class="content">
+    <div class="content mt-5" >
       <!-- Loading -->
       <div v-if="manager.loading" class="loading-box">
         <div class="spinner"></div>
@@ -45,9 +42,18 @@
             <p>Manage the amenities that can be assigned to rooms.</p>
           </div>
 
-          <span class="count-badge">
+          
+          <div class="p-sm-0">
+            <span class="count-badge">
             {{ manager.amenityList.length }} Amenities
-          </span>
+          </span> 
+          
+            <button class="add-btn rounded-5 " @click="openCreateModal">
+          <i class="bi bi-plus-lg"></i>
+          Add Amenity
+        </button>
+          </div>
+          
         </div>
 
         <!-- Empty -->
@@ -73,7 +79,7 @@
               <tr>
                 <th>#</th>
                 <th>Amenity</th>
-                <th>Icon</th>
+                <!-- <th>Icon</th> -->
                 <th>Description</th>
                 <th>Status</th>
                 <th class="action-column">Action</th>
@@ -92,18 +98,18 @@
                 <td>
                   <div class="amenity-name">
                     <div class="amenity-icon">
-                      <i :class="amenity.icon || 'bi bi-stars'"></i>
+                      <i :class="'bi-stars'"></i>
                     </div>
 
                     <span>{{ amenity.name }}</span>
                   </div>
                 </td>
 
-                <td>
+                <!-- <td>
                   <span class="icon-text">
                     {{ amenity.icon || "—" }}
                   </span>
-                </td>
+                </td> -->
 
                 <td class="description">
                   {{ amenity.description || "No description" }}
@@ -184,7 +190,7 @@
           </div>
 
           <!-- Icon -->
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label>Icon</label>
 
             <input
@@ -197,7 +203,7 @@
               Example: <b>bi-wifi</b>, <b>bi-tv</b>,
               <b>bi-snow</b>
             </small>
-          </div>
+          </div> -->
 
           <!-- Description -->
           <div class="form-group">
@@ -251,7 +257,7 @@ const editingAmenity = ref(null);
 
 const form = ref({
   name: "",
-  icon: "",
+  icon: "bi-stars",
   description: "",
   status: "active",
 });
@@ -263,7 +269,7 @@ onMounted(async () => {
 function resetForm() {
   form.value = {
     name: "",
-    icon: "",
+    icon: "bi-stars",
     description: "",
     status: "active",
   };
@@ -280,7 +286,7 @@ function openEditModal(amenity) {
 
   form.value = {
     name: amenity.name || "",
-    icon: amenity.icon || "",
+    icon: amenity.icon || "bi-stars",
     description: amenity.description || "",
     status: amenity.status || "active",
   };
@@ -298,21 +304,26 @@ async function saveAmenity() {
   try {
     const payload = {
       name: form.value.name,
-      icon: form.value.icon || null,
+      icon: form.value.icon,
       description: form.value.description || null,
       status: form.value.status,
     };
 
     if (editingAmenity.value) {
-      await manager.updateAmenity(editingAmenity.value.id, payload);
+      await manager.updateAmenity(
+        editingAmenity.value.id,
+        payload
+      );
     } else {
       await manager.createAmenity(payload);
     }
 
+    const wasEditing = !!editingAmenity.value;
+
     closeModal();
 
     alert(
-      editingAmenity.value
+      wasEditing
         ? "Amenity updated successfully."
         : "Amenity created successfully."
     );
@@ -360,7 +371,7 @@ async function deleteAmenity(amenity) {
   align-items: center;
   justify-content: space-between;
 }
-
+/* 
 .page-title {
   margin: 0;
 
@@ -376,7 +387,7 @@ async function deleteAmenity(amenity) {
 
   color: var(--text-muted);
   font-size: 14px;
-}
+} */
 
 /* =========================
    CONTENT
@@ -405,6 +416,7 @@ async function deleteAmenity(amenity) {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  
 
   cursor: pointer;
 

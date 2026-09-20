@@ -305,7 +305,7 @@
 
                       <i
                         :class="
-                          amenity.icon ||
+                          
                           'bi bi-stars'
                         "
                       ></i>
@@ -390,7 +390,6 @@
 
                           <i
                             :class="
-                              amenity.icon ||
                               'bi bi-stars'
                             "
                           ></i>
@@ -568,6 +567,7 @@ const availableToConnect = computed(() => {
 
   return manager.availableAmenities.filter(
     amenity =>
+    amenity.status === "active" &&
       !connectedIds.includes(
         Number(amenity.id)
       )

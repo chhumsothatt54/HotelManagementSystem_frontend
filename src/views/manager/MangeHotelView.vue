@@ -842,7 +842,7 @@
                 <!-- PROVINCE -->
                 <div class="form-group">
 
-                  <label>
+                  <!-- <label>
                     Province / State <span>*</span>
                   </label>
 
@@ -857,7 +857,7 @@
                       required
                     />
 
-                  </div>
+                  </div> -->
 
                 </div>
 
