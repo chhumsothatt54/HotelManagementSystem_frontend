@@ -157,13 +157,6 @@
                 <span class="spinner-grow spinner-grow-sm text-warning" role="status"></span>
                 <span>Waiting for payment scan...</span>
               </div>
-              
-              <!-- Demo Simulate Success Button -->
-              <div class="mt-3">
-                <button class="btn btn-outline-success btn-sm rounded-pill px-4 fw-semibold" @click="mockPaymentSuccess" type="button">
-                  <i class="bi bi-lightning-charge-fill me-1"></i> [Demo] Simulate Payment Success
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -286,20 +279,6 @@ function startPolling() {
 function stopPolling() {
   clearInterval(pollTimer)
   pollTimer = null
-}
-
-async function mockPaymentSuccess() {
-  try {
-    const bookingId = route.query.bookingId
-    await api.post(`/v1/booking/${bookingId}/mock-success`)
-
-    stopPolling()
-    if (modalInstance) modalInstance.hide()
-    alert('Payment successful (Demo)!')
-    router.push({ path: '/booking-detail', query: { id: bookingId } })
-  } catch (err) {
-    console.error('Mock success error:', err)
-  }
 }
 
 async function confirmPayment() {
