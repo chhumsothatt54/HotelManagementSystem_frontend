@@ -68,7 +68,7 @@
                         <tbody>
                             <!-- Loading State -->
                             <tr v-if="managerStore.loading">
-                                <td colspan="8" class="text-center py-4 text-muted">
+                                <td colspan="9" class="text-center py-4 text-muted">
                                     <div class="spinner-border spinner-border-sm me-2" role="status"></div>
                                     Loading bookings...
                                 </td>
@@ -76,7 +76,7 @@
 
                             <!-- Empty State -->
                             <tr v-else-if="filteredBookings.length === 0">
-                                <td colspan="8" class="text-center py-4 text-muted">
+                                <td colspan="9" class="text-center py-4 text-muted">
                                     No bookings found.
                                 </td>
                             </tr>
@@ -106,6 +106,7 @@
                                     </span>
                                 </td>
                                 <td class="fw-bold text-dark">${{ booking.total_amount }}</td>
+                                <!-- PAYMENT STATUS -->
                                 <td>
                                     <span
                                         class="payment-badge"
@@ -114,9 +115,13 @@
                                         {{ formatPaymentStatus(booking) }}
                                     </span>
                                 </td>
+
+                                <!-- PAYMENT METHOD -->
                                 <td>
-    {{ booking.payments?.[booking.payments.length - 1]?.payment_method || 'N/A' }}
-</td>
+                                    <span class="payment-method">
+                                        {{ getPaymentMethod(booking) }}
+                                    </span>
+                                </td>
                                 <td class="text-end">
                                     <select 
                                         class="action-select" 
