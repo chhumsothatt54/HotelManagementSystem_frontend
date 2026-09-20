@@ -59,13 +59,16 @@
                                 <th scope="col" style="width: 15%;">CHECK-OUT</th>
                                 <th scope="col" style="width: 15%;">STATUS</th>
                                 <th scope="col" style="width: 11%;">AMOUNT</th>
+                                
+                                <th scope="col" style="width: 13%;">PAYMENT</th>
+                                <th scope="col" style="width: 11%;">PAYMENT METHOD</th>
                                 <th scope="col" class="text-end" style="width: 12%;">ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
                             <!-- Loading State -->
                             <tr v-if="managerStore.loading">
-                                <td colspan="7" class="text-center py-4 text-muted">
+                                <td colspan="8" class="text-center py-4 text-muted">
                                     <div class="spinner-border spinner-border-sm me-2" role="status"></div>
                                     Loading bookings...
                                 </td>
@@ -73,7 +76,7 @@
 
                             <!-- Empty State -->
                             <tr v-else-if="filteredBookings.length === 0">
-                                <td colspan="7" class="text-center py-4 text-muted">
+                                <td colspan="8" class="text-center py-4 text-muted">
                                     No bookings found.
                                 </td>
                             </tr>
@@ -103,6 +106,17 @@
                                     </span>
                                 </td>
                                 <td class="fw-bold text-dark">${{ booking.total_amount }}</td>
+                                <td>
+                                    <span
+                                        class="payment-badge"
+                                        :class="getPaymentStatusClass(booking)"
+                                    >
+                                        {{ formatPaymentStatus(booking) }}
+                                    </span>
+                                </td>
+                                <td>
+    {{ booking.payments?.[booking.payments.length - 1]?.payment_method || 'N/A' }}
+</td>
                                 <td class="text-end">
                                     <select 
                                         class="action-select" 
@@ -142,6 +156,12 @@ const filterOptions = ['All', 'Pending', 'Confirmed', 'Checked_in', 'Checked_out
 onMounted(async () => {
     try {
         await managerStore.getBookings()
+
+        //console.log('BOOKINGS:', managerStore.bookings)
+        //console.log('FIRST BOOKING:', managerStore.bookings?.[0])
+       // console.log('PAYMENT STATUS:', managerStore.bookings?.[0]?.payment_status)
+       // console.log('PAYMENT OBJECT:', managerStore.bookings?.[0]?.payments?.[0])
+       // console.log('PAYMENT KEYS:', Object.keys(managerStore.bookings?.[0]?.payments?.[0] || {}))
     } catch (err) {
         console.error('Failed to fetch bookings:', err)
     }
@@ -226,6 +246,61 @@ const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+//payment status
+const getPaymentStatus = (booking) => {
+    const payments = booking.payments || []
+
+    if (payments.length === 0) {
+        return 'paiding'
+    }
+
+    const payment = payments[payments.length - 1]
+
+    return payment.status || 'paiding'
+}
+
+const formatPaymentStatus = (booking) => {
+    const status = getPaymentStatus(booking).toLowerCase()
+
+    const labels = {
+        pending: 'Paiding',
+        paiding: 'Paiding',
+        paid: 'Paid',
+        failed: 'Failed',
+        refunded: 'Refunded'
+    }
+
+    return labels[status] || status
+}
+
+const getPaymentStatusClass = (booking) => {
+    const status = getPaymentStatus(booking).toLowerCase()
+
+    // pending and paiding use the same UI style
+    if (status === 'pending' || status === 'paiding') {
+        return 'payment-paiding'
+    }
+
+    return `payment-${status}`
+}
+//payment method
+const getPaymentMethod = (booking) => {
+    const payments = booking.payments || []
+
+    if (payments.length === 0) {
+        return 'N/A'
+    }
+
+    const payment = payments[payments.length - 1]
+
+    if (!payment.payment_method) {
+        return 'N/A'
+    }
+
+    return payment.payment_method.charAt(0).toUpperCase()
+        + payment.payment_method.slice(1)
 }
 </script>
 <style scoped>
@@ -321,4 +396,39 @@ const formatDate = (dateString) => {
       border-color: var(--primary-emerald);
       box-shadow: 0 0 0 0.2rem rgba(10, 122, 92, 0.15);
     }
+
+    .payment-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.payment-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.payment-paid {
+    background-color: #ecfdf5;
+    color: #047857;
+}
+
+.payment-paiding {
+    background-color: #fff7ed;
+    color: #c2410c;
+}
+
+.payment-failed {
+    background-color: #fef2f2;
+    color: #dc2626;
+}
+
+.payment-refunded {
+    background-color: #eff6ff;
+    color: #2563eb;
+}
 </style>
