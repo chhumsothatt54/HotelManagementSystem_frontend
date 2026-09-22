@@ -5,13 +5,10 @@ import HomeView from "../views/HomeView.vue";
 import DashMgView from "@/views/manager/DashMgView.vue";
 import DashboardMg from "@/views/DashboardMg.vue";
 
-import DemoMg from "@/views/DemoMg.vue";
-import DemoAdmin from "@/views/DemoAdmin.vue";
-
 // Customer Views
 import HoteldetailView from "@/views/customer/Hoteldetailview.vue";
 import BookingView from "@/views/customer/BookingView.vue";
-import BookingdetailView from "@/views/customer/BookingdetailView.vue"; 
+import BookingdetailView from "@/views/customer/BookingdetailView.vue";
 import PaymentView from "@/views/customer/PaymentView.vue";
 import ContactView from "@/views/customer/ContactView.vue";
 import AboutView from "@/views/customer/AboutView.vue";
@@ -118,20 +115,6 @@ const router = createRouter({
       name: "about",
       component: AboutView,
     },
-
-    // =============================
-    // Demo Routes
-    // =============================
-    // {
-    //   path: "/demomg",
-    //   name: "demo-manager",
-    //   component: DemoMg,
-    // },
-    // {
-    //   path: "/demoadmin",
-    //   name: "demo-admin",
-    //   component: DemoAdmin,
-    // },
 
     // =============================
     // Customer Routes
@@ -455,10 +438,10 @@ const router = createRouter({
           component: OccupancyView,
           meta: {
             requireAuth: true,
-            roles: ["hotel_manager"],    
+            roles: ["hotel_manager"],
           },
         },
-          {
+        {
           path: "RevenueReport",
           name: "manager-revenue-report",
           component: RevenueReport,
@@ -473,7 +456,7 @@ const router = createRouter({
           component: BookingReport,
           meta: {
             requireAuth: true,
-            roles: ["hotel_manager"],    
+            roles: ["hotel_manager"],
           },
         },
       ],

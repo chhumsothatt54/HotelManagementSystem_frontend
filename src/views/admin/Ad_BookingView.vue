@@ -11,9 +11,10 @@
                         <div class="panel-title fw-bold fs-6">All Bookings</div>
                         <div class="panel-sub text-muted font-sm">Recent booking activities</div>
                     </div>
-                    
+
                     <div class="d-flex gap-3">
-                        <input type="text" class="form-control search-input" placeholder="Search ID, guest, hotel..." v-model="searchQuery">
+                        <input type="text" class="form-control search-input" placeholder="Search ID, guest, hotel..."
+                            v-model="searchQuery">
                         <select class="form-select status-select" v-model="statusFilter">
                             <option value="All">All Status</option>
                             <option value="pending">Pending</option>
@@ -48,37 +49,37 @@
                                 <td class="fw-bold text-dark">#{{ booking.id || booking.booking_number }}</td>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
-                                        <div
-                                            v-if="(booking.customer || booking.user)?.avatar"
-                                            class="border-0"
-                                            style="width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; overflow: hidden;"
-                                        >
-                                            <img
-                                                :src="(booking.customer || booking.user).avatar.startsWith('http') ? (booking.customer || booking.user).avatar : ((booking.customer || booking.user).avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${(booking.customer || booking.user).avatar}` : `http://127.0.0.1:8000/storage/${(booking.customer || booking.user).avatar}`)"
+                                        <div v-if="(booking.customer || booking.user)?.avatar" class="border-0"
+                                            style="width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; overflow: hidden;">
+                                            <img :src="(booking.customer || booking.user).avatar.startsWith('http') ? (booking.customer || booking.user).avatar : ((booking.customer || booking.user).avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${(booking.customer || booking.user).avatar}` : `http://127.0.0.1:8000/storage/${(booking.customer || booking.user).avatar}`)"
                                                 style="width: 100%; height: 100%; object-fit: cover;"
-                                                alt="Guest Avatar"
-                                            />
+                                                alt="Guest Avatar" />
                                         </div>
-                                        <div
-                                            v-else
+                                        <div v-else
                                             class="bg-light text-dark d-flex align-items-center justify-content-center"
-                                            style="width: 32px; height: 32px; border-radius: 50%; font-weight: 600; font-size: 13px; flex-shrink: 0; border: 1px solid #e5e7eb;"
-                                        >
-                                            {{ ((booking.customer || booking.user)?.name || booking.guest_name || 'G').charAt(0).toUpperCase() }}
+                                            style="width: 32px; height: 32px; border-radius: 50%; font-weight: 600; font-size: 13px; flex-shrink: 0; border: 1px solid #e5e7eb;">
+                                            {{ ((booking.customer || booking.user)?.name || booking.guest_name ||
+                                            'G').charAt(0).toUpperCase() }}
                                         </div>
                                         <div>
-                                            <div class="text-dark fw-semibold">{{ (booking.customer || booking.user)?.name || booking.guest_name || 'N/A' }}</div>
-                                            <div class="text-muted font-xs">{{ (booking.customer || booking.user)?.email || booking.guest_email }}</div>
+                                            <div class="text-dark fw-semibold">{{ (booking.customer ||
+                                                booking.user)?.name || booking.guest_name || 'N/A' }}</div>
+                                            <div class="text-muted font-xs">{{ (booking.customer || booking.user)?.email
+                                                || booking.guest_email }}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="text-dark">{{ booking.hotel?.name || 'N/A' }}</div>
-                                    <div class="text-muted font-xs">{{ booking.room?.room_number || booking.room_type?.name }}</div>
+                                    <div class="text-muted font-xs">{{ booking.room?.room_number ||
+                                        booking.room_type?.name }}</div>
                                 </td>
-                                <td class="text-secondary">{{ formatDate(booking.check_in_date || booking.check_in) }}</td>
-                                <td class="text-secondary">{{ formatDate(booking.check_out_date || booking.check_out) }}</td>
-                                <td class="fw-bold text-success">${{ booking.total_amount || booking.total_price || booking.amount }}</td>
+                                <td class="text-secondary">{{ formatDate(booking.check_in_date || booking.check_in) }}
+                                </td>
+                                <td class="text-secondary">{{ formatDate(booking.check_out_date || booking.check_out) }}
+                                </td>
+                                <td class="fw-bold text-success">${{ booking.total_amount || booking.total_price ||
+                                    booking.amount }}</td>
                                 <td>
                                     <span class="status-badge" :class="booking.status">
                                         {{ booking.status }}
@@ -117,7 +118,7 @@ const loadBookings = async () => {
 const bookingList = computed(() => {
     const data = adminStore.bookings;
     if (!data) return [];
-    
+
     // Recursive search for the first array in the object
     const findArray = (obj) => {
         if (Array.isArray(obj)) return obj;
@@ -137,7 +138,7 @@ const bookingList = computed(() => {
         }
         return [];
     };
-    
+
     return findArray(data);
 });
 
@@ -190,6 +191,7 @@ onMounted(() => {
     padding: 16px 0;
     border-bottom: 1px solid #eef2f0;
 }
+
 .icon-btn {
     background: #f1f5f9;
     border: none;
@@ -199,6 +201,7 @@ onMounted(() => {
     position: relative;
     cursor: pointer;
 }
+
 .dot {
     position: absolute;
     top: 10px;
@@ -208,6 +211,7 @@ onMounted(() => {
     background-color: #ef4444;
     border-radius: 50%;
 }
+
 .user-chip {
     display: flex;
     align-items: center;
@@ -218,6 +222,7 @@ onMounted(() => {
     border: 1px solid #e2e8f0;
     cursor: pointer;
 }
+
 .avatar-circle {
     width: 32px;
     height: 32px;
@@ -230,8 +235,14 @@ onMounted(() => {
     font-weight: bold;
     font-size: 14px;
 }
-.font-sm { font-size: 13px; }
-.font-xs { font-size: 11px; }
+
+.font-sm {
+    font-size: 13px;
+}
+
+.font-xs {
+    font-size: 11px;
+}
 
 /* Panel & Table Styles */
 .search-input {
@@ -240,16 +251,19 @@ onMounted(() => {
     border: 1px solid #eef2f0;
     font-size: 14px;
 }
+
 .search-input:focus {
     box-shadow: none;
     border-color: #035e4e;
 }
+
 .status-select {
     width: 140px;
     border-radius: 8px;
     border: 1px solid #eef2f0;
     font-size: 14px;
 }
+
 .status-select:focus {
     box-shadow: none;
     border-color: #035e4e;
@@ -262,6 +276,7 @@ onMounted(() => {
     padding: 24px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
+
 .custom-table th {
     font-size: 11px;
     font-weight: 700;
@@ -270,11 +285,13 @@ onMounted(() => {
     border-bottom: 1px solid #f1f5f9;
     text-transform: uppercase;
 }
+
 .custom-table td {
     padding: 16px 20px;
     border-bottom: 1px solid #f8fafc;
     font-size: 14px;
 }
+
 .status-badge {
     padding: 4px 12px;
     border-radius: 20px;
@@ -282,7 +299,20 @@ onMounted(() => {
     font-weight: 600;
     text-transform: capitalize;
 }
-.status-badge.confirmed, .status-badge.completed { background-color: #def7ec; color: #03543f; }
-.status-badge.pending { background-color: #fef08a; color: #854d0e; }
-.status-badge.cancelled { background-color: #fde8e8; color: #9b1c1c; }
+
+.status-badge.confirmed,
+.status-badge.completed {
+    background-color: #def7ec;
+    color: #03543f;
+}
+
+.status-badge.pending {
+    background-color: #fef08a;
+    color: #854d0e;
+}
+
+.status-badge.cancelled {
+    background-color: #fde8e8;
+    color: #9b1c1c;
+}
 </style>

@@ -8,7 +8,8 @@
             <!-- Custom Page Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <div class="text-success font-xs fw-bold text-uppercase mb-1" style="letter-spacing: 1px;">SYSTEM</div>
+                    <div class="text-success font-xs fw-bold text-uppercase mb-1" style="letter-spacing: 1px;">SYSTEM
+                    </div>
                     <div class="fw-bold fs-4 text-dark mb-1">Notifications</div>
                     <div class="text-muted font-sm">System-level notifications for admins.</div>
                 </div>
@@ -26,20 +27,23 @@
                         No notifications found.
                     </div>
                     <div v-else class="notif-wrapper">
-                        <div v-for="(notif, index) in notificationList" :key="index" 
-                             class="notif-item d-flex align-items-start gap-3"
-                             :class="isUnread(notif) ? 'unread' : 'read'">
-                            
+                        <div v-for="(notif, index) in notificationList" :key="index"
+                            class="notif-item d-flex align-items-start gap-3"
+                            :class="isUnread(notif) ? 'unread' : 'read'">
+
                             <div class="notif-icon-box flex-shrink-0 d-flex align-items-center justify-content-center">
                                 <i :class="notif.icon || 'bi bi-bell'"></i>
                             </div>
-                            
+
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-start mb-1">
                                     <h6 class="mb-0 fw-bold text-dark">{{ getTitle(notif) }}</h6>
                                     <div class="text-end">
-                                        <div class="text-muted font-xs">{{ formatDate(notif.created_at || notif.date || notif.updated_at) }}</div>
-                                        <div v-if="isUnread(notif)" class="mt-2 text-success fw-bold font-sm cursor-pointer mark-read-text" @click="markAsRead(notif.id)">
+                                        <div class="text-muted font-xs">{{ formatDate(notif.created_at || notif.date ||
+                                            notif.updated_at) }}</div>
+                                        <div v-if="isUnread(notif)"
+                                            class="mt-2 text-success fw-bold font-sm cursor-pointer mark-read-text"
+                                            @click="markAsRead(notif.id)">
                                             Mark read
                                         </div>
                                     </div>
@@ -73,18 +77,18 @@ const loadNotifications = async () => {
         // Fetch notifications from the backend API
         await adminStore.getNotification();
         let responseData = adminStore.notification;
-        
+
         // Safely extract the notifications array.
         // Since Laravel sends paginated data, the array is usually located in responseData.data.data
         if (responseData && responseData.data && Array.isArray(responseData.data.data)) {
             notificationList.value = responseData.data.data;
-        } 
+        }
         else if (responseData && Array.isArray(responseData.data)) {
             notificationList.value = responseData.data;
-        } 
+        }
         else if (Array.isArray(responseData)) {
             notificationList.value = responseData;
-        } 
+        }
         else {
             notificationList.value = []; // Default to empty array if no data found
         }
@@ -116,7 +120,7 @@ const formatDate = (dateString) => {
     const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
-    
+
     return `${year}-${month}-${day} ${hours}:${minutes}`;
 };
 
@@ -171,6 +175,7 @@ onMounted(() => {
     padding: 10px 16px;
     font-size: 14px;
 }
+
 .mark-all-btn:hover {
     background-color: #c8eadd;
 }
@@ -197,6 +202,7 @@ onMounted(() => {
     padding-left: 16px;
     padding-right: 16px;
 }
+
 .notif-item.read:last-child {
     border-bottom: none;
 }
@@ -208,10 +214,12 @@ onMounted(() => {
     color: #035e4e;
     font-size: 18px;
 }
+
 .notif-item.unread .notif-icon-box {
     background-color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
+
 .notif-item.read .notif-icon-box {
     background-color: transparent;
     padding-left: 16px;
@@ -220,10 +228,16 @@ onMounted(() => {
 .mark-read-text {
     cursor: pointer;
 }
+
 .mark-read-text:hover {
     text-decoration: underline;
 }
 
-.font-sm { font-size: 13px; }
-.font-xs { font-size: 11px; }
+.font-sm {
+    font-size: 13px;
+}
+
+.font-xs {
+    font-size: 11px;
+}
 </style>

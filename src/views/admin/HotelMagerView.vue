@@ -12,7 +12,8 @@
                         <div class="panel-sub text-muted font-sm">Managers waiting for your review or action</div>
                     </div>
                     <div>
-                        <input type="text" class="custom-input" placeholder="Search managers..." v-model="searchQuery" />
+                        <input type="text" class="custom-input" placeholder="Search managers..."
+                            v-model="searchQuery" />
                     </div>
                 </div>
 
@@ -39,22 +40,15 @@
                         <tr v-for="manager in filteredManagers" :key="manager.id" v-else>
                             <td class="fw-bold text-dark">
                                 <div class="d-flex align-items-center gap-2">
-                                    <div
-                                        v-if="manager.avatar"
-                                        class="border-0"
-                                        style="width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; overflow: hidden;"
-                                    >
-                                        <img
-                                            :src="manager.avatar.startsWith('http') ? manager.avatar : (manager.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${manager.avatar}` : `http://127.0.0.1:8000/storage/${manager.avatar}`)"
+                                    <div v-if="manager.avatar" class="border-0"
+                                        style="width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; overflow: hidden;">
+                                        <img :src="manager.avatar.startsWith('http') ? manager.avatar : (manager.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${manager.avatar}` : `http://127.0.0.1:8000/storage/${manager.avatar}`)"
                                             style="width: 100%; height: 100%; object-fit: cover;"
-                                            alt="Manager Avatar"
-                                        />
+                                            alt="Manager Avatar" />
                                     </div>
-                                    <div
-                                        v-else
+                                    <div v-else
                                         class="bg-light text-dark d-flex align-items-center justify-content-center"
-                                        style="width: 32px; height: 32px; border-radius: 50%; font-weight: 600; font-size: 13px; flex-shrink: 0; border: 1px solid #e5e7eb;"
-                                    >
+                                        style="width: 32px; height: 32px; border-radius: 50%; font-weight: 600; font-size: 13px; flex-shrink: 0; border: 1px solid #e5e7eb;">
                                         {{ manager.name ? manager.name.charAt(0).toUpperCase() : 'M' }}
                                     </div>
                                     <span>{{ manager.name }}</span>
@@ -73,11 +67,8 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-end align-items-center gap-2">
-                                    <select 
-                                        :value="manager.status" 
-                                        class="status-select" 
-                                        @change="changeStatus(manager.id, $event.target.value)"
-                                    >
+                                    <select :value="manager.status" class="status-select"
+                                        @change="changeStatus(manager.id, $event.target.value)">
                                         <option value="active">Active</option>
                                         <option value="inactive">Inactive</option>
                                         <option value="blocked">Blocked</option>
@@ -106,8 +97,8 @@ const managerList = ref([]);
 const filteredManagers = computed(() => {
     if (!searchQuery.value) return managerList.value;
     const query = searchQuery.value.toLowerCase();
-    return managerList.value.filter(manager => 
-        manager.name?.toLowerCase().includes(query) || 
+    return managerList.value.filter(manager =>
+        manager.name?.toLowerCase().includes(query) ||
         manager.email?.toLowerCase().includes(query) ||
         manager.status?.toLowerCase().includes(query)
     );
@@ -141,7 +132,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
 .custom-input {
     border: 1px solid #e2e8f0;
     border-radius: 8px;
@@ -150,6 +140,7 @@ onMounted(() => {
     outline: none;
     min-width: 200px;
 }
+
 .custom-input:focus {
     border-color: #035e4e;
     box-shadow: 0 0 0 2px rgba(3, 94, 78, 0.1);
@@ -168,6 +159,7 @@ onMounted(() => {
     padding: 16px 0;
     border-bottom: 1px solid #eef2f0;
 }
+
 .icon-btn {
     background: #f1f5f9;
     border: none;
@@ -177,6 +169,7 @@ onMounted(() => {
     position: relative;
     cursor: pointer;
 }
+
 .dot {
     position: absolute;
     top: 10px;
@@ -186,6 +179,7 @@ onMounted(() => {
     background-color: #ef4444;
     border-radius: 50%;
 }
+
 .user-chip {
     display: flex;
     align-items: center;
@@ -196,6 +190,7 @@ onMounted(() => {
     border: 1px solid #e2e8f0;
     cursor: pointer;
 }
+
 .avatar-circle {
     width: 32px;
     height: 32px;
@@ -208,8 +203,14 @@ onMounted(() => {
     font-weight: bold;
     font-size: 14px;
 }
-.font-sm { font-size: 13px; }
-.font-xs { font-size: 11px; }
+
+.font-sm {
+    font-size: 13px;
+}
+
+.font-xs {
+    font-size: 11px;
+}
 
 /* Panel & Table Styles */
 .panel-card {
@@ -219,6 +220,7 @@ onMounted(() => {
     padding: 24px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
+
 .custom-table th {
     font-size: 11px;
     font-weight: 700;
@@ -226,11 +228,13 @@ onMounted(() => {
     padding: 16px 20px;
     border-bottom: 1px solid #f1f5f9;
 }
+
 .custom-table td {
     padding: 16px 20px;
     border-bottom: 1px solid #f8fafc;
     font-size: 14px;
 }
+
 .status-badge {
     padding: 4px 12px;
     border-radius: 20px;
@@ -238,9 +242,22 @@ onMounted(() => {
     font-weight: 600;
     text-transform: lowercase;
 }
-.status-badge.active { background-color: #def7ec; color: #03543f; }
-.status-badge.inactive { background-color: #f1f5f9; color: #64748b; }
-.status-badge.blocked { background-color: #fde8e8; color: #9b1c1c; }
+
+.status-badge.active {
+    background-color: #def7ec;
+    color: #03543f;
+}
+
+.status-badge.inactive {
+    background-color: #f1f5f9;
+    color: #64748b;
+}
+
+.status-badge.blocked {
+    background-color: #fde8e8;
+    color: #9b1c1c;
+}
+
 .status-select {
     border: 1px solid #e2e8f0;
     border-radius: 8px;

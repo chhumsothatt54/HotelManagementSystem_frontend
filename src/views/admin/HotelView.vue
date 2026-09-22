@@ -1,154 +1,134 @@
 <template>
-    <div class="page-container">
-        <!-- Topbar -->
-        <AdminTopbar title="Hotels" subtitle="Platform performance overview" />
+  <div class="page-container">
+    <!-- Topbar -->
+    <AdminTopbar title="Hotels" subtitle="Platform performance overview" />
 
-        <div class="content-area">
-            <!-- Header -->
-            <div class="page-header mb-4">
-                <div class="category-tag">PROPERTIES</div>
-                <h1 class="main-title">Hotels</h1>
-                <p class="main-subtitle">Approve, reject, or manage hotels created by managers.</p>
-            </div>
+    <div class="content-area">
+      <!-- Header -->
+      <div class="page-header mb-4">
+        <div class="category-tag">PROPERTIES</div>
+        <h1 class="main-title">Hotels</h1>
+        <p class="main-subtitle">Approve, reject, or manage hotels created by managers.</p>
+      </div>
 
-            <!-- Filter Tabs -->
-            <div class="filter-tabs">
-                <button v-for="tab in filterTabs" :key="tab.value" class="tab-pill"
-                    :class="{ active: activeTab === tab.value }" @click="activeTab = tab.value">
-                    {{ tab.label }}
-                </button>
-            </div>
+      <!-- Filter Tabs -->
+      <div class="filter-tabs">
+        <button v-for="tab in filterTabs" :key="tab.value" class="tab-pill" :class="{ active: activeTab === tab.value }"
+          @click="activeTab = tab.value">
+          {{ tab.label }}
+        </button>
+      </div>
 
-            <!-- Table Card Container -->
-            <div class="table-card">
-                <div class="table-responsive">
-                    <table class="custom-table align-middle">
-                        <thead>
-                            <tr>
-                                <th>HOTEL</th>
-                                <th>MANAGER</th>
-                                <th>LOCATION</th>
-                                <th>ROOMS</th>
-                                <th>STATUS</th>
-                                <th class="text-end">ACTIONS</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Loading State -->
-                            <tr v-if="loading">
-                                <td colspan="6" class="text-center py-5 text-muted">Loading hotels data...</td>
-                            </tr>
+      <!-- Table Card Container -->
+      <div class="table-card">
+        <div class="table-responsive">
+          <table class="custom-table align-middle">
+            <thead>
+              <tr>
+                <th>HOTEL</th>
+                <th>MANAGER</th>
+                <th>LOCATION</th>
+                <th>ROOMS</th>
+                <th>STATUS</th>
+                <th class="text-end">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Loading State -->
+              <tr v-if="loading">
+                <td colspan="6" class="text-center py-5 text-muted">Loading hotels data...</td>
+              </tr>
 
-                            <!-- Empty State -->
-                            <tr v-else-if="!filteredHotels.length">
-                                <td colspan="6" class="text-center py-5 text-muted">No hotels found for this filter.</td>
-                            </tr>
+              <!-- Empty State -->
+              <tr v-else-if="!filteredHotels.length">
+                <td colspan="6" class="text-center py-5 text-muted">No hotels found for this filter.</td>
+              </tr>
 
-                            <!-- Data Rows -->
-                            <tr v-for="hotel in filteredHotels" :key="hotel.id" v-else>
-                                <td class="fw-bold hotel-name">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div
-                                            v-if="hotel.images && hotel.images.length"
-                                            class="border-0 rounded text-center overflow-hidden"
-                                            style="width: 48px; height: 48px; flex-shrink: 0;"
-                                        >
-                                            <img
-                                                :src="hotel.images[0].image.startsWith('http') ? hotel.images[0].image : (hotel.images[0].image.startsWith('uploads/') ? `http://127.0.0.1:8000/${hotel.images[0].image}` : `http://127.0.0.1:8000/storage/${hotel.images[0].image}`)"
-                                                style="width: 100%; height: 100%; object-fit: cover;"
-                                                alt="Hotel Image"
-                                            />
-                                        </div>
-                                        <div
-                                            v-else
-                                            class="bg-light text-dark d-flex align-items-center justify-content-center rounded"
-                                            style="width: 48px; height: 48px; font-weight: 600; font-size: 16px; flex-shrink: 0; border: 1px solid #e5e7eb;"
-                                        >
-                                            H
-                                        </div>
-                                        <span>{{ hotel.name }}</span>
-                                    </div>
-                                </td>
-                                <td class="text-secondary">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div
-                                            v-if="hotel.manager && hotel.manager.avatar"
-                                            class="border-0"
-                                            style="width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; overflow: hidden;"
-                                        >
-                                            <img
-                                                :src="hotel.manager.avatar.startsWith('http') ? hotel.manager.avatar : (hotel.manager.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${hotel.manager.avatar}` : `http://127.0.0.1:8000/storage/${hotel.manager.avatar}`)"
-                                                style="width: 100%; height: 100%; object-fit: cover;"
-                                                alt="Manager Avatar"
-                                            />
-                                        </div>
-                                        <div
-                                            v-else
-                                            class="bg-light text-dark d-flex align-items-center justify-content-center"
-                                            style="width: 32px; height: 32px; border-radius: 50%; font-weight: 600; font-size: 13px; flex-shrink: 0; border: 1px solid #e5e7eb;"
-                                        >
-                                            {{ (hotel.manager?.name || hotel.manager_name || 'M').charAt(0).toUpperCase() }}
-                                        </div>
-                                        <span>{{ hotel.manager?.name || hotel.manager_name || 'N/A' }}</span>
-                                    </div>
-                                </td>
-                                <td class="text-secondary">
-                                    <a
-                                        v-if="hotel.address || hotel.location"
-                                        :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotel.address || hotel.location)}`"
-                                        target="_blank"
-                                        class="text-decoration-none text-primary"
-                                    >
-                                        <i class="bi bi-geo-alt-fill me-1"></i>
-                                        {{ hotel.address || hotel.location }}
-                                    </a>
-                                    <span v-else>N/A</span>
-                                </td>
-                                <td class="text-secondary fw-semibold">{{ hotel.rooms_count ?? hotel.rooms?.length ?? 0 }} Rooms</td>
-                                <td>
-                                    <span class="status-badge" :class="hotel.status?.toLowerCase()">
-                                        {{ hotel.status }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center justify-content-end gap-2">
-                                        <!-- Actions for Pending status: Check and X buttons -->
-                                        <template v-if="hotel.status?.toLowerCase() === 'pending'">
-                                            <button class="icon-action-btn check-btn" title="Approve"
-                                                @click="changeStatus(hotel.id, 'approved')">
-                                               <i class="bi bi-check"></i>
-                                            </button>
-                                            <button class="icon-action-btn cross-btn" title="Reject"
-                                                @click="changeStatus(hotel.id, 'rejected')">
-                                                <i class="bi bi-x-lg"></i>
-                                            </button>
-                                        </template>
+              <!-- Data Rows -->
+              <tr v-for="hotel in filteredHotels" :key="hotel.id" v-else>
+                <td class="fw-bold hotel-name">
+                  <div class="d-flex align-items-center gap-3">
+                    <div v-if="hotel.images && hotel.images.length" class="border-0 rounded text-center overflow-hidden"
+                      style="width: 48px; height: 48px; flex-shrink: 0;">
+                      <img
+                        :src="hotel.images[0].image.startsWith('http') ? hotel.images[0].image : (hotel.images[0].image.startsWith('uploads/') ? `http://127.0.0.1:8000/${hotel.images[0].image}` : `http://127.0.0.1:8000/storage/${hotel.images[0].image}`)"
+                        style="width: 100%; height: 100%; object-fit: cover;" alt="Hotel Image" />
+                    </div>
+                    <div v-else class="bg-light text-dark d-flex align-items-center justify-content-center rounded"
+                      style="width: 48px; height: 48px; font-weight: 600; font-size: 16px; flex-shrink: 0; border: 1px solid #e5e7eb;">
+                      H
+                    </div>
+                    <span>{{ hotel.name }}</span>
+                  </div>
+                </td>
+                <td class="text-secondary">
+                  <div class="d-flex align-items-center gap-2">
+                    <div v-if="hotel.manager && hotel.manager.avatar" class="border-0"
+                      style="width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; overflow: hidden;">
+                      <img
+                        :src="hotel.manager.avatar.startsWith('http') ? hotel.manager.avatar : (hotel.manager.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${hotel.manager.avatar}` : `http://127.0.0.1:8000/storage/${hotel.manager.avatar}`)"
+                        style="width: 100%; height: 100%; object-fit: cover;" alt="Manager Avatar" />
+                    </div>
+                    <div v-else class="bg-light text-dark d-flex align-items-center justify-content-center"
+                      style="width: 32px; height: 32px; border-radius: 50%; font-weight: 600; font-size: 13px; flex-shrink: 0; border: 1px solid #e5e7eb;">
+                      {{ (hotel.manager?.name || hotel.manager_name || 'M').charAt(0).toUpperCase() }}
+                    </div>
+                    <span>{{ hotel.manager?.name || hotel.manager_name || 'N/A' }}</span>
+                  </div>
+                </td>
+                <td class="text-secondary">
+                  <a v-if="hotel.address || hotel.location"
+                    :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotel.address || hotel.location)}`"
+                    target="_blank" class="text-decoration-none text-primary">
+                    <i class="bi bi-geo-alt-fill me-1"></i>
+                    {{ hotel.address || hotel.location }}
+                  </a>
+                  <span v-else>N/A</span>
+                </td>
+                <td class="text-secondary fw-semibold">{{ hotel.rooms_count ?? hotel.rooms?.length ?? 0 }} Rooms</td>
+                <td>
+                  <span class="status-badge" :class="hotel.status?.toLowerCase()">
+                    {{ hotel.status }}
+                  </span>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center justify-content-end gap-2">
+                    <!-- Actions for Pending status: Check and X buttons -->
+                    <template v-if="hotel.status?.toLowerCase() === 'pending'">
+                      <button class="icon-action-btn check-btn" title="Approve"
+                        @click="changeStatus(hotel.id, 'approved')">
+                        <i class="bi bi-check"></i>
+                      </button>
+                      <button class="icon-action-btn cross-btn" title="Reject"
+                        @click="changeStatus(hotel.id, 'rejected')">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </template>
 
-                                        <!-- Status Select Dropdown for non-pending -->
-                                        <div v-else class="status-select-wrapper">
-                                            <select :value="hotel.status?.toLowerCase()" class="status-select"
-                                                @change="changeStatus(hotel.id, $event.target.value)">
-                                                <option value="pending">pending</option>
-                                                <option value="approved">approved</option>
-                                                <option value="rejected">rejected</option>
-                                                <option value="inactive">inactive</option>
-                                            </select>
-                                        </div>
+                    <!-- Status Select Dropdown for non-pending -->
+                    <div v-else class="status-select-wrapper">
+                      <select :value="hotel.status?.toLowerCase()" class="status-select"
+                        @change="changeStatus(hotel.id, $event.target.value)">
+                        <option value="pending">pending</option>
+                        <option value="approved">approved</option>
+                        <option value="rejected">rejected</option>
+                        <option value="inactive">inactive</option>
+                      </select>
+                    </div>
 
-                                        <!-- Delete Button -->
-                                        <button class="icon-action-btn delete-btn" title="Delete Hotel"
-                                            @click="deleteHotel(hotel.id)">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                    <!-- Delete Button -->
+                    <button class="icon-action-btn delete-btn" title="Delete Hotel" @click="deleteHotel(hotel.id)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -230,57 +210,68 @@ onMounted(() => {
 
 /* Topbar Styles */
 .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 0;
-    border-bottom: 1px solid #eef2f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #eef2f0;
 }
+
 .topbar-title {
-    color: #111827;
+  color: #111827;
 }
+
 .icon-btn {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    position: relative;
-    cursor: pointer;
-    color: #0f766e;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  color: #0f766e;
 }
+
 .dot {
-    position: absolute;
-    top: 10px;
-    right: 12px;
-    width: 6px;
-    height: 6px;
-    background-color: #10b981;
-    border-radius: 50%;
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 6px;
+  height: 6px;
+  background-color: #10b981;
+  border-radius: 50%;
 }
+
 .user-chip {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 6px 12px;
-    border-radius: 30px;
-    background: #ffffff;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 12px;
+  border-radius: 30px;
+  background: #ffffff;
+  cursor: pointer;
 }
+
 .avatar-circle {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: #0f766e;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #0f766e;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
 }
-.font-sm { font-size: 13px; }
-.font-xs { font-size: 11px; }
+
+.font-sm {
+  font-size: 13px;
+}
+
+.font-xs {
+  font-size: 11px;
+}
 
 /* Content Area */
 .content-area {
@@ -408,6 +399,7 @@ onMounted(() => {
 .status-select-wrapper {
   display: inline-block;
 }
+
 .status-select {
   border: 1px solid #e2e8f0;
   border-radius: 8px;

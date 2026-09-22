@@ -12,7 +12,7 @@
             <div>
                 <button class="btn btn-save" @click="saveProfile" :disabled="isSaving">
                     <span v-if="isSaving" class="spinner-border spinner-border-sm me-2"></span>
-                    <i v-else class="fa-solid fa-check me-2"></i> 
+                    <i v-else class="fa-solid fa-check me-2"></i>
                     {{ isSaving ? 'Saving...' : (saved ? 'Saved!' : 'Save Changes') }}
                 </button>
             </div>
@@ -25,8 +25,10 @@
                 <div class="col-md-4">
                     <div class="profile-card">
                         <input type="file" ref="fileInput" @change="handleFileUpload" class="d-none" accept="image/*" />
-                        <div class="avatar-large mx-auto mb-3 position-relative" @click="triggerFileInput" style="cursor: pointer;">
-                            <img v-if="userAvatar" :src="userAvatar" alt="Admin Avatar" class="w-100 h-100 rounded-circle object-fit-cover" />
+                        <div class="avatar-large mx-auto mb-3 position-relative" @click="triggerFileInput"
+                            style="cursor: pointer;">
+                            <img v-if="userAvatar" :src="userAvatar" alt="Admin Avatar"
+                                class="w-100 h-100 rounded-circle object-fit-cover" />
                             <span v-else>{{ userInitial }}</span>
                             <div class="camera-icon-badge">
                                 <i class="bi bi-camera-fill"></i>
@@ -47,7 +49,7 @@
                     <div class="form-card mb-4">
                         <div class="card-title">Personal Information</div>
                         <div class="card-subtitle mb-4">Update your account information.</div>
-                        
+
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">First Name</label>
@@ -76,26 +78,30 @@
                     <div class="form-card">
                         <div class="card-title text-dark">Security</div>
                         <div class="card-subtitle mb-4">Update your password. Leave blank if unchanged.</div>
-                        
+
                         <div v-if="pwdSuccess" class="alert alert-success py-2 mb-3">
                             <i class="bi bi-check-circle me-1"></i> <span class="ms-1 font-sm">{{ pwdSuccess }}</span>
                         </div>
                         <div v-if="pwdError" class="alert alert-danger py-2 mb-3">
-                            <i class="bi bi-exclamation-circle me-1"></i> <span class="ms-1 font-sm">{{ pwdError }}</span>
+                            <i class="bi bi-exclamation-circle me-1"></i> <span class="ms-1 font-sm">{{ pwdError
+                                }}</span>
                         </div>
 
                         <div class="row g-3">
                             <div class="col-md-12">
                                 <label class="form-label">Current Password</label>
-                                <input type="password" class="form-control" v-model="pwdForm.current_password" placeholder="........">
+                                <input type="password" class="form-control" v-model="pwdForm.current_password"
+                                    placeholder="........">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">New Password</label>
-                                <input type="password" class="form-control" v-model="pwdForm.new_password" placeholder="........">
+                                <input type="password" class="form-control" v-model="pwdForm.new_password"
+                                    placeholder="........">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Confirm Password</label>
-                                <input type="password" class="form-control" v-model="pwdForm.new_password_confirmation" placeholder="........">
+                                <input type="password" class="form-control" v-model="pwdForm.new_password_confirmation"
+                                    placeholder="........">
                             </div>
                         </div>
                     </div>
@@ -186,7 +192,7 @@ async function saveProfile() {
     isSaving.value = true
     pwdError.value = ''
     pwdSuccess.value = ''
-    
+
     try {
         const formData = new FormData()
         formData.append('name', `${user.firstName} ${user.lastName}`.trim())
@@ -201,9 +207,9 @@ async function saveProfile() {
 
         if (pwdForm.new_password || pwdForm.new_password_confirmation || pwdForm.current_password) {
             if (!pwdForm.current_password) {
-                 pwdError.value = "Current password is required to change password."
-                 isSaving.value = false
-                 return
+                pwdError.value = "Current password is required to change password."
+                isSaving.value = false
+                return
             }
             const pwdResult = await authStore.changePassword({
                 current_password: pwdForm.current_password,
@@ -253,6 +259,7 @@ async function saveProfile() {
     padding: 16px 0;
     border-bottom: 1px solid #eef2f0;
 }
+
 .icon-btn {
     background: #f1f5f9;
     border: none;
@@ -262,6 +269,7 @@ async function saveProfile() {
     position: relative;
     cursor: pointer;
 }
+
 .dot {
     position: absolute;
     top: 10px;
@@ -271,6 +279,7 @@ async function saveProfile() {
     background-color: #ef4444;
     border-radius: 50%;
 }
+
 .user-chip {
     display: flex;
     align-items: center;
@@ -281,6 +290,7 @@ async function saveProfile() {
     border: 1px solid #e2e8f0;
     cursor: pointer;
 }
+
 .avatar-circle {
     width: 32px;
     height: 32px;
@@ -293,8 +303,14 @@ async function saveProfile() {
     font-weight: bold;
     font-size: 14px;
 }
-.font-sm { font-size: 13px; }
-.font-xs { font-size: 11px; }
+
+.font-sm {
+    font-size: 13px;
+}
+
+.font-xs {
+    font-size: 11px;
+}
 
 /* Profile Page Styles */
 .header-section {
@@ -316,7 +332,8 @@ async function saveProfile() {
     font-size: 24px;
     color: #1e293b;
     margin-bottom: 4px;
-    font-family: 'Georgia', serif; /* Gives the classic serif look from the design */
+    font-family: 'Georgia', serif;
+    /* Gives the classic serif look from the design */
 }
 
 .header-subtitle {
@@ -436,7 +453,7 @@ async function saveProfile() {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     font-size: 14px;
 }
 </style>

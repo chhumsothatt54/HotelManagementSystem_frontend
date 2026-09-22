@@ -20,7 +20,8 @@
                         </select>
                         <div class="search-box">
                             <i class="fa-solid fa-magnifying-glass search-icon text-muted"></i>
-                            <input type="text" class="form-control search-input" placeholder="Search rooms..." v-model="searchQuery">
+                            <input type="text" class="form-control search-input" placeholder="Search rooms..."
+                                v-model="searchQuery">
                         </div>
                         <button class="btn btn-primary d-flex align-items-center gap-2"
                             style="background-color: #0f766e; border: none; border-radius: 8px; padding: 8px 16px; font-size: 14px;"
@@ -53,22 +54,16 @@
                             <tr v-for="room in roomList" :key="room.id" v-else>
                                 <td class="fw-bold text-dark">
                                     <div class="d-flex align-items-center gap-3">
-                                        <div
-                                            v-if="room.room_type?.images && room.room_type.images.length"
+                                        <div v-if="room.room_type?.images && room.room_type.images.length"
                                             class="border-0 rounded overflow-hidden flex-shrink-0"
-                                            style="width: 48px; height: 48px;"
-                                        >
-                                            <img
-                                                :src="room.room_type.images[0].image.startsWith('http') ? room.room_type.images[0].image : (room.room_type.images[0].image.startsWith('uploads/') ? `http://127.0.0.1:8000/${room.room_type.images[0].image}` : `http://127.0.0.1:8000/storage/${room.room_type.images[0].image}`)"
+                                            style="width: 48px; height: 48px;">
+                                            <img :src="room.room_type.images[0].image.startsWith('http') ? room.room_type.images[0].image : (room.room_type.images[0].image.startsWith('uploads/') ? `http://127.0.0.1:8000/${room.room_type.images[0].image}` : `http://127.0.0.1:8000/storage/${room.room_type.images[0].image}`)"
                                                 style="width: 100%; height: 100%; object-fit: cover;"
-                                                alt="Room Image"
-                                            />
+                                                alt="Room Image" />
                                         </div>
-                                        <div
-                                            v-else
+                                        <div v-else
                                             class="bg-light text-dark d-flex align-items-center justify-content-center rounded flex-shrink-0"
-                                            style="width: 48px; height: 48px; font-weight: 600; font-size: 16px; border: 1px solid #e5e7eb;"
-                                        >
+                                            style="width: 48px; height: 48px; font-weight: 600; font-size: 16px; border: 1px solid #e5e7eb;">
                                             R
                                         </div>
                                         <span>{{ room.room_number || room.name || `#${room.id}` }}</span>
@@ -78,10 +73,12 @@
                                 <td class="text-secondary">{{ room.room_type?.name || 'Standard' }}</td>
                                 <td>
                                     <span class="badge bg-light text-dark border">
-                                        {{ room.capacity || room.room_type?.max_guests || room.room_type?.capacity || 1 }} Guests
+                                        {{ room.capacity || room.room_type?.max_guests || room.room_type?.capacity || 1
+                                        }} Guests
                                     </span>
                                 </td>
-                                <td class="fw-bold text-success">${{ room.price_per_night ?? room.price ?? room.room_type?.price_per_night ?? room.room_type?.base_price ?? 0 }} / night</td>
+                                <td class="fw-bold text-success">${{ room.price_per_night ?? room.price ??
+                                    room.room_type?.price_per_night ?? room.room_type?.base_price ?? 0 }} / night</td>
                                 <td>
                                     <span class="status-badge" :class="room.status || 'available'">
                                         {{ room.status || 'Available' }}
@@ -156,7 +153,8 @@
                     </div>
                     <div class="d-flex justify-content-end gap-2">
                         <button type="button" class="btn btn-light border" @click="closeAddModal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" style="background-color: #0f766e; border: none;">Create</button>
+                        <button type="submit" class="btn btn-primary"
+                            style="background-color: #0f766e; border: none;">Create</button>
                     </div>
                 </form>
             </div>
@@ -212,7 +210,8 @@
                     </div>
                     <div class="d-flex justify-content-end gap-2">
                         <button type="button" class="btn btn-light border" @click="closeEditModal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" style="background-color: #0f766e; border: none;">Save Changes</button>
+                        <button type="submit" class="btn btn-primary"
+                            style="background-color: #0f766e; border: none;">Save Changes</button>
                     </div>
                 </form>
             </div>
@@ -250,7 +249,7 @@ const rawRooms = computed(() => {
 
 const roomList = computed(() => {
     let list = rawRooms.value;
-    
+
     // Filter by status
     if (statusFilter.value !== 'all') {
         list = list.filter(room => {
@@ -258,7 +257,7 @@ const roomList = computed(() => {
             return status === statusFilter.value;
         });
     }
-    
+
     // Filter by search query
     if (searchQuery.value) {
         const query = searchQuery.value.toLowerCase();
@@ -269,7 +268,7 @@ const roomList = computed(() => {
             return roomNo.includes(query) || hotelName.includes(query) || roomType.includes(query);
         });
     }
-    
+
     return list;
 });
 
@@ -283,7 +282,7 @@ const hotelsList = computed(() => {
 const roomTypesList = computed(() => {
     let data = adminStore.roomType;
     if (!data) return [];
-    
+
     const findArray = (obj) => {
         if (Array.isArray(obj)) return obj;
         if (obj && typeof obj === 'object') {
@@ -435,6 +434,7 @@ onMounted(() => {
     padding: 16px 0;
     border-bottom: 1px solid #eef2f0;
 }
+
 .icon-btn {
     background: #f1f5f9;
     border: none;
@@ -444,6 +444,7 @@ onMounted(() => {
     position: relative;
     cursor: pointer;
 }
+
 .dot {
     position: absolute;
     top: 10px;
@@ -453,6 +454,7 @@ onMounted(() => {
     background-color: #ef4444;
     border-radius: 50%;
 }
+
 .user-chip {
     display: flex;
     align-items: center;
@@ -463,6 +465,7 @@ onMounted(() => {
     border: 1px solid #e2e8f0;
     cursor: pointer;
 }
+
 .avatar-circle {
     width: 32px;
     height: 32px;
@@ -475,14 +478,21 @@ onMounted(() => {
     font-weight: bold;
     font-size: 14px;
 }
-.font-sm { font-size: 13px; }
-.font-xs { font-size: 11px; }
+
+.font-sm {
+    font-size: 13px;
+}
+
+.font-xs {
+    font-size: 11px;
+}
 
 /* Panel & Table Styles */
 .search-box {
     position: relative;
     width: 250px;
 }
+
 .search-icon {
     position: absolute;
     left: 14px;
@@ -490,6 +500,7 @@ onMounted(() => {
     transform: translateY(-50%);
     font-size: 14px;
 }
+
 .search-input {
     padding-left: 38px;
     border-radius: 8px;
@@ -497,15 +508,18 @@ onMounted(() => {
     font-size: 14px;
     box-shadow: none;
 }
+
 .search-input:focus {
     border-color: #0f766e;
     box-shadow: 0 0 0 0.2rem rgba(15, 118, 110, 0.25);
 }
+
 .form-select {
     border-radius: 8px;
     font-size: 14px;
     border: 1px solid #e2e8f0;
 }
+
 .form-select:focus {
     border-color: #0f766e;
     box-shadow: 0 0 0 0.2rem rgba(15, 118, 110, 0.25);
@@ -518,6 +532,7 @@ onMounted(() => {
     padding: 24px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
+
 .custom-table th {
     font-size: 11px;
     font-weight: 700;
@@ -526,11 +541,13 @@ onMounted(() => {
     border-bottom: 1px solid #f1f5f9;
     text-transform: uppercase;
 }
+
 .custom-table td {
     padding: 16px 20px;
     border-bottom: 1px solid #f8fafc;
     font-size: 14px;
 }
+
 .status-badge {
     padding: 4px 12px;
     border-radius: 20px;
@@ -538,9 +555,21 @@ onMounted(() => {
     font-weight: 600;
     text-transform: capitalize;
 }
-.status-badge.available { background-color: #def7ec; color: #03543f; }
-.status-badge.maintenance { background-color: #fef08a; color: #854d0e; }
-.status-badge.inactive { background-color: #fde8e8; color: #9b1c1c; }
+
+.status-badge.available {
+    background-color: #def7ec;
+    color: #03543f;
+}
+
+.status-badge.maintenance {
+    background-color: #fef08a;
+    color: #854d0e;
+}
+
+.status-badge.inactive {
+    background-color: #fde8e8;
+    color: #9b1c1c;
+}
 
 /* Actions Buttons */
 .icon-action-btn {
@@ -588,6 +617,7 @@ onMounted(() => {
     justify-content: center;
     z-index: 1050;
 }
+
 .modal-content {
     background: #ffffff;
     width: 100%;

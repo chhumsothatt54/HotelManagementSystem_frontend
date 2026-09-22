@@ -8,7 +8,8 @@
             <!-- Custom Page Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <div class="text-success font-xs fw-bold text-uppercase mb-1" style="letter-spacing: 1px;">REPORTS</div>
+                    <div class="text-success font-xs fw-bold text-uppercase mb-1" style="letter-spacing: 1px;">REPORTS
+                    </div>
                     <div class="fw-bold fs-4 text-dark mb-1">Revenue Report</div>
                     <div class="text-muted font-sm">Revenue performance by hotel.</div>
                 </div>
@@ -35,20 +36,23 @@
             <div class="panel-card p-4">
                 <div class="mb-4">
                     <div class="panel-title fw-bold fs-5 text-dark mb-1">Revenue by Hotel</div>
-                    <div class="panel-sub text-muted font-sm">{{ fromDate || '2026-08-01' }} to {{ toDate || '2026-08-31' }}</div>
+                    <div class="panel-sub text-muted font-sm">{{ fromDate || '2026-08-01' }} to {{ toDate ||'2026-08-31' }}</div>
                 </div>
 
                 <div class="hotel-list">
                     <div v-if="loading" class="text-center py-4 text-muted">Loading report...</div>
-                    <div v-else-if="!breakdownList.length" class="text-center py-4 text-muted">No revenue data available.</div>
-                    <div v-for="(item, index) in breakdownList" :key="index" v-else class="hotel-item d-flex align-items-center justify-content-between py-3 border-bottom">
+                    <div v-else-if="!breakdownList.length" class="text-center py-4 text-muted">No revenue data
+                        available.</div>
+                    <div v-for="(item, index) in breakdownList" :key="index" v-else
+                        class="hotel-item d-flex align-items-center justify-content-between py-3 border-bottom">
                         <div class="d-flex align-items-center gap-3">
                             <div class="hotel-icon-box">
                                 <i class="bi bi-building"></i>
                             </div>
                             <div>
                                 <div class="fw-bold text-dark mb-1">{{ item.hotel_name || item.name || 'Unknown Property' }}</div>
-                                <div class="text-muted font-xs">{{ item.total_bookings || item.bookings_count || 0 }} bookings</div>
+                                <div class="text-muted font-xs">{{ item.total_bookings || item.bookings_count || 0 }}
+                                    bookings</div>
                             </div>
                         </div>
                         <div class="fw-bold fs-5 text-dark">
@@ -125,6 +129,7 @@ onMounted(() => {
     padding: 10px 16px;
     font-size: 14px;
 }
+
 .export-btn:hover {
     background-color: #024a3e;
 }
@@ -136,6 +141,7 @@ onMounted(() => {
     font-size: 14px;
     color: #475569;
 }
+
 .custom-input:focus {
     box-shadow: none;
     border-color: #035e4e;
@@ -157,6 +163,11 @@ onMounted(() => {
     border-bottom: none !important;
 }
 
-.font-sm { font-size: 13px; }
-.font-xs { font-size: 11px; }
+.font-sm {
+    font-size: 13px;
+}
+
+.font-xs {
+    font-size: 11px;
+}
 </style>

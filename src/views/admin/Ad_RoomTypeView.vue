@@ -47,31 +47,27 @@
                                 <td class="text-muted">#{{ type.id }}</td>
                                 <td class="fw-bold text-dark">
                                     <div class="d-flex align-items-center gap-3">
-                                        <div
-                                            v-if="type.images && type.images.length"
+                                        <div v-if="type.images && type.images.length"
                                             class="border-0 rounded overflow-hidden flex-shrink-0"
-                                            style="width: 48px; height: 48px;"
-                                        >
-                                            <img
-                                                :src="type.images[0].image.startsWith('http') ? type.images[0].image : (type.images[0].image.startsWith('uploads/') ? `http://127.0.0.1:8000/${type.images[0].image}` : `http://127.0.0.1:8000/storage/${type.images[0].image}`)"
+                                            style="width: 48px; height: 48px;">
+                                            <img :src="type.images[0].image.startsWith('http') ? type.images[0].image : (type.images[0].image.startsWith('uploads/') ? `http://127.0.0.1:8000/${type.images[0].image}` : `http://127.0.0.1:8000/storage/${type.images[0].image}`)"
                                                 style="width: 100%; height: 100%; object-fit: cover;"
-                                                alt="Room Type Image"
-                                            />
+                                                alt="Room Type Image" />
                                         </div>
-                                        <div
-                                            v-else
+                                        <div v-else
                                             class="bg-light text-dark d-flex align-items-center justify-content-center rounded flex-shrink-0"
-                                            style="width: 48px; height: 48px; font-weight: 600; font-size: 16px; border: 1px solid #e5e7eb;"
-                                        >
+                                            style="width: 48px; height: 48px; font-weight: 600; font-size: 16px; border: 1px solid #e5e7eb;">
                                             R
                                         </div>
                                         <span>{{ type.name }}</span>
                                     </div>
                                 </td>
-                                <td class="fw-bold text-success">${{ type.price_per_night || type.base_price || type.price || 0 }}</td>
+                                <td class="fw-bold text-success">${{ type.price_per_night || type.base_price ||
+                                    type.price || 0 }}</td>
                                 <td>
                                     <span class="badge bg-light text-dark border">
-                                        <i class="fa-solid fa-user-group me-1 text-muted"></i> {{ type.max_guests || type.capacity || 1 }}
+                                        <i class="fa-solid fa-user-group me-1 text-muted"></i> {{ type.max_guests ||
+                                        type.capacity || 1 }}
                                         Guests
                                     </span>
                                 </td>
@@ -142,7 +138,8 @@
                     </div>
                     <div class="d-flex justify-content-end gap-2">
                         <button type="button" class="btn btn-light border" @click="closeAddModal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" style="background-color: #0f766e; border: none;">Create</button>
+                        <button type="submit" class="btn btn-primary"
+                            style="background-color: #0f766e; border: none;">Create</button>
                     </div>
                 </form>
             </div>
@@ -192,7 +189,8 @@
                     </div>
                     <div class="d-flex justify-content-end gap-2">
                         <button type="button" class="btn btn-light border" @click="closeEditModal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" style="background-color: #0f766e; border: none;">Save Changes</button>
+                        <button type="submit" class="btn btn-primary"
+                            style="background-color: #0f766e; border: none;">Save Changes</button>
                     </div>
                 </form>
             </div>
@@ -231,7 +229,7 @@ const hotelsList = computed(() => {
 const rawRoomTypes = computed(() => {
     let data = adminStore.roomType;
     if (!data) return [];
-    
+
     // Helper to find an array in a nested object
     const findArray = (obj) => {
         if (Array.isArray(obj)) return obj;
@@ -312,8 +310,8 @@ const closeAddModal = () => {
 
 const submitAdd = async () => {
     try {
-        const payload = { 
-            ...addForm.value, 
+        const payload = {
+            ...addForm.value,
             price_per_night: Number(addForm.value.base_price),
             max_guests: Number(addForm.value.capacity),
             price: Number(addForm.value.base_price),
@@ -349,8 +347,8 @@ const closeEditModal = () => {
 
 const submitEdit = async () => {
     try {
-        const payload = { 
-            ...editForm.value, 
+        const payload = {
+            ...editForm.value,
             price_per_night: Number(editForm.value.base_price),
             max_guests: Number(editForm.value.capacity),
             price: Number(editForm.value.base_price),
@@ -546,6 +544,7 @@ onMounted(() => {
     justify-content: center;
     z-index: 1050;
 }
+
 .modal-content {
     background: #ffffff;
     width: 100%;

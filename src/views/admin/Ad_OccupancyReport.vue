@@ -10,19 +10,22 @@
                 <div class="col-md-4">
                     <div class="panel-card h-100 p-4">
                         <div class="text-muted font-sm mb-1 fw-bold text-uppercase">Total Occupancy Rate</div>
-                        <h3 class="fw-bold mb-0 text-dark">{{ occupancyData?.total_occupancy_rate || occupancyData?.overall_rate || '0' }}%</h3>
+                        <h3 class="fw-bold mb-0 text-dark">{{ occupancyData?.total_occupancy_rate ||
+                            occupancyData?.overall_rate || '0' }}%</h3>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="panel-card h-100 p-4">
                         <div class="text-muted font-sm mb-1 fw-bold text-uppercase">Occupied Rooms</div>
-                        <h3 class="fw-bold mb-0 text-success">{{ occupancyData?.total_occupied_rooms || occupancyData?.occupied_rooms || '0' }}</h3>
+                        <h3 class="fw-bold mb-0 text-success">{{ occupancyData?.total_occupied_rooms ||
+                            occupancyData?.occupied_rooms || '0' }}</h3>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="panel-card h-100 p-4">
                         <div class="text-muted font-sm mb-1 fw-bold text-uppercase">Available Rooms</div>
-                        <h3 class="fw-bold mb-0 text-primary">{{ occupancyData?.total_available_rooms || occupancyData?.available_rooms || '0' }}</h3>
+                        <h3 class="fw-bold mb-0 text-primary">{{ occupancyData?.total_available_rooms ||
+                            occupancyData?.available_rooms || '0' }}</h3>
                     </div>
                 </div>
             </div>
@@ -55,14 +58,16 @@
                                 <td colspan="5" class="text-center py-4 text-muted">No occupancy data available.</td>
                             </tr>
                             <tr v-for="(item, index) in breakdownList" :key="index" v-else>
-                                <td class="fw-bold text-dark">{{ item.hotel_name || item.name || 'Unknown Property' }}</td>
+                                <td class="fw-bold text-dark">{{ item.hotel_name || item.name || 'Unknown Property' }}
+                                </td>
                                 <td>{{ item.total_rooms || 0 }}</td>
                                 <td class="text-success fw-bold">{{ item.occupied_rooms || 0 }}</td>
                                 <td class="text-primary fw-bold">{{ item.available_rooms || 0 }}</td>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <div class="progress flex-grow-1" style="height: 6px;">
-                                            <div class="progress-bar bg-success" role="progressbar" :style="{ width: `${item.occupancy_rate || 0}%` }"></div>
+                                            <div class="progress-bar bg-success" role="progressbar"
+                                                :style="{ width: `${item.occupancy_rate || 0}%` }"></div>
                                         </div>
                                         <span class="font-sm fw-bold">{{ item.occupancy_rate || 0 }}%</span>
                                     </div>
@@ -131,6 +136,7 @@ onMounted(() => {
     padding: 16px 0;
     border-bottom: 1px solid #eef2f0;
 }
+
 .icon-btn {
     background: #f1f5f9;
     border: none;
@@ -140,6 +146,7 @@ onMounted(() => {
     position: relative;
     cursor: pointer;
 }
+
 .dot {
     position: absolute;
     top: 10px;
@@ -149,6 +156,7 @@ onMounted(() => {
     background-color: #ef4444;
     border-radius: 50%;
 }
+
 .user-chip {
     display: flex;
     align-items: center;
@@ -159,6 +167,7 @@ onMounted(() => {
     border: 1px solid #e2e8f0;
     cursor: pointer;
 }
+
 .avatar-circle {
     width: 32px;
     height: 32px;
@@ -171,8 +180,14 @@ onMounted(() => {
     font-weight: bold;
     font-size: 14px;
 }
-.font-sm { font-size: 13px; }
-.font-xs { font-size: 11px; }
+
+.font-sm {
+    font-size: 13px;
+}
+
+.font-xs {
+    font-size: 11px;
+}
 
 /* Panel & Table Styles */
 .panel-card {
@@ -181,6 +196,7 @@ onMounted(() => {
     border: 1px solid #eef2f0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
+
 .custom-table th {
     font-size: 11px;
     font-weight: 700;
@@ -189,6 +205,7 @@ onMounted(() => {
     border-bottom: 1px solid #f1f5f9;
     text-transform: uppercase;
 }
+
 .custom-table td {
     padding: 16px 20px;
     border-bottom: 1px solid #f8fafc;

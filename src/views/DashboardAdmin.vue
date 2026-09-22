@@ -1,17 +1,11 @@
 <template>
     <main>
-
-
-
         <!-- ===================== SIDEBAR ===================== -->
-         <SidebarView/>
-
-
+        <SidebarView />
         <!-- ===================== MAIN ===================== -->
         <main id="main">
             <div class="page-content">
-                <RouterView/>
-
+                <RouterView />
             </div>
         </main>
     </main>
@@ -23,7 +17,6 @@ import SidebarView from '@/components/layout/admin/SidebarView.vue';
 </script>
 
 <style>
-
 .brand-serif {
     font-family: Georgia, 'Times New Roman', serif;
 }
@@ -611,7 +604,7 @@ table.bookings tr:last-child td {
         transition: left 0.3s ease;
         padding: 1.25rem 1rem;
     }
-    
+
     #sidebar.show {
         left: 0;
     }
@@ -619,7 +612,8 @@ table.bookings tr:last-child td {
     #sidebar.collapsed .brand-text,
     #sidebar.collapsed .link-text,
     #sidebar.collapsed .nav-section-label {
-        display: block; /* Override desktop collapse behavior if it gets applied */
+        display: block;
+        /* Override desktop collapse behavior if it gets applied */
     }
 
     #main,

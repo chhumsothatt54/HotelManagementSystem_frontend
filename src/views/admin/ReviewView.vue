@@ -35,17 +35,18 @@
                             </tr>
                             <tr v-for="review in reviewList" :key="review.id" v-else>
                                 <td class="text-muted">#{{ review.id }}</td>
-                                <td class="fw-bold text-dark">{{ review.user?.name || review.guest_name || 'Anonymous' }}</td>
+                                <td class="fw-bold text-dark">{{ review.user?.name || review.guest_name || 'Anonymous'
+                                    }}</td>
                                 <td class="text-secondary">{{ review.hotel?.name || 'N/A' }}</td>
                                 <td>
                                     <div class="text-warning">
-                                        <i v-for="n in 5" :key="n" 
-                                           :class="n <= (review.rating || review.stars || 0) ? 'bi-star-fill' : 'bi-star'" 
-                                           class="bi me-1"></i>
+                                        <i v-for="n in 5" :key="n"
+                                            :class="n <= (review.rating || review.stars || 0) ? 'bi-star-fill' : 'bi-star'"
+                                            class="bi me-1"></i>
                                     </div>
                                 </td>
                                 <td class="text-secondary" style="max-width: 250px;">
-                                    <div class="text-truncate" :title="review.comment">{{ review.comment || 'No comment provided' }}</div>
+                                    <div class="text-truncate" :title="review.comment">{{ review.comment || 'No comment provided' }}></div>
                                 </td>
                                 <td>
                                     <span class="status-badge" :class="review.status">
@@ -54,11 +55,8 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-end align-items-center gap-2">
-                                        <select 
-                                            :value="review.status" 
-                                            class="status-select" 
-                                            @change="changeStatus(review.id, $event.target.value)"
-                                        >
+                                        <select :value="review.status" class="status-select"
+                                            @change="changeStatus(review.id, $event.target.value)">
                                             <option value="pending">Pending</option>
                                             <option value="approved">Approved</option>
                                             <option value="rejected">Rejected</option>
@@ -96,7 +94,7 @@ const loadReviews = async () => {
 const reviewList = computed(() => {
     const data = adminStore.reviews;
     if (!data) return [];
-    
+
     if (Array.isArray(data)) return data;
     if (Array.isArray(data.data)) return data.data;
     if (Array.isArray(data.reviews)) return data.reviews;
@@ -131,6 +129,7 @@ onMounted(() => {
     padding: 16px 0;
     border-bottom: 1px solid #eef2f0;
 }
+
 .icon-btn {
     background: #f1f5f9;
     border: none;
@@ -140,6 +139,7 @@ onMounted(() => {
     position: relative;
     cursor: pointer;
 }
+
 .dot {
     position: absolute;
     top: 10px;
@@ -149,6 +149,7 @@ onMounted(() => {
     background-color: #ef4444;
     border-radius: 50%;
 }
+
 .user-chip {
     display: flex;
     align-items: center;
@@ -159,6 +160,7 @@ onMounted(() => {
     border: 1px solid #e2e8f0;
     cursor: pointer;
 }
+
 .avatar-circle {
     width: 32px;
     height: 32px;
@@ -171,8 +173,14 @@ onMounted(() => {
     font-weight: bold;
     font-size: 14px;
 }
-.font-sm { font-size: 13px; }
-.font-xs { font-size: 11px; }
+
+.font-sm {
+    font-size: 13px;
+}
+
+.font-xs {
+    font-size: 11px;
+}
 
 /* Panel & Table Styles */
 .panel-card {
@@ -182,6 +190,7 @@ onMounted(() => {
     padding: 24px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
+
 .custom-table th {
     font-size: 11px;
     font-weight: 700;
@@ -190,11 +199,13 @@ onMounted(() => {
     border-bottom: 1px solid #f1f5f9;
     text-transform: uppercase;
 }
+
 .custom-table td {
     padding: 16px 20px;
     border-bottom: 1px solid #f8fafc;
     font-size: 14px;
 }
+
 .status-badge {
     padding: 4px 12px;
     border-radius: 20px;
@@ -202,9 +213,22 @@ onMounted(() => {
     font-weight: 600;
     text-transform: capitalize;
 }
-.status-badge.approved { background-color: #def7ec; color: #03543f; }
-.status-badge.pending { background-color: #fef08a; color: #854d0e; }
-.status-badge.rejected { background-color: #fde8e8; color: #9b1c1c; }
+
+.status-badge.approved {
+    background-color: #def7ec;
+    color: #03543f;
+}
+
+.status-badge.pending {
+    background-color: #fef08a;
+    color: #854d0e;
+}
+
+.status-badge.rejected {
+    background-color: #fde8e8;
+    color: #9b1c1c;
+}
+
 .status-select {
     border: 1px solid #e2e8f0;
     border-radius: 8px;

@@ -12,18 +12,11 @@
                 <!-- Search -->
                 <div class="search-box">
                     <i class="fa-solid fa-magnifying-glass text-muted"></i>
-                    <input
-                        v-model="searchQuery"
-                        type="text"
-                        class="form-control border-0 shadow-none p-0"
-                        placeholder="Search by name or email"
-                    />
+                    <input v-model="searchQuery" type="text" class="form-control border-0 shadow-none p-0"
+                        placeholder="Search by name or email" />
                 </div>
                 <!-- Role -->
-                <select
-                    v-model="roleFilter"
-                    class="filter-select"
-                >
+                <select v-model="roleFilter" class="filter-select">
                     <option value="">All roles</option>
                     <option value="customer">Customer</option>
                     <option value="hotel_manager">
@@ -31,10 +24,7 @@
                     </option>
                 </select>
                 <!-- Status -->
-                <select
-                    v-model="statusFilter"
-                    class="filter-select"
-                >
+                <select v-model="statusFilter" class="filter-select">
                     <option value="">All statuses</option>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
@@ -67,64 +57,36 @@
                     <tbody>
                         <!-- Loading -->
                         <tr v-if="loading">
-                            <td
-                                colspan="6"
-                                class="state-cell"
-                            >
+                            <td colspan="6" class="state-cell">
                                 <div class="spinner"></div>
                                 Loading users…
                             </td>
                         </tr>
                         <!-- Empty -->
-                        <tr
-                            v-else-if="
-                                !admin.users?.data ||
-                                admin.users.data.length === 0
-                            "
-                        >
-                            <td
-                                colspan="6"
-                                class="state-cell"
-                            >
-                                <i
-                                    class="fa-regular fa-folder-open"
-                                ></i>
+                        <tr v-else-if="
+                            !admin.users?.data ||
+                            admin.users.data.length === 0
+                        ">
+                            <td colspan="6" class="state-cell">
+                                <i class="fa-regular fa-folder-open"></i>
 
                                 No users match your filters.
                             </td>
                         </tr>
-
                         <!-- Data -->
-                        <tr
-                            v-for="u in admin.users?.data"
-                            :key="u.id || u.email"
-                        >
-
+                        <tr v-for="u in admin.users?.data" :key="u.id || u.email">
                             <!-- User -->
                             <td>
-                                <div
-                                    class="d-flex align-items-center gap-2"
-                                >
+                                <div class="d-flex align-items-center gap-2">
 
-                                    <div
-                                        v-if="u.avatar"
-                                        class="avatar-circle-sm overflow-hidden border-0"
-                                    >
-                                        <img
-                                            :src="u.avatar.startsWith('http') ? u.avatar : (u.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${u.avatar}` : `http://127.0.0.1:8000/storage/${u.avatar}`)"
-                                            style="width: 100%; height: 100%; object-fit: cover;"
-                                            alt="User Avatar"
-                                        />
+                                    <div v-if="u.avatar" class="avatar-circle-sm overflow-hidden border-0">
+                                        <img :src="u.avatar.startsWith('http') ? u.avatar : (u.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${u.avatar}` : `http://127.0.0.1:8000/storage/${u.avatar}`)"
+                                            style="width: 100%; height: 100%; object-fit: cover;" alt="User Avatar" />
                                     </div>
-                                    <div
-                                        v-else
-                                        class="avatar-circle-sm"
-                                        :class="
-                                            roleAvatarClass(
-                                                u.role
-                                            )
-                                        "
-                                    >
+                                    <div v-else class="avatar-circle-sm" :class="roleAvatarClass(
+                                        u.role
+                                    )
+                                        ">
                                         {{
                                             u.name
                                                 ? u.name
@@ -154,31 +116,21 @@
 
                             <!-- Role -->
                             <td>
-                                <span
-                                    class="role-pill"
-                                    :class="
-                                        roleAvatarClass(
-                                            u.role
-                                        )
-                                    "
-                                >
+                                <span class="role-pill" :class="roleAvatarClass(
+                                    u.role
+                                )
+                                    ">
                                     {{ formatRole(u.role) }}
                                 </span>
                             </td>
 
                             <!-- Status -->
                             <td>
-                                <span
-                                    class="status-badge"
-                                    :class="
-                                        statusClass(
-                                            u.status
-                                        )
-                                    "
-                                >
-                                    <span
-                                        class="status-dot"
-                                    ></span>
+                                <span class="status-badge" :class="statusClass(
+                                    u.status
+                                )
+                                    ">
+                                    <span class="status-dot"></span>
 
                                     {{
                                         u.status || 'active'
@@ -193,21 +145,13 @@
 
                             <!-- Actions -->
                             <td>
-                                <div
-                                    class="d-flex justify-content-end gap-2"
-                                >
+                                <div class="d-flex justify-content-end gap-2">
 
                                     <!-- View -->
-                                    <button
-                                        class="action-icon-btn"
-                                        title="View"
-                                        @click="
-                                            handleView(u.id)
-                                        "
-                                    >
-                                        <i
-                                            class="bi bi-eye"
-                                        ></i>
+                                    <button class="action-icon-btn" title="View" @click="
+                                        handleView(u.id)
+                                        ">
+                                        <i class="bi bi-eye"></i>
                                     </button>
 
                                 </div>
@@ -222,22 +166,14 @@
             </div>
 
             <!-- Pagination -->
-            <div
-                v-if="admin.users?.last_page > 1"
-                class="d-flex justify-content-end align-items-center gap-2 mt-3"
-            >
+            <div v-if="admin.users?.last_page > 1" class="d-flex justify-content-end align-items-center gap-2 mt-3">
 
-                <button
-                    class="page-btn"
-                    :disabled="
-                        admin.users?.current_page === 1
-                    "
-                    @click="
+                <button class="page-btn" :disabled="admin.users?.current_page === 1
+                    " @click="
                         changePage(
                             admin.users.current_page - 1
                         )
-                    "
-                >
+                        ">
                     Previous
                 </button>
 
@@ -248,18 +184,13 @@
                     {{ admin.users?.last_page }}
                 </span>
 
-                <button
-                    class="page-btn"
-                    :disabled="
-                        admin.users?.current_page ===
-                        admin.users?.last_page
-                    "
-                    @click="
+                <button class="page-btn" :disabled="admin.users?.current_page ===
+                    admin.users?.last_page
+                    " @click="
                         changePage(
-                            admin.users.current_page+1
+                            admin.users.current_page + 1
                         )
-                    "
-                >
+                        ">
                     Next
                 </button>
 
@@ -271,11 +202,7 @@
         <!-- USER DETAIL MODAL -->
         <!-- ================================= -->
 
-        <div
-            v-if="showDetail"
-            class="detail-overlay"
-            @click.self="closeDetail"
-        >
+        <div v-if="showDetail" class="detail-overlay" @click.self="closeDetail">
 
             <div class="detail-modal">
 
@@ -290,43 +217,26 @@
                         </p>
                     </div>
 
-                    <button
-                        class="close-btn"
-                        @click="closeDetail"
-                    >
+                    <button class="close-btn" @click="closeDetail">
                         <i class="bi bi-x-lg"></i>
                     </button>
 
                 </div>
 
                 <!-- Modal Body -->
-                <div
-                    v-if="selectedUser"
-                    class="detail-body"
-                >
+                <div v-if="selectedUser" class="detail-body">
 
                     <!-- Profile -->
                     <div class="detail-profile">
 
-                        <div
-                            v-if="selectedUser.avatar"
-                            class="detail-avatar overflow-hidden border-0"
-                        >
-                            <img
-                                :src="selectedUser.avatar.startsWith('http') ? selectedUser.avatar : (selectedUser.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${selectedUser.avatar}` : `http://127.0.0.1:8000/storage/${selectedUser.avatar}`)"
-                                style="width: 100%; height: 100%; object-fit: cover;"
-                                alt="User Avatar"
-                            />
+                        <div v-if="selectedUser.avatar" class="detail-avatar overflow-hidden border-0">
+                            <img :src="selectedUser.avatar.startsWith('http') ? selectedUser.avatar : (selectedUser.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${selectedUser.avatar}` : `http://127.0.0.1:8000/storage/${selectedUser.avatar}`)"
+                                style="width: 100%; height: 100%; object-fit: cover;" alt="User Avatar" />
                         </div>
-                        <div
-                            v-else
-                            class="detail-avatar"
-                            :class="
-                                roleAvatarClass(
-                                    selectedUser.role
-                                )
-                            "
-                        >
+                        <div v-else class="detail-avatar" :class="roleAvatarClass(
+                            selectedUser.role
+                        )
+                            ">
                             {{
                                 selectedUser.name
                                     ? selectedUser.name
@@ -418,14 +328,10 @@
                                 Role
                             </span>
 
-                            <span
-                                class="role-pill"
-                                :class="
-                                    roleAvatarClass(
-                                        selectedUser.role
-                                    )
-                                "
-                            >
+                            <span class="role-pill" :class="roleAvatarClass(
+                                selectedUser.role
+                            )
+                                ">
                                 {{
                                     formatRole(
                                         selectedUser.role
@@ -440,17 +346,11 @@
                                 Status
                             </span>
 
-                            <span
-                                class="status-badge"
-                                :class="
-                                    statusClass(
-                                        selectedUser.status
-                                    )
-                                "
-                            >
-                                <span
-                                    class="status-dot"
-                                ></span>
+                            <span class="status-badge" :class="statusClass(
+                                selectedUser.status
+                            )
+                                ">
+                                <span class="status-dot"></span>
 
                                 {{
                                     selectedUser.status ||
@@ -498,10 +398,7 @@
                 <!-- Modal Footer -->
                 <div class="detail-footer">
 
-                    <button
-                        class="btn-close-detail"
-                        @click="closeDetail"
-                    >
+                    <button class="btn-close-detail" @click="closeDetail">
                         Close
                     </button>
 
@@ -688,14 +585,14 @@ const formatDate = (dateStr) => {
         return 'N/A';
     }
     return new Date(dateStr)
-    .toLocaleDateString(
-        'en-US',
-        {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        }
-    );
+        .toLocaleDateString(
+            'en-US',
+            {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            }
+        );
 };
 // ==========================================
 // ROLE AVATAR CLASS
@@ -734,7 +631,6 @@ const statusClass = (status) => {
 </script>
 
 <style scoped>
-
 /* ==========================================
    CONTENT
 ========================================== */
@@ -742,10 +638,12 @@ const statusClass = (status) => {
 .content-wrap {
     padding: 24px 32px;
 }
+
 .section-desc {
     color: #6b7280;
     margin-bottom: 20px;
 }
+
 /* ==========================================
    TOOLBAR
 ========================================== */
@@ -1122,12 +1020,10 @@ const statusClass = (status) => {
 
     inset: 0;
 
-    background: rgba(
-        15,
-        23,
-        42,
-        0.45
-    );
+    background: rgba(15,
+            23,
+            42,
+            0.45);
 
     display: flex;
 
@@ -1150,8 +1046,7 @@ const statusClass = (status) => {
     border-radius: 14px;
 
     box-shadow:
-        0 20px 50px
-        rgba(0, 0, 0, 0.15);
+        0 20px 50px rgba(0, 0, 0, 0.15);
 
     overflow: hidden;
 }
@@ -1358,5 +1253,4 @@ const statusClass = (status) => {
     }
 
 }
-
 </style>

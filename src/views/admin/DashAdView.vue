@@ -31,7 +31,8 @@
                 <div class="stat-card h-100">
                     <div class="d-flex justify-content-between align-items-start">
                         <span class="stat-label">Total Rooms</span>
-                        <span class="stat-icon" style="background:#fdf1d6;color:#9a6a00;"><i class="bi bi-door-open"></i></span>
+                        <span class="stat-icon" style="background:#fdf1d6;color:#9a6a00;"><i
+                                class="bi bi-door-open"></i></span>
                     </div>
                     <div class="stat-value">{{ stats.rooms }}</div>
                     <div class="stat-foot">Across all properties</div>
@@ -108,10 +109,8 @@
                         </template>
                     </tbody>
                 </table>
-                <div 
-                    v-if="!admin.dashboard?.data?.pending_hotels_list?.length" 
-                    class="empty-state text-center py-4 text-muted"
-                >
+                <div v-if="!admin.dashboard?.data?.pending_hotels_list?.length"
+                    class="empty-state text-center py-4 text-muted">
                     No hotels pending approval.
                 </div>
             </div>
@@ -157,32 +156,38 @@ onMounted(async () => {
     font-size: 1.25rem;
     font-weight: 700;
 }
+
 .page-subtitle {
     font-size: 0.875rem;
     color: #6c757d;
 }
+
 .stat-card {
     background: #fff;
     border-radius: 12px;
     padding: 20px;
     border: 1px solid #eef2f0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
+
 .stat-label {
     font-size: 0.875rem;
     font-weight: 600;
     color: #6b7280;
     text-transform: uppercase;
 }
+
 .stat-value {
     font-size: 1.75rem;
     font-weight: 700;
     margin: 8px 0;
 }
+
 .stat-foot {
     font-size: 0.8rem;
     color: #9ca3af;
 }
+
 .stat-icon {
     width: 36px;
     height: 36px;
@@ -194,17 +199,20 @@ onMounted(async () => {
     color: #11684e;
     font-size: 1.1rem;
 }
+
 .panel-card {
     background: #fff;
     border-radius: 12px;
     padding: 24px;
     border: 1px solid #eef2f0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
+
 .panel-title {
     font-weight: 700;
     font-size: 1rem;
 }
+
 .panel-sub {
     font-size: 0.875rem;
     color: #6b7280;
@@ -218,6 +226,7 @@ onMounted(async () => {
     height: 250px;
     padding: 20px 0;
 }
+
 .chart-column {
     display: flex;
     flex-direction: column;
@@ -225,26 +234,32 @@ onMounted(async () => {
     gap: 8px;
     height: 100%;
 }
+
 .chart-val {
     font-size: 13px;
     color: #6b7280;
     font-weight: 600;
 }
+
 .chart-bar-bg {
     width: 40px;
     flex-grow: 1;
-    background-color: #eaf6f2; /* Light green */
+    background-color: #eaf6f2;
+    /* Light green */
     border-radius: 8px;
     position: relative;
     display: flex;
     align-items: flex-end;
 }
+
 .chart-bar-fill {
     width: 100%;
-    background-color: #11684e; /* Dark green */
+    background-color: #11684e;
+    /* Dark green */
     border-radius: 8px;
     transition: height 0.8s ease-out;
 }
+
 .chart-label {
     font-size: 13px;
     color: #9ca3af;

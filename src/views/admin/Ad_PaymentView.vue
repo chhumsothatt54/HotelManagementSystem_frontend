@@ -9,10 +9,12 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <div class="panel-title fw-bold fs-6">Transactions List</div>
-                        <div class="panel-sub text-muted font-sm">Recent payments and transactions across the platform</div>
+                        <div class="panel-sub text-muted font-sm">Recent payments and transactions across the platform
+                        </div>
                     </div>
                     <div class="d-flex gap-3">
-                        <input type="text" class="form-control shadow-sm" placeholder="Search ID, customer, booking..." v-model="searchQuery" style="max-width: 250px;">
+                        <input type="text" class="form-control shadow-sm" placeholder="Search ID, customer, booking..."
+                            v-model="searchQuery" style="max-width: 250px;">
                         <select class="form-select shadow-sm" v-model="statusFilter" style="max-width: 150px;">
                             <option value="All">All Status</option>
                             <option value="pending">Pending</option>
@@ -47,27 +49,26 @@
                                 <td class="fw-bold text-dark">#{{ payment.id || payment.transaction_id }}</td>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
-                                        <div
-                                            v-if="payment.booking?.customer?.avatar"
-                                            class="border-0"
-                                            style="width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; overflow: hidden;"
-                                        >
-                                            <img
-                                                :src="payment.booking.customer.avatar.startsWith('http') ? payment.booking.customer.avatar : (payment.booking.customer.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${payment.booking.customer.avatar}` : `http://127.0.0.1:8000/storage/${payment.booking.customer.avatar}`)"
+                                        <div v-if="payment.booking?.customer?.avatar" class="border-0"
+                                            style="width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; overflow: hidden;">
+                                            <img :src="payment.booking.customer.avatar.startsWith('http') ? payment.booking.customer.avatar : (payment.booking.customer.avatar.startsWith('uploads/') ? `http://127.0.0.1:8000/${payment.booking.customer.avatar}` : `http://127.0.0.1:8000/storage/${payment.booking.customer.avatar}`)"
                                                 style="width: 100%; height: 100%; object-fit: cover;"
-                                                alt="Customer Avatar"
-                                            />
+                                                alt="Customer Avatar" />
                                         </div>
-                                        <div
-                                            v-else
+                                        <div v-else
                                             class="bg-light text-dark d-flex align-items-center justify-content-center"
-                                            style="width: 32px; height: 32px; border-radius: 50%; font-weight: 600; font-size: 13px; flex-shrink: 0; border: 1px solid #e5e7eb;"
-                                        >
-                                            {{ (payment.booking?.customer?.name || payment.booking?.guest_name || 'C').charAt(0).toUpperCase() }}
+                                            style="width: 32px; height: 32px; border-radius: 50%; font-weight: 600; font-size: 13px; flex-shrink: 0; border: 1px solid #e5e7eb;">
+                                            {{ (payment.booking?.customer?.name || payment.booking?.guest_name ||
+                                            'C').charAt(0).toUpperCase() }}
                                         </div>
                                         <div>
-                                            <div class="text-dark fw-semibold" style="font-size: 14px;">{{ payment.booking?.customer?.name || payment.booking?.guest_name || 'N/A' }}</div>
-                                            <div class="text-muted" style="font-size: 12px;" v-if="payment.booking?.customer?.email || payment.booking?.guest_email">{{ payment.booking?.customer?.email || payment.booking?.guest_email }}</div>
+                                            <div class="text-dark fw-semibold" style="font-size: 14px;">{{
+                                                payment.booking?.customer?.name || payment.booking?.guest_name || 'N/A'
+                                                }}</div>
+                                            <div class="text-muted" style="font-size: 12px;"
+                                                v-if="payment.booking?.customer?.email || payment.booking?.guest_email">
+                                                {{ payment.booking?.customer?.email || payment.booking?.guest_email }}
+                                            </div>
                                         </div>
                                     </div>
                                 </td>
@@ -78,7 +79,8 @@
                                         {{ payment.method || payment.payment_method }}
                                     </span>
                                 </td>
-                                <td class="text-secondary">{{ formatDate(payment.created_at || payment.payment_date) }}</td>
+                                <td class="text-secondary">{{ formatDate(payment.created_at || payment.payment_date) }}
+                                </td>
                                 <td>
                                     <span class="status-badge" :class="payment.status">
                                         {{ payment.status }}
@@ -117,7 +119,7 @@ const loadPayments = async () => {
 const paymentList = computed(() => {
     const data = adminStore.payments;
     if (!data) return [];
-    
+
     // Recursive search for the first array in the object
     const findArray = (obj) => {
         if (Array.isArray(obj)) return obj;
@@ -137,7 +139,7 @@ const paymentList = computed(() => {
         }
         return [];
     };
-    
+
     return findArray(data);
 });
 
@@ -158,7 +160,6 @@ const filteredPayments = computed(() => {
             return idMatch || bookingMatch || customerNameMatch || methodMatch;
         });
     }
-
     return result;
 });
 
@@ -192,6 +193,7 @@ onMounted(() => {
     padding: 16px 0;
     border-bottom: 1px solid #eef2f0;
 }
+
 .icon-btn {
     background: #f1f5f9;
     border: none;
@@ -201,6 +203,7 @@ onMounted(() => {
     position: relative;
     cursor: pointer;
 }
+
 .dot {
     position: absolute;
     top: 10px;
@@ -210,6 +213,7 @@ onMounted(() => {
     background-color: #ef4444;
     border-radius: 50%;
 }
+
 .user-chip {
     display: flex;
     align-items: center;
@@ -220,6 +224,7 @@ onMounted(() => {
     border: 1px solid #e2e8f0;
     cursor: pointer;
 }
+
 .avatar-circle {
     width: 32px;
     height: 32px;
@@ -232,8 +237,14 @@ onMounted(() => {
     font-weight: bold;
     font-size: 14px;
 }
-.font-sm { font-size: 13px; }
-.font-xs { font-size: 11px; }
+
+.font-sm {
+    font-size: 13px;
+}
+
+.font-xs {
+    font-size: 11px;
+}
 
 /* Panel & Table Styles */
 .panel-card {
@@ -243,6 +254,7 @@ onMounted(() => {
     padding: 24px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
+
 .custom-table th {
     font-size: 11px;
     font-weight: 700;
@@ -251,11 +263,13 @@ onMounted(() => {
     border-bottom: 1px solid #f1f5f9;
     text-transform: uppercase;
 }
+
 .custom-table td {
     padding: 16px 20px;
     border-bottom: 1px solid #f8fafc;
     font-size: 14px;
 }
+
 .status-badge {
     padding: 4px 12px;
     border-radius: 20px;
@@ -263,7 +277,22 @@ onMounted(() => {
     font-weight: 600;
     text-transform: capitalize;
 }
-.status-badge.successful, .status-badge.completed, .status-badge.paid { background-color: #def7ec; color: #03543f; }
-.status-badge.pending { background-color: #fef08a; color: #854d0e; }
-.status-badge.failed, .status-badge.cancelled { background-color: #fde8e8; color: #9b1c1c; }
+
+.status-badge.successful,
+.status-badge.completed,
+.status-badge.paid {
+    background-color: #def7ec;
+    color: #03543f;
+}
+
+.status-badge.pending {
+    background-color: #fef08a;
+    color: #854d0e;
+}
+
+.status-badge.failed,
+.status-badge.cancelled {
+    background-color: #fde8e8;
+    color: #9b1c1c;
+}
 </style>

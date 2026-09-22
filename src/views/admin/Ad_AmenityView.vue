@@ -19,7 +19,8 @@
                         </select>
                         <div class="search-box">
                             <i class="fa-solid fa-magnifying-glass search-icon text-muted"></i>
-                            <input type="text" class="form-control search-input" placeholder="Search amenities..." v-model="searchQuery">
+                            <input type="text" class="form-control search-input" placeholder="Search amenities..."
+                                v-model="searchQuery">
                         </div>
                         <button class="btn btn-primary d-flex align-items-center gap-2"
                             style="background-color: #0f766e; border: none; border-radius: 8px; padding: 8px 16px; font-size: 14px;"
@@ -52,7 +53,8 @@
                                 <td class="text-muted">#{{ amenity.id }}</td>
                                 <td class="fw-bold text-dark">{{ amenity.name }}</td>
                                 <td>
-                                    <i :class="amenity.icon || amenity.icon_class || 'bi bi-star'" class="fs-5 text-secondary"></i>
+                                    <i :class="amenity.icon || amenity.icon_class || 'bi bi-star'"
+                                        class="fs-5 text-secondary"></i>
                                 </td>
                                 <td class="text-secondary">{{ amenity.description || 'No description provided' }}</td>
                                 <td>
@@ -89,7 +91,8 @@
                 <form @submit.prevent="submitAdd">
                     <div class="mb-3">
                         <label class="form-label">Name</label>
-                        <input type="text" class="form-control" v-model="addForm.name" required placeholder="e.g. Swimming Pool">
+                        <input type="text" class="form-control" v-model="addForm.name" required
+                            placeholder="e.g. Swimming Pool">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Icon Class</label>
@@ -98,7 +101,8 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Description</label>
-                        <textarea class="form-control" v-model="addForm.description" rows="3" placeholder="Optional description"></textarea>
+                        <textarea class="form-control" v-model="addForm.description" rows="3"
+                            placeholder="Optional description"></textarea>
                     </div>
                     <div class="mb-4">
                         <label class="form-label">Status</label>
@@ -109,7 +113,8 @@
                     </div>
                     <div class="d-flex justify-content-end gap-2">
                         <button type="button" class="btn btn-light border" @click="closeAddModal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" style="background-color: #0f766e; border: none;">Create</button>
+                        <button type="submit" class="btn btn-primary"
+                            style="background-color: #0f766e; border: none;">Create</button>
                     </div>
                 </form>
             </div>
@@ -145,7 +150,8 @@
                     </div>
                     <div class="d-flex justify-content-end gap-2">
                         <button type="button" class="btn btn-light border" @click="closeEditModal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" style="background-color: #0f766e; border: none;">Save Changes</button>
+                        <button type="submit" class="btn btn-primary"
+                            style="background-color: #0f766e; border: none;">Save Changes</button>
                     </div>
                 </form>
             </div>
@@ -177,7 +183,7 @@ const loadAmenities = async () => {
 const rawAmenityList = computed(() => {
     const data = adminStore.amenities;
     if (!data) return [];
-    
+
     // Recursive search for the first array in the object
     const findArray = (obj) => {
         if (Array.isArray(obj)) return obj;
@@ -197,13 +203,13 @@ const rawAmenityList = computed(() => {
         }
         return [];
     };
-    
+
     return findArray(data);
 });
 
 const filteredAmenityList = computed(() => {
     let list = rawAmenityList.value;
-    
+
     // Filter by status
     if (statusFilter.value !== 'all') {
         list = list.filter(amenity => {
@@ -211,7 +217,7 @@ const filteredAmenityList = computed(() => {
             return status === statusFilter.value;
         });
     }
-    
+
     // Filter by search query
     if (searchQuery.value) {
         const query = searchQuery.value.toLowerCase();
@@ -221,7 +227,7 @@ const filteredAmenityList = computed(() => {
             return name.includes(query) || description.includes(query);
         });
     }
-    
+
     return list;
 });
 
@@ -325,6 +331,7 @@ onMounted(() => {
     padding: 16px 0;
     border-bottom: 1px solid #eef2f0;
 }
+
 .icon-btn {
     background: #f1f5f9;
     border: none;
@@ -334,6 +341,7 @@ onMounted(() => {
     position: relative;
     cursor: pointer;
 }
+
 .dot {
     position: absolute;
     top: 10px;
@@ -343,6 +351,7 @@ onMounted(() => {
     background-color: #ef4444;
     border-radius: 50%;
 }
+
 .user-chip {
     display: flex;
     align-items: center;
@@ -353,6 +362,7 @@ onMounted(() => {
     border: 1px solid #e2e8f0;
     cursor: pointer;
 }
+
 .avatar-circle {
     width: 32px;
     height: 32px;
@@ -365,14 +375,21 @@ onMounted(() => {
     font-weight: bold;
     font-size: 14px;
 }
-.font-sm { font-size: 13px; }
-.font-xs { font-size: 11px; }
+
+.font-sm {
+    font-size: 13px;
+}
+
+.font-xs {
+    font-size: 11px;
+}
 
 /* Filter & Search Styles */
 .search-box {
     position: relative;
     width: 250px;
 }
+
 .search-icon {
     position: absolute;
     left: 14px;
@@ -380,6 +397,7 @@ onMounted(() => {
     transform: translateY(-50%);
     font-size: 14px;
 }
+
 .search-input {
     padding-left: 38px;
     border-radius: 8px;
@@ -387,15 +405,18 @@ onMounted(() => {
     font-size: 14px;
     box-shadow: none;
 }
+
 .search-input:focus {
     border-color: #0f766e;
     box-shadow: 0 0 0 0.2rem rgba(15, 118, 110, 0.25);
 }
+
 .form-select {
     border-radius: 8px;
     font-size: 14px;
     border: 1px solid #e2e8f0;
 }
+
 .form-select:focus {
     border-color: #0f766e;
     box-shadow: 0 0 0 0.2rem rgba(15, 118, 110, 0.25);
@@ -409,6 +430,7 @@ onMounted(() => {
     padding: 24px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
+
 .custom-table th {
     font-size: 11px;
     font-weight: 700;
@@ -417,6 +439,7 @@ onMounted(() => {
     border-bottom: 1px solid #f1f5f9;
     text-transform: uppercase;
 }
+
 .custom-table td {
     padding: 16px 20px;
     border-bottom: 1px solid #f8fafc;
@@ -430,8 +453,16 @@ onMounted(() => {
     font-weight: 600;
     text-transform: capitalize;
 }
-.status-badge.active { background-color: #def7ec; color: #03543f; }
-.status-badge.inactive { background-color: #fde8e8; color: #9b1c1c; }
+
+.status-badge.active {
+    background-color: #def7ec;
+    color: #03543f;
+}
+
+.status-badge.inactive {
+    background-color: #fde8e8;
+    color: #9b1c1c;
+}
 
 /* Actions Buttons */
 .icon-action-btn {
@@ -479,6 +510,7 @@ onMounted(() => {
     justify-content: center;
     z-index: 1050;
 }
+
 .modal-content {
     background: #ffffff;
     width: 100%;

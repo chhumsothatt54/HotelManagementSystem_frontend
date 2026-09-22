@@ -1,8 +1,6 @@
 <template>
 
     <aside id="sidebar">
-
-
         <RouterLink to="/" class="brand-box text-decoration-none text-dark">
             <div class="brand-logo overflow-hidden border-0 p-0" style="background: transparent;">
                 <img src="@/assets/image/hotel_logo.jpg" alt="logo" class="w-100 h-100 object-fit-cover">
