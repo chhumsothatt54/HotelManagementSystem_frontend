@@ -1,22 +1,5 @@
 <template>
-    <!-- Top bar -->
-    <div class="topbar bg-white">
-        <div>
-            <h1 class="page-title brand-serif">Hotel Image</h1>
-            <div class="page-subtitle">Property performance overview</div>
-        </div>
-        <div class="d-flex align-items-center gap-3">
-            <div class="icon-btn"><i class="bi bi-bell"></i><span class="dot"></span></div>
-            <!-- <div class="user-chip">
-                <div class="avatar-circle">M</div>
-                <div>
-                    <div class="name">Sokha Manager</div>
-                    <div class="sub">Mekong Riverside Hotel</div>
-                </div>
-                <i class="bi bi-chevron-down text-muted small"></i>
-            </div> -->
-        </div>
-    </div>
+   
 
     <div class="page-content">
         <!-- Subheader Action Area -->
@@ -152,6 +135,13 @@ const handleDelete = async (imageId) => {
 </script>
 <style scoped>
 
+
+        .page-content{
+            padding-left: 1rem !important; 
+            padding-right: 1rem !important;
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
 
         /* Main Content Styling */
         .main-wrapper {

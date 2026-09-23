@@ -56,7 +56,7 @@ import ChangePasswordView from "@/views/auth/ChangePasswordView.vue";
 import { useAuthStore } from "@/stores/auth.js";
 import BookingReport from "@/views/manager/BookingReport.vue";
 import RevenueReport from "@/views/manager/RevenueReport.vue";
-import NotificationsView from "@/views/admin/NotificationsView.vue";
+import NotificationsView from "@/views/manager/NotificationView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -325,7 +325,7 @@ const router = createRouter({
           },
         },
         {
-          path: "manger-hotel",
+          path: "manager-hotel",
           name: "manager-hotel",
           component: MangeHotelView,
           meta: {
@@ -454,6 +454,15 @@ const router = createRouter({
           path: "BookingReport",
           name: "manager-occupancy-report",
           component: BookingReport,
+          meta: {
+            requireAuth: true,
+            roles: ["hotel_manager"],
+          },
+        },
+        {
+          path: "notifications",
+          name: "manager-notifications",
+          component: NotificationsView,
           meta: {
             requireAuth: true,
             roles: ["hotel_manager"],

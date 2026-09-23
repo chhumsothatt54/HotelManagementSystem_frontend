@@ -1,21 +1,5 @@
 <template>
   <div class="rooms-container p-4">
-    <!-- Topbar Section -->
-    <div class="topbar bg-white p-3 rounded-3 shadow-sm d-flex justify-content-between align-items-center mb-4 border">
-      <div>
-        <h1 class="page-title brand-serif h4 mb-1 text-dark fw-bold">Rooms</h1>
-        <div class="page-subtitle text-muted small">
-          Manage your account and property information
-        </div>
-      </div>
-
-      <div class="d-flex align-items-center gap-3">
-        <button class="btn btn-light position-relative rounded-circle p-2 shadow-sm border-0" type="button">
-          <i class="bi bi-bell text-secondary"></i>
-          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
-        </button>
-      </div>
-    </div>
 
     <!-- Main Content Header -->
     <div class="page-content">
@@ -390,6 +374,12 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.page-content{
+  padding-left: 1rem !important; 
+  padding-right: 1rem !important;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
 /* Theme & Emerald UI Colors */
 .btn-emerald {
   background-color: #059669;
@@ -403,9 +393,6 @@ onMounted(async () => {
   color: #ffffff;
 }
 
-.bg-emerald-subtle {
-  background-color: #d1fae5;
-}
 
 .text-emerald {
   color: #059669;

@@ -1,54 +1,39 @@
 <template>
-  <div class="room-images-container p-4">
-    <!-- Topbar Header -->
-    <div class="topbar bg-white p-3 rounded-3 shadow-sm d-flex justify-content-between align-items-center mb-4 border">
-      <div>
-        <h1 class="page-title brand-serif h4 mb-1 text-dark fw-bold">Room Gallery</h1>
-        <div class="page-subtitle text-muted small">
-          Manage media assets and visual presentation for your property types
-        </div>
-      </div>
-
-      <div class="d-flex align-items-center gap-3">
-        <button class="btn btn-light position-relative rounded-circle p-2 shadow-sm border-0" type="button">
-          <i class="bi bi-bell text-secondary"></i>
-          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
-        </button>
-      </div>
-    </div>
-
+  <div class="room-images-container">
     <div class="page-content">
       <!-- Section Header -->
-      <div class="mb-4">
-        <div class="badge bg-emerald-subtle text-emerald text-uppercase fw-bold mb-1 px-2 py-1" style="font-size: 0.725rem; letter-spacing: 0.5px;">
+      <div class="mb-4"><br>
+        <span class="badge bg-emerald-subtle text-emerald text-uppercase fw-semibold mb-2 px-2.5 py-1 rounded-pill" style="font-size: 0.7rem; letter-spacing: 0.5px;">
           MEDIA MANAGEMENT
-        </div>
-        <h2 class="fw-bold text-dark mb-1">Room Type Gallery</h2>
+        </span>
+        <h2 class="fw-bold text-dark mb-1 h3">Room Type Gallery</h2>
         <p class="text-muted small mb-0">Upload high-resolution images for each room category to attract guests.</p>
       </div>
 
       <!-- Alert Messages -->
-      <div v-if="managerStore.error" class="alert alert-danger alert-dismissible fade show mb-4 shadow-sm" role="alert">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ managerStore.error }}
-        <button type="button" class="btn-close" @click="managerStore.clearError?.()"></button>
+      <div v-if="managerStore.error" class="alert alert-danger border-0 shadow-sm rounded-3 fade show mb-4 d-flex align-items-center" role="alert">
+        <i class="bi bi-exclamation-triangle-fill fs-5 me-2.5"></i>
+        <div class="flex-grow-1 small">{{ managerStore.error }}</div>
+        <button type="button" class="btn-close ms-auto" @click="managerStore.clearError?.()"></button>
       </div>
 
-      <div v-if="successMessage" class="alert alert-success alert-dismissible fade show mb-4 shadow-sm" role="alert">
-        <i class="bi bi-check-circle-fill me-2"></i> {{ successMessage }}
-        <button type="button" class="btn-close" @click="successMessage = ''"></button>
+      <div v-if="successMessage" class="alert alert-success border-0 shadow-sm rounded-3 fade show mb-4 d-flex align-items-center" role="alert">
+        <i class="bi bi-check-circle-fill fs-5 me-2.5 text-emerald"></i>
+        <div class="flex-grow-1 small">{{ successMessage }}</div>
+        <button type="button" class="btn-close ms-auto" @click="successMessage = ''"></button>
       </div>
 
       <!-- Main Layout Grid -->
       <div class="row g-4">
         <!-- Sidebar Selector & Upload Form -->
         <div class="col-12 col-lg-4">
-          <div class="card border-0 shadow-sm rounded-3 bg-white p-4 h-100">
-            <h5 class="fw-bold text-dark mb-3">Upload Media</h5>
+          <div class="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
+            <h5 class="fw-bold text-dark mb-3 h6 text-uppercase tracking-wider text-secondary">Upload Media</h5>
 
             <!-- Dropdown Selection -->
             <div class="mb-4">
-              <label class="form-label fw-semibold small text-dark mb-2">Target Room Type</label>
-              <select v-model="selectedRoomTypeId" class="form-select form-select-lg" :disabled="managerStore.loading">
+              <label class="form-label fw-medium small text-secondary mb-1.5">Target Room Type</label>
+              <select v-model="selectedRoomTypeId" class="form-select custom-select" :disabled="managerStore.loading">
                 <option value="" disabled>Select room category</option>
                 <option v-for="room in roomTypes" :key="room.id || room._id" :value="room.id || room._id">
                   {{ room.name }}
@@ -58,7 +43,7 @@
 
             <!-- Drag & Drop Upload Container -->
             <div
-              class="upload-zone rounded-3 p-4 text-center"
+              class="upload-zone rounded-4 p-4 text-center d-flex flex-column align-items-center justify-content-center"
               :class="{ 'dragging': isDragging, 'opacity-50 pointer-events-none': uploading }"
               @dragover.prevent="isDragging = true"
               @dragleave.prevent="isDragging = false"
@@ -74,16 +59,16 @@
                 @change="handleFileSelect"
               />
 
-              <div class="upload-icon-circle mx-auto mb-3 d-flex align-items-center justify-content-center">
+              <div class="upload-icon-circle mb-3 d-flex align-items-center justify-content-center">
                 <i v-if="!uploading" class="bi bi-cloud-arrow-up-fill fs-3 text-emerald"></i>
                 <div v-else class="spinner-border spinner-border-sm text-emerald" role="status"></div>
               </div>
 
-              <h6 class="fw-bold text-dark mb-1">
+              <h6 class="fw-semibold text-dark mb-1 small">
                 {{ uploading ? 'Uploading images...' : 'Click or Drag files here' }}
               </h6>
-              <p class="text-muted small mb-0">
-                Supports PNG, JPG, or WEBP (Max 5MB per file)
+              <p class="text-muted extra-small mb-0">
+                PNG, JPG, or WEBP (Max 5MB per file)
               </p>
             </div>
           </div>
@@ -91,32 +76,36 @@
 
         <!-- Image Gallery Showcase -->
         <div class="col-12 col-lg-8">
-          <div class="card border-0 shadow-sm rounded-3 bg-white p-4 h-100">
+          <div class="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <h5 class="fw-bold text-dark mb-0">
-                Uploaded Media
-                <span class="badge bg-light text-secondary ms-2 fw-normal" style="font-size: 0.8rem;">
+              <div class="d-flex align-items-center gap-2">
+                <h5 class="fw-bold text-dark mb-0 h6">
+                  Uploaded Media
+                </h5>
+                <span class="badge bg-light text-secondary rounded-pill fw-normal px-2.5 py-1" style="font-size: 0.75rem;">
                   {{ currentRoomImages.length }} Photos
                 </span>
-              </h5>
-              <span class="badge bg-emerald-subtle text-emerald fw-semibold">
+              </div>
+              <span class="badge bg-emerald-subtle text-emerald fw-semibold px-2.5 py-1.5 rounded-3">
                 {{ selectedRoomName }}
               </span>
             </div>
 
-            <hr class="text-muted opacity-25 mt-0 mb-4" />
+            <hr class="text-secondary opacity-10 my-3" />
 
             <!-- Loading State -->
             <div v-if="loadingImages" class="text-center py-5">
-              <div class="spinner-border text-emerald" role="status"></div>
-              <p class="text-muted small mt-2">Fetching gallery items...</p>
+              <div class="spinner-border text-emerald spinner-border-sm" role="status"></div>
+              <p class="text-muted small mt-2 mb-0">Fetching gallery items...</p>
             </div>
 
             <!-- Empty State -->
-            <div v-else-if="!currentRoomImages.length" class="text-center py-5 border rounded-3 bg-light style-empty-box">
-              <i class="bi bi-images display-4 text-muted opacity-50 d-block mb-3"></i>
-              <h6 class="fw-semibold text-secondary">No Photos Available</h6>
-              <p class="text-muted small mb-0">Select a room type and upload images to see them here.</p>
+            <div v-else-if="!currentRoomImages.length" class="empty-state-box text-center py-5 rounded-4 d-flex flex-column align-items-center justify-content-center">
+              <div class="empty-icon-circle mb-3 d-flex align-items-center justify-content-center">
+                <i class="bi bi-images fs-3 text-muted"></i>
+              </div>
+              <h6 class="fw-semibold text-dark small mb-1">No Photos Available</h6>
+              <p class="text-muted extra-small mb-0">Select a room type and upload images to see them here.</p>
             </div>
 
             <!-- Image Cards Grid -->
@@ -126,28 +115,28 @@
                 :key="img.id || img.url"
                 class="col-6 col-sm-4 col-md-3"
               >
-                <div class="gallery-card rounded-3 overflow-hidden position-relative group">
+                <div class="gallery-card rounded-3 overflow-hidden position-relative">
                   <img :src="img.url" :alt="selectedRoomName" class="w-100 h-100 object-fit-cover" />
                   
                   <!-- Overlay Controls -->
                   <div class="gallery-overlay d-flex align-items-center justify-content-center gap-2">
                     <button
                       type="button"
-                      class="btn btn-light btn-sm rounded-circle shadow-sm"
+                      class="btn btn-white btn-action rounded-circle shadow-sm d-flex align-items-center justify-content-center"
                       title="Preview Image"
                       @click="previewImage(img.url)"
                     >
-                      <i class="bi bi-eye text-dark"></i>
+                      <i class="bi bi-eye text-dark fs-6"></i>
                     </button>
                     <button
                       type="button"
-                      class="btn btn-danger btn-sm rounded-circle shadow-sm"
+                      class="btn btn-white btn-action rounded-circle shadow-sm d-flex align-items-center justify-content-center"
                       title="Delete Image"
                       :disabled="deletingId === img.id"
                       @click.stop="deleteImage(img.id)"
                     >
-                      <i v-if="deletingId !== img.id" class="bi bi-trash"></i>
-                      <span v-else class="spinner-border spinner-border-sm"></span>
+                      <i v-if="deletingId !== img.id" class="bi bi-trash text-danger fs-6"></i>
+                      <span v-else class="spinner-border spinner-border-sm text-danger" style="width: 1rem; height: 1rem;"></span>
                     </button>
                   </div>
                 </div>
@@ -160,11 +149,14 @@
 
     <!-- Image Preview Modal -->
     <Teleport to="body">
-      <div v-if="activePreviewUrl" class="custom-modal-overlay" @click="activePreviewUrl = null">
-        <div class="preview-dialog p-2">
-          <img :src="activePreviewUrl" class="img-fluid rounded-3 shadow-lg max-preview-img" />
+      <Transition name="fade">
+        <div v-if="activePreviewUrl" class="custom-modal-overlay" @click="activePreviewUrl = null">
+          <div class="preview-dialog p-2" @click.stop>
+            <img :src="activePreviewUrl" class="img-fluid rounded-4 shadow-lg max-preview-img" />
+            <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" @click="activePreviewUrl = null"></button>
+          </div>
         </div>
-      </div>
+      </Transition>
     </Teleport>
   </div>
 </template>
@@ -292,74 +284,124 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* Color Accents */
-.btn-emerald {
-  background-color: #059669;
-  color: #ffffff;
-  border: none;
+/* Page Layout Reset */
+.room-images-container,
+.page-content {
+  padding-left: 1rem !important; 
+  padding-right: 1rem !important;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
 }
 
-.bg-emerald-subtle {
-  background-color: #d1fae5;
+/* Typography & Badges */
+.extra-small {
+  font-size: 0.75rem;
+}
+
+.tracking-wider {
+  letter-spacing: 0.05em;
 }
 
 .text-emerald {
   color: #059669;
 }
 
+/* Custom Select Dropdown */
+.custom-select {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: #1e293b;
+  background-color: #f8fafc;
+  transition: all 0.2s ease;
+}
+
+.custom-select:focus {
+  background-color: #ffffff;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
 /* Upload Zone Styling */
 .upload-zone {
-  border: 2px dashed #cbd5e1;
+  border: 2px dashed #e2e8f0;
   background-color: #f8fafc;
+  min-height: 180px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
 
-.upload-zone:hover, .upload-zone.dragging {
-  border-color: #059669;
-  background-color: #ecfdf5;
+.upload-zone:hover, 
+.upload-zone.dragging {
+  border-color: #10b981;
+  background-color: #f0fdf4;
 }
 
 .upload-icon-circle {
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background-color: #ffffff;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
-/* Gallery Cards Grid */
+/* Empty State Styling */
+.empty-state-box {
+  background-color: #f8fafc;
+  border: 1px dashed #e2e8f0;
+  min-height: 240px;
+}
+
+.empty-icon-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* Gallery Cards & Hover Overlay */
 .gallery-card {
-  height: 140px;
+  aspect-ratio: 4 / 3;
   background-color: #f1f5f9;
 }
 
 .gallery-overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(15, 23, 42, 0.5);
-  backdrop-filter: blur(2px);
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(3px);
   opacity: 0;
-  transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease;
 }
 
 .gallery-card:hover .gallery-overlay {
   opacity: 1;
 }
 
-.style-empty-box {
-  border-style: dashed !important;
+.btn-white {
+  background-color: #ffffff;
+  border: none;
 }
 
-/* Modal Overlay for Preview */
+.btn-action {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  transition: transform 0.15s ease;
+}
+
+.btn-action:hover {
+  transform: scale(1.08);
+}
+
+/* Modal Styling & Animations */
 .custom-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   background-color: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -371,6 +413,16 @@ onMounted(async () => {
   max-height: 85vh;
   max-width: 90vw;
   object-fit: contain;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 .pointer-events-none {

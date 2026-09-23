@@ -1,22 +1,7 @@
 <template>
   <!-- Top bar -->
-  <div class="topbar bg-white">
-    <div>
-      <h1 class="page-title brand-serif">Profile</h1>
-      <div class="page-subtitle">
-        Manage your account and property information
-      </div>
-    </div>
 
-    <div class="d-flex align-items-center gap-3">
-      <!-- Notification -->
-      <div class="icon-btn">
-        <i class="bi bi-bell"></i>
-        <span class="dot"></span>
-      </div>
-    </div>
-  </div>
-
+<br>
   <!-- Page content -->
   <div class="page-content">
     <div class="panel-card">
@@ -482,6 +467,13 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.page-content {
+  padding-left: 1rem !important; 
+  padding-right: 1rem !important;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
 .profile-avatar {
   cursor: pointer;
   position: relative;

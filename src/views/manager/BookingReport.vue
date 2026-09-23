@@ -1,38 +1,15 @@
 <template>
   <div class="booking-reports-page">
-    <!-- Top Bar Header -->
-    <header class="topbar">
-      <div>
-        <h1 class="topbar-title brand-serif">Booking Reports</h1>
-        <div class="topbar-subtitle">Reservation reports</div>
-      </div>
-
-      <div class="d-flex align-items-center gap-3">
-        <button class="icon-btn" aria-label="Notifications">
-          <i class="bi bi-bell"></i>
-          <span class="dot"></span>
-        </button>
-
-        <!-- <div class="user-chip d-flex align-items-center gap-2">
-          <div class="avatar-circle">M</div>
-          <div class="user-info">
-            <div class="user-name">Sokha Manager</div>
-            <div class="user-sub">Mekong Riverside Hotel</div>
-          </div>
-          <i class="bi bi-chevron-down text-muted small ms-1"></i>
-        </div> -->
-      </div>
-    </header>
 
     <!-- Main Content Body -->
     <main class="page-content">
+      
       <!-- Section Title & Action Button -->
-      <div class="d-flex align-items-center justify-content-between mt-5 mb-4 flex-wrap gap-3">
+      <div class="page-header d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
         <div>
-          <br>
-          <span class="eyebrow-text">BOOKING REPORTS</span>
+          <span class="eyebrow-text">REPORTS & ANALYTICS</span>
           <h2 class="section-title brand-serif">Booking Reports</h2>
-          <p class="section-subtitle">Generate reservation reports for your property.</p>
+          <p class="section-subtitle">Generate and inspect reservation reports for your property.</p>
         </div>
 
         <button 
@@ -46,119 +23,147 @@
       </div>
 
       <!-- Error State -->
-      <div v-if="managerStore.error" class="alert alert-danger mb-4">
-        {{ managerStore.error }}
+      <div v-if="managerStore.error" class="alert alert-custom-danger mb-4 d-flex align-items-center gap-2">
+        <i class="bi bi-exclamation-octagon-fill"></i>
+        <span>{{ managerStore.error }}</span>
       </div>
 
-      <!-- Date Filters -->
-      <div class="main-card-panel mb-4">
-        <div class="row g-4">
-          <div class="col-12 col-md-6">
-            <label class="form-label fw-bold text-ink small mb-2">Start Date</label>
-            <input 
-              type="date" 
-              class="form-control custom-input" 
-              v-model="startDate" 
-            />
+      <!-- Date Filters Panel -->
+      <div class="main-card-panel filter-panel mb-4">
+        <div class="row g-3 align-items-end">
+          <div class="col-12 col-sm-6 col-md-4">
+            <label class="form-label field-label">Start Date</label>
+            <div class="input-icon-wrapper">
+              <i class="bi bi-calendar-event input-icon"></i>
+              <input 
+                type="date" 
+                class="form-control custom-input ps-5" 
+                v-model="startDate" 
+              />
+            </div>
           </div>
 
-          <div class="col-12 col-md-6">
-            <label class="form-label fw-bold text-ink small mb-2">End Date</label>
-            <input 
-              type="date" 
-              class="form-control custom-input" 
-              v-model="endDate" 
-            />
+          <div class="col-12 col-sm-6 col-md-4">
+            <label class="form-label field-label">End Date</label>
+            <div class="input-icon-wrapper">
+              <i class="bi bi-calendar-event input-icon"></i>
+              <input 
+                type="date" 
+                class="form-control custom-input ps-5" 
+                v-model="endDate" 
+              />
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4 d-flex align-items-center justify-content-md-end">
+            <span class="filter-count-badge" v-if="reportBookings.length">
+              Showing <strong>{{ reportBookings.length }}</strong> confirmed record(s)
+            </span>
           </div>
         </div>
       </div>
 
-      <!-- Real Confirmed Bookings Data Table Panel -->
-      <div class="main-card-panel">
-        <div class="d-flex align-items-center justify-content-between mb-4">
+      <!-- Bookings Data Table Panel -->
+      <div class="main-card-panel p-0 overflow-hidden">
+        
+        <!-- Panel Header -->
+        <div class="panel-header d-flex align-items-center justify-content-between p-4">
           <div>
-            <h3 class="h5 fw-bold text-ink m-0">Confirmed Bookings Report</h3>
-            <p class="text-muted small m-0">Showing confirmed reservation records from live data</p>
+            <h3 class="h6 fw-bold text-ink m-0">Confirmed Bookings</h3>
+            <p class="text-muted small m-0 mt-1">Showing confirmed reservation records from live database</p>
           </div>
-          <button class="btn btn-sm btn-link text-emerald text-decoration-none" @click="loadData">
-            <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+          <button class="btn-refresh d-inline-flex align-items-center gap-1" @click="loadData">
+            <i class="bi bi-arrow-clockwise"></i>
+            <span>Refresh</span>
           </button>
         </div>
 
-        <!-- Table View -->
+        <!-- Table Container -->
         <div class="table-responsive">
           <table class="table custom-table align-middle mb-0">
             <thead>
               <tr>
-                <th scope="col" style="width: 22%;">GUEST</th>
-                <th scope="col" style="width: 10%;">ROOM</th>
-                <th scope="col" style="width: 15%;">CHECK-IN</th>
-                <th scope="col" style="width: 15%;">CHECK-OUT</th>
-                <th scope="col" style="width: 15%;">STATUS</th>
-                <th scope="col" style="width: 11%;">AMOUNT</th>
-                <!-- <th scope="col" class="text-end" style="width: 12%;">ACTION</th> -->
+                <th scope="col" style="width: 25%;">GUEST</th>
+                <th scope="col" style="width: 12%;">ROOM</th>
+                <th scope="col" style="width: 16%;">CHECK-IN</th>
+                <th scope="col" style="width: 16%;">CHECK-OUT</th>
+                <th scope="col" style="width: 16%;">STATUS</th>
+                <th scope="col" class="text-end" style="width: 15%;">AMOUNT</th>
               </tr>
             </thead>
             <tbody>
+              
               <!-- Loading State -->
               <tr v-if="managerStore.loading">
-                <td colspan="7" class="text-center py-5 text-muted">
-                  <div class="spinner-border spinner-border-sm text-emerald me-2" role="status"></div>
-                  Loading confirmed bookings...
+                <td colspan="6" class="text-center py-5">
+                  <div class="d-flex flex-column align-items-center justify-content-center py-3">
+                    <div class="spinner-border spinner-border-sm text-emerald mb-2" role="status"></div>
+                    <span class="text-muted small fw-medium">Fetching confirmed bookings...</span>
+                  </div>
                 </td>
               </tr>
 
               <!-- Empty State -->
               <tr v-else-if="reportBookings.length === 0">
-                <td colspan="7" class="text-center py-5 text-muted">
-                  <i class="bi bi-journal-x fs-2 d-block mb-2 text-secondary"></i>
-                  No confirmed bookings found.
+                <td colspan="6" class="text-center py-5">
+                  <div class="empty-state-wrapper py-4">
+                    <i class="bi bi-journal-x fs-1 text-secondary opacity-50 mb-2 d-block"></i>
+                    <h6 class="fw-bold text-ink mb-1">No confirmed bookings found</h6>
+                    <p class="text-muted small m-0">Try expanding your start and end date range filters.</p>
+                  </div>
                 </td>
               </tr>
 
-              <!-- Live Confirmed Data Rows -->
-              <tr v-else v-for="booking in reportBookings" :key="booking.id">
+              <!-- Data Rows -->
+              <tr v-else v-for="booking in reportBookings" :key="booking.id" class="table-row">
                 <td>
                   <div class="d-flex align-items-center gap-3">
-                    <div 
-                      class="guest-avatar" 
-                      :style="{ 
-                        backgroundColor: getAvatarStyle(booking.guest_name).bg, 
-                        color: getAvatarStyle(booking.guest_name).text 
-                      }"
-                    >
-                      {{ getInitial(booking.guest_name) }}
-                    </div>
-                    <span class="fw-bold text-ink">{{ booking.guest_name }}</span>
+                    <div class="guest-avatar-wrapper">
+  <img
+    v-if="booking.customer?.avatar"
+    :src="getAvatarUrl(booking.customer.avatar)"
+    :alt="booking.customer?.name || booking.guest_name"
+    class="guest-avatar guest-avatar-image"
+    @error="handleAvatarError"
+  />
+
+  <div
+    v-else
+    class="guest-avatar"
+    :style="{
+      backgroundColor: getAvatarStyle(booking.guest_name).bg,
+      color: getAvatarStyle(booking.guest_name).text
+    }"
+  >
+    {{ getInitial(booking.guest_name) }}
+  </div>
+</div>
+                    <span class="fw-semibold text-ink">{{ booking.guest_name || 'Anonymous Guest' }}</span>
                   </div>
                 </td>
-                <td class="text-muted">{{ booking.room?.room_number || booking.room_id || 'N/A' }}</td>
-                <td class="text-muted">{{ formatDate(booking.check_in) }}</td>
-                <td class="text-muted">{{ formatDate(booking.check_out) }}</td>
+
+                <td>
+                  <span class="room-pill">
+                    {{ booking.room?.room_number || booking.room_id || 'N/A' }}
+                  </span>
+                </td>
+
+                <td class="text-muted font-mono">{{ formatDate(booking.check_in) }}</td>
+                <td class="text-muted font-mono">{{ formatDate(booking.check_out) }}</td>
+
                 <td>
                   <span
                     class="status-badge"
                     :class="`status-${booking.status}`"
                   >
+                    <span class="status-dot"></span>
                     {{ formatStatus(booking.status) }}
                   </span>
                 </td>
-                <td class="fw-bold text-ink">${{ booking.total_amount }}</td>
-                <!-- <td class="text-end">
-                  <select 
-                    class="action-select" 
-                    :value="booking.status" 
-                    @change="handleStatusChange(booking.id, $event.target.value)"
-                    :disabled="updatingId === booking.id"
-                  >
-                    <option value="pending">Pending</option>
-                    <option value="confirmed">Confirmed</option>
-                    <option value="checked_in">Checked-in</option>
-                    <option value="checked_out">Checked-out</option>
-                    <option value="cancelled">Cancelled</option>
-                    <option value="rejected">Rejected</option>
-                  </select>
-                </td> -->
+
+                <td class="text-end">
+                  <span class="amount-text">${{ Number(booking.total_amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 }) }}</span>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -168,6 +173,357 @@
   </div>
 </template>
 
+<style scoped>
+/* Guest Avatar */
+.guest-avatar-wrapper {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.guest-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.825rem;
+  flex-shrink: 0;
+}
+
+.guest-avatar-image {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+/*
+|--------------------------------------------------------------------------
+| DESIGN SYSTEM VARIABLES
+|--------------------------------------------------------------------------
+*/
+.booking-reports-page {
+  --emerald: #087f68;
+  --emerald-hover: #066754;
+  --emerald-light: rgba(8, 127, 104, 0.08);
+  --ink: #0f172a;
+  --ink-secondary: #334155;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --bg-page: #f8fafc;
+  --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --card-shadow-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+
+  background-color: var(--bg-page);
+  min-height: 100vh;
+  width: 100%;
+}
+
+.brand-serif {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.page-content {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/*
+|--------------------------------------------------------------------------
+| HEADER SECTION
+|--------------------------------------------------------------------------
+*/
+.eyebrow-text {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--emerald);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.section-title {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.section-subtitle {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.35rem;
+}
+
+.btn-emerald {
+  background-color: var(--emerald);
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  padding: 0.6rem 1.25rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(8, 127, 104, 0.2);
+}
+
+.btn-emerald:hover:not(:disabled) {
+  background-color: var(--emerald-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(8, 127, 104, 0.3);
+}
+
+.btn-emerald:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/*
+|--------------------------------------------------------------------------
+| ALERT & CARDS
+|--------------------------------------------------------------------------
+*/
+.alert-custom-danger {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  border-radius: 10px;
+  padding: 0.85rem 1.15rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.main-card-panel {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.2s ease;
+}
+
+.panel-header {
+  border-bottom: 1px solid var(--line);
+  background-color: #ffffff;
+}
+
+.btn-refresh {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-refresh:hover {
+  background-color: var(--bg-page);
+  color: var(--emerald);
+  border-color: var(--emerald);
+}
+
+/*
+|--------------------------------------------------------------------------
+| FILTERS & FORM CONTROLS
+|--------------------------------------------------------------------------
+*/
+.field-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ink-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.4rem;
+}
+
+.input-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.custom-input {
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  color: var(--ink);
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.custom-input:focus {
+  border-color: var(--emerald);
+  box-shadow: 0 0 0 3px var(--emerald-light);
+  outline: none;
+}
+
+.filter-count-badge {
+  font-size: 0.8rem;
+  color: var(--muted);
+  background-color: var(--bg-page);
+  padding: 0.4rem 0.85rem;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+}
+
+/*
+|--------------------------------------------------------------------------
+| TABLE STYLING
+|--------------------------------------------------------------------------
+*/
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.custom-table {
+  width: 100%;
+}
+
+.custom-table th {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  padding: 0.9rem 1.25rem;
+  background-color: #f8fafc;
+  text-transform: uppercase;
+}
+
+.custom-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.875rem;
+  color: var(--ink-secondary);
+}
+
+.table-row {
+  transition: background-color 0.15s ease;
+}
+
+.table-row:hover {
+  background-color: rgba(248, 250, 252, 0.8);
+}
+
+.table-row:last-child td {
+  border-bottom: none;
+}
+
+/* Guest Avatar */
+.guest-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+/* Room Pill */
+.room-pill {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-secondary);
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Confirmed */
+.status-confirmed {
+  background-color: rgba(8, 127, 104, 0.1);
+  color: var(--emerald);
+}
+.status-confirmed .status-dot {
+  background-color: var(--emerald);
+}
+
+/* Checked In */
+.status-checked_in {
+  background-color: rgba(14, 233, 40, 0.1);
+  color: #004f23;
+}
+.status-checked_in .status-dot {
+  background-color: #02c747;
+}
+
+/* Checked Out */
+.status-checked_out {
+  background-color: rgba(100, 116, 139, 0.1);
+  color: #475569;
+}
+.status-checked_out .status-dot {
+  background-color: #475569;
+}
+
+/* Amount Display */
+.amount-text {
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.font-mono {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .page-content {
+    padding: 1.25rem;
+  }
+  
+  .section-title {
+    font-size: 1.4rem;
+  }
+  
+  .main-card-panel {
+    padding: 1rem;
+  }
+}
+</style>
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useManagerStore } from '@/stores/manager'
@@ -296,226 +652,19 @@ function exportCSV() {
   link.click();
   document.body.removeChild(link);
 }
+const getAvatarUrl = (avatar) => {
+  if (!avatar) return null
+
+  // Already a full URL
+  if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
+    return avatar
+  }
+
+  // Laravel storage image
+  return `http://127.0.0.1:8000/storage/${avatar}`
+}
+
+const handleAvatarError = (event) => {
+  event.target.style.display = 'none'
+}
 </script>
-
-<style scoped>
-.booking-reports-page {
-  --emerald: #087f68;
-  --emerald-hover: #066754;
-  --ink: #0f172a;
-  --muted: #64748b;
-  --line: #e2e8f0;
-  --bg-page: #f8fafc;
-
-  background-color: var(--bg-page);
-  min-height: 100vh;
-  width: 100%;
-}
-
-.brand-serif {
-  font-family: "Lora", serif;
-}
-
-/* Topbar Styling */
-.topbar {
-  background: #ffffff;
-  border-bottom: 1px solid var(--line);
-  padding: 1.25rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.topbar-title {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--ink);
-  margin: 0;
-}
-
-.topbar-subtitle {
-  font-size: 0.825rem;
-  color: var(--muted);
-}
-
-.icon-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--muted);
-  position: relative;
-  cursor: pointer;
-}
-
-.icon-btn .dot {
-  position: absolute;
-  top: 9px;
-  right: 9px;
-  width: 6px;
-  height: 6px;
-  background-color: var(--emerald);
-  border-radius: 50%;
-}
-
-.avatar-circle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: var(--emerald);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-
-.user-name {
-  font-size: 0.825rem;
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.2;
-}
-
-.user-sub {
-  font-size: 0.725rem;
-  color: var(--muted);
-}
-
-/* Layout */
-.page-content {
-  padding: 2rem;
-}
-
-.eyebrow-text {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--emerald);
-  letter-spacing: 0.08em;
-}
-
-.section-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--ink);
-  margin: 0.1rem 0;
-}
-
-.section-subtitle {
-  font-size: 0.875rem;
-  color: var(--muted);
-  margin: 0;
-}
-
-.btn-emerald {
-  background-color: var(--emerald);
-  color: #ffffff;
-  border: none;
-  font-weight: 600;
-  font-size: 0.875rem;
-  border-radius: 8px;
-  padding: 0.55rem 1.25rem;
-  transition: all 0.2s ease;
-}
-
-.btn-emerald:hover:not(:disabled) {
-  background-color: var(--emerald-hover);
-}
-
-.text-ink {
-  color: var(--ink);
-}
-
-.text-emerald {
-  color: var(--emerald) !important;
-}
-
-/* Card Panel */
-.main-card-panel {
-  background: #ffffff;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 1.5rem;
-}
-
-/* Inputs */
-.custom-input {
-  border-radius: 8px;
-  border: 1px solid var(--line);
-  padding: 0.65rem 1rem;
-  font-size: 0.875rem;
-  color: var(--ink);
-  background-color: #ffffff;
-}
-
-.custom-input:focus {
-  border-color: var(--emerald);
-  box-shadow: 0 0 0 3px rgba(8, 127, 104, 0.15);
-}
-
-/* Custom Table Design */
-.custom-table th {
-  font-size: 0.725rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color: var(--muted);
-  border-bottom: 1px solid var(--line);
-  padding: 0.85rem 0.75rem;
-  background-color: #f8fafc;
-}
-
-.custom-table td {
-  padding: 0.85rem 0.75rem;
-  border-bottom: 1px solid var(--line);
-  font-size: 0.875rem;
-}
-
-/* Avatar Circle */
-.guest-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 0.8125rem;
-  flex-shrink: 0;
-}
-
-/* Status Badges */
-.status-badge {
-  display: inline-block;
-  padding: 0.25rem 0.65rem;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-.status-confirmed { 
-  background-color: rgba(8, 127, 104, 0.12); 
-  color: var(--emerald); 
-}
-
-/* Action Select Dropdown */
-.action-select {
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  padding: 0.3rem 0.6rem;
-  font-size: 0.8125rem;
-  color: var(--ink);
-  background-color: #ffffff;
-  width: 120px;
-}
-
-.action-select:focus {
-  outline: none;
-  border-color: var(--emerald);
-  box-shadow: 0 0 0 3px rgba(8, 127, 104, 0.15);
-}
-</style>
