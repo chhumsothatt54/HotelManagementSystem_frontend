@@ -1,47 +1,7 @@
 <template>
     <div class="dashboard-page">
+   
 
-        <!-- ==================== TOP BAR ==================== -->
-        <div class="topbar bg-white">
-            <div>
-                <h1 class="page-title brand-serif">
-                    Dashboard
-                </h1>
-
-                <div class="page-subtitle">
-                    Property performance overview
-                </div>
-            </div>
-
-            <div class="d-flex align-items-center gap-3">
-
-                <!-- Notification -->
-                <button class="icon-btn" type="button">
-                    <i class="bi bi-bell"></i>
-                    <span class="dot"></span>
-                </button>
-
-                <!-- Manager
-                <div class="user-chip">
-                    <div class="avatar-circle">
-                        {{ managerInitial }}
-                    </div>
-
-                    <div>
-                        <div class="name">
-                            {{ managerName }}
-                        </div>
-
-                        <div class="sub">
-                            {{ hotelName }}
-                        </div>
-                    </div>
-
-                    <i class="bi bi-chevron-down text-muted small"></i>
-                </div> -->
-
-            </div>
-        </div>
 
 
         <!-- ==================== CONTENT ==================== -->
@@ -313,7 +273,7 @@
                                 </div>
 
                                 <router-link
-                                    to="/manager/bookings"
+                                    to="/manager/booking"
                                     class="view-all-link"
                                 >
                                     View all
@@ -383,8 +343,16 @@
                                                     class="d-flex align-items-center gap-2"
                                                 >
                                                     <div class="guest-avatar">
-                                                        {{ getGuestInitial(booking) }}
-                                                    </div>
+    <img
+        v-if="getGuestImage(booking)"
+        :src="getGuestImage(booking)"
+        :alt="getGuestName(booking)"
+    />
+
+    <span v-else>
+        {{ getGuestInitial(booking) }}
+    </span>
+</div>
 
                                                     <div>
                                                         <div class="guest-name">
@@ -563,7 +531,7 @@
                         </div>
 
                         <router-link
-                            to="/manager/revenue"
+                            to="/manager/RevenueReport"
                             class="view-all-link"
                         >
                             View report
@@ -667,9 +635,12 @@ const hotel = computed(() => {
 
 
 const managerName = computed(() => {
-    // If your auth store later provides manager name,
-    // you can replace this with the real logged-in user.
-    return 'Manager'
+    return (
+        managerStore.profile?.name ||
+        managerStore.profile?.full_name ||
+        managerStore.profile?.username ||
+        'Manager'
+    )
 })
 
 
@@ -771,11 +742,17 @@ const currentDate = computed(() => {
     }).format(new Date())
 })
 
-
+/* Total Revenue Calculation */
+const totalRevenue = computed(() => {
+  if (!revenueReport.value?.revenue) return 0;
+  return revenueReport.value.revenue.reduce(
+    (total, item) => total + Number(item.revenue || 0),
+    0
+  );
+});
 // ============================================================
 // LOAD DASHBOARD
 // ============================================================
-
 async function loadDashboard() {
     managerStore.clearError()
 
@@ -785,8 +762,12 @@ async function loadDashboard() {
             managerStore.getMyHotel(),
             managerStore.getBookings(1),
             managerStore.getOccupancyReport(),
-            managerStore.getRevenueReport()
+            managerStore.getRevenueReport(),
+            managerStore.getProfile()
         ])
+
+        // console.log('MANAGER PROFILE:', managerStore.profile)
+
     } catch (error) {
         console.error('Failed to load manager dashboard:', error)
     }
@@ -860,6 +841,8 @@ function getStatusClass(status) {
 
 function getGuestName(booking) {
     return (
+        booking.customer?.name ||
+        booking.customer?.full_name ||
         booking.user?.name ||
         booking.user?.full_name ||
         booking.guest_name ||
@@ -882,6 +865,27 @@ function getRoomNumber(booking) {
         '-'
     )
 }
+function getGuestImage(booking) {
+    const image =
+        booking.customer?.profile_image ||
+        booking.customer?.image ||
+        booking.customer?.avatar ||
+        booking.user?.profile_image ||
+        booking.user?.image ||
+        booking.user?.avatar
+
+    if (!image) {
+        return null
+    }
+
+    // Already a complete URL
+    if (image.startsWith('http')) {
+        return image
+    }
+
+    // Laravel storage image
+    return `http://127.0.0.1:8000/storage/${image}`
+}
 
 
 // ============================================================
@@ -895,6 +899,35 @@ onMounted(() => {
 
 
 <style scoped>
+.guest-avatar {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #e9efeb;
+    color: #53665b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.guest-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.guest-avatar span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
 /* ============================================================
    PAGE
 ============================================================ */

@@ -1,35 +1,12 @@
 <template>
   <div class="revenue-reports-page">
-    <!-- Top Bar Header -->
-    <header class="topbar">
-      <div>
-        <h1 class="topbar-title brand-serif">Revenue Reports</h1>
-        <div class="topbar-subtitle">Financial reports</div>
-      </div>
-
-      <div class="d-flex align-items-center gap-3">
-        <button class="icon-btn" aria-label="Notifications">
-          <i class="bi bi-bell"></i>
-          <span class="dot"></span>
-        </button>
-
-        <!-- <div class="user-chip d-flex align-items-center gap-2">
-          <div class="avatar-circle">M</div>
-          <div class="user-info">
-            <div class="user-name">{{ managerStore.user?.name || "Sokha Manager" }}</div>
-            <div class="user-sub">{{ revenueReport?.hotel || "Mekong Riverside Hotel" }}</div>
-          </div>
-          <i class="bi bi-chevron-down text-muted small ms-1"></i>
-        </div> -->
-      </div>
-    </header>
 
     <!-- Main Content Body -->
     <main class="page-content">
       <!-- Section Title & Action Button -->
-      <div class="d-flex align-items-center justify-content-between mt-xl-5 mb-4 flex-wrap gap-3">
+      <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
         <div>
-          <br>
+          <!-- Removed <br> that created extra gap -->
           <span class="eyebrow-text">REVENUE REPORTS</span>
           <h2 class="section-title brand-serif">Revenue Reports</h2>
           <p class="section-subtitle">Analyze your hotel's revenue performance.</p>
@@ -227,80 +204,9 @@ onMounted(() => {
   font-family: "Lora", serif;
 }
 
-/* Topbar Styling */
-.topbar {
-  background: #ffffff;
-  border-bottom: 1px solid var(--line);
-  padding: 1.25rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.topbar-title {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--ink);
-  margin: 0;
-}
-
-.topbar-subtitle {
-  font-size: 0.825rem;
-  color: var(--muted);
-}
-
-.icon-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--muted);
-  position: relative;
-  cursor: pointer;
-}
-
-.icon-btn .dot {
-  position: absolute;
-  top: 9px;
-  right: 9px;
-  width: 6px;
-  height: 6px;
-  background-color: var(--emerald);
-  border-radius: 50%;
-}
-
-.avatar-circle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: var(--emerald);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-
-.user-name {
-  font-size: 0.825rem;
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.2;
-}
-
-.user-sub {
-  font-size: 0.725rem;
-  color: var(--muted);
-}
-
 /* Page Layout */
 .page-content {
-  padding: 2rem;
+  padding: 1rem 2rem 2rem 2rem; /* Reduced top padding from 2rem to 1rem */
 }
 
 .eyebrow-text {

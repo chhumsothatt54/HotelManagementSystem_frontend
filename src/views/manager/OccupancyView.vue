@@ -1,20 +1,6 @@
 <template>
   <div class="occupancy-page">
 
-    <!-- Topbar -->
-    <div class="topbar bg-white">
-      <div>
-        <h1 class="page-title brand-serif">Occupancy</h1>
-        <div class="page-subtitle">
-          Monitor your hotel room occupancy
-        </div>
-      </div>
-
-      <div class="topbar-date">
-        <i class="bi bi-calendar3"></i>
-        {{ currentDate }}
-      </div>
-    </div>
 
     <!-- Loading -->
     <div v-if="loading" class="loading-box">

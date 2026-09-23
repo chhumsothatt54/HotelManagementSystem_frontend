@@ -1,47 +1,6 @@
 <template>
   <div class="connect-page">
 
-    <!-- ================= TOPBAR ================= -->
-    <div class="topbar bg-white border-bottom">
-      <div>
-        <h1 class="page-title mb-1">
-          Connect Amenities
-        </h1>
-
-        <p class="page-subtitle mb-0">
-          Assign amenities to rooms in your hotel
-        </p>
-      </div>
-
-      <div class="d-flex align-items-center gap-3">
-
-        <!-- Notification -->
-        <button class="notification-btn position-relative">
-          <i class="bi bi-bell"></i>
-          <span class="notification-dot"></span>
-        </button>
-
-        <!-- Refresh -->
-        <button
-          class="btn btn-outline-success refresh-btn"
-          @click="loadData"
-          :disabled="manager.loading"
-        >
-          <i
-            class="bi"
-            :class="
-              manager.loading
-                ? 'bi-arrow-repeat spin'
-                : 'bi-arrow-clockwise'
-            "
-          ></i>
-
-          Refresh
-        </button>
-
-      </div>
-    </div>
-
 
     <!-- ================= CONTENT ================= -->
     <div class="container-fluid content">

@@ -1,21 +1,6 @@
 <template>
   <div class="revenue-container p-4">
-    <!-- Topbar Header -->
-    <div class="topbar bg-white p-3 rounded-3 shadow-sm d-flex justify-content-between align-items-center mb-4 border">
-      <div>
-        <h1 class="page-title brand-serif h4 mb-1 text-dark fw-bold">Financial Analytics</h1>
-        <div class="page-subtitle text-muted small">
-          Monitor your property revenue, daily averages, and sales metrics
-        </div>
-      </div>
-
-      <div class="d-flex align-items-center gap-3">
-        <button class="btn btn-light position-relative rounded-circle p-2 shadow-sm border-0" type="button">
-          <i class="bi bi-bell text-secondary"></i>
-          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
-        </button>
-      </div>
-    </div>
+  
 
     <div class="page-content">
       <!-- Section Header & Filter -->
