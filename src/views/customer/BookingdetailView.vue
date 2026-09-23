@@ -34,6 +34,7 @@
                 <th scope="col">Dates</th>
                 <th scope="col">Guests</th>
                 <th scope="col">Total Price</th>
+                <th scope="col">Payment</th>
                 <th scope="col">Status</th>
                 <th scope="col" class="text-end pe-4">Actions</th>
               </tr>
@@ -41,7 +42,7 @@
             <tbody>
               <!-- EMPTY STATE -->
               <tr v-if="filteredBookings.length === 0">
-                <td colspan="7" class="text-center py-5 text-muted">
+                <td colspan="8" class="text-center py-5 text-muted">
                   <p class="mb-0 fw-medium">No booking records found.</p>
                 </td>
               </tr>
@@ -73,6 +74,11 @@
                 </td>
                 <td>
                   <span class="fw-bold text-emerald fs-6">${{ b.total_amount }}</span>
+                </td>
+                <td>
+                  <span class="badge status-badge" :class="getPaymentStatusClass(b.payment_status)">
+                    ● {{ formatStatus(b.payment_status || 'unpaid') }}
+                  </span>
                 </td>
                 <td>
                   <span class="badge status-badge" :class="getStatusClass(b.status)">
@@ -155,6 +161,18 @@ function getStatusClass(status) {
   }
 }
 
+// ពណ៌ Payment Status Badge
+function getPaymentStatusClass(status) {
+  if (!status) return 'bg-warning-subtle text-warning-emphasis border border-warning-subtle'
+  switch (status.toLowerCase()) {
+    case 'paid': return 'bg-success-subtle text-success border border-success-subtle'
+    case 'pending': return 'bg-warning-subtle text-warning-emphasis border border-warning-subtle'
+    case 'failed':
+    case 'unpaid': return 'bg-danger-subtle text-danger border border-danger-subtle'
+    default: return 'bg-secondary-subtle text-secondary'
+  }
+}
+
 function formatDate(dateString) {
   if (!dateString) return ''
   return new Date(dateString).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
@@ -163,7 +181,7 @@ function formatDate(dateString) {
 function getHotelImage(booking) {
   // Try to use a real image if available, else a nice placeholder
   if (booking.hotel?.images && booking.hotel.images.length > 0) {
-    const path = booking.hotel.images[0].image_path
+    const path = booking.hotel.images[0].image
     return path.startsWith('http') ? path : `http://127.0.0.1:8000/storage/${path}`
   }
   return 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=200&auto=format&fit=crop'

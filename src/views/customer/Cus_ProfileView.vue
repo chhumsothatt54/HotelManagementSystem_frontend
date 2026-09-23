@@ -49,10 +49,10 @@
               <!-- FORM COLUMN -->
               <div class="col-12 col-md-8 col-xl-9">
                 <div class="row g-4">
-                  <!-- First Name -->
+                  <!-- Name -->
                   <div class="col-md-12 form-group-premium">
                     <label>Name</label>
-                    <input type="text" class="form-control" v-model="user.firstName" placeholder="Enter your first name">
+                    <input type="text" class="form-control" v-model="user.fullName" placeholder="Enter your full name">
                   </div>
 
                   <!-- Email -->
@@ -283,8 +283,7 @@ const tabs = ref([
 ])
 
 const user = reactive({
-  firstName: '',
-  lastName: '',
+  fullName: '',
   email: '',
   phone: '',
   country: 'Vietnam',
@@ -318,9 +317,7 @@ async function loadUserData() {
   try {
     await authStore.getMe()
     if (authStore.user) {
-      const names = (authStore.user.name || '').trim().split(' ')
-      user.firstName = names[0] || ''
-      user.lastName = names.slice(1).join(' ') || ''
+      user.fullName = authStore.user.name || ''
       user.email = authStore.user.email || ''
       user.phone = authStore.user.phone || ''
       
@@ -329,7 +326,7 @@ async function loadUserData() {
       if (authStore.user.address) user.address = authStore.user.address
       if (authStore.user.zipCode) user.zipCode = authStore.user.zipCode
       
-      user.initials = user.firstName ? user.firstName.charAt(0).toUpperCase() : 'U'
+      user.initials = user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U'
     }
   } catch (error) {
     console.error("Failed to fetch user profile:", error)
@@ -358,7 +355,7 @@ async function saveChanges() {
   isSaving.value = true
   try {
     const formData = new FormData()
-    formData.append('name', `${user.firstName} ${user.lastName}`.trim())
+    formData.append('name', user.fullName.trim())
     formData.append('email', user.email)
     formData.append('phone', user.phone || '')
     formData.append('_method', 'PUT') // Required for Laravel PUT with multipart
@@ -375,7 +372,7 @@ async function saveChanges() {
 
     saved.value = true
     await authStore.getMe() // refresh state globally
-    user.initials = user.firstName ? user.firstName.charAt(0).toUpperCase() : 'U'
+    user.initials = user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U'
     
     setTimeout(() => {
       saved.value = false
@@ -454,7 +451,7 @@ function formatDate(dateString) {
 
 function getHotelImage(booking) {
   if (booking.hotel?.images && booking.hotel.images.length > 0) {
-    const path = booking.hotel.images[0].image_path
+    const path = booking.hotel.images[0].image
     return path.startsWith('http') ? path : `http://127.0.0.1:8000/storage/${path}`
   }
   return 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=200&auto=format&fit=crop'

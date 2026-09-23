@@ -130,7 +130,7 @@ onUnmounted(() => {
 
 const userInitials = computed(() => {
   if (authStore.user && authStore.user.name) {
-    return authStore.user.name.charAt(0).toUpperCase();
+    return String(authStore.user.name).charAt(0).toUpperCase();
   }
   return 'U';
 });
