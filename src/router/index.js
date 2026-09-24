@@ -57,6 +57,8 @@ import { useAuthStore } from "@/stores/auth.js";
 import BookingReport from "@/views/manager/BookingReport.vue";
 import RevenueReport from "@/views/manager/RevenueReport.vue";
 import NotificationsView from "@/views/manager/NotificationView.vue";
+import Cus_NotificationView from "@/views/customer/NotificationView.vue";
+import WishlistView from "@/views/customer/WishlistView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -163,6 +165,23 @@ const router = createRouter({
         requireAuth: true,
         roles: ['customer']
       },
+    },
+    {
+      path: '/wishlist', name: 'wishlist',
+      component: WishlistView,
+      meta: {
+        requireAuth: true,
+        roles: ['customer']
+      }
+    },
+    {
+      path: '/notification',
+      name: 'notification',
+      component: Cus_NotificationView,
+      meta: {
+        requireAuth: true,
+        roles: ['customer']
+      }
     },
 
     // =============================

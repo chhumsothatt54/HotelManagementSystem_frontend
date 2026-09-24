@@ -37,12 +37,12 @@
         </ul>
 
         <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
-          <button class="icon-btn" title="Favorites">♡</button>
+          <RouterLink to="/wishlist" class="icon-btn text-decoration-none" title="Favorites">♡</RouterLink>
           
-          <button class="icon-btn position-relative" title="Notifications">
+          <RouterLink to="/notification" class="icon-btn position-relative" title="Notifications">
             <i class="bi bi-bell"></i>
             <span class="badge-dot"></span>
-          </button>
+          </RouterLink>
 
           <template v-if="!authStore.isLogin">
             <RouterLink to="/login" class="login-btn text-decoration-none">
@@ -145,194 +145,238 @@ const handleLogout = () => {
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap');
 
 .custom-glass-navbar {
-  background: rgba(255, 255, 255, 0.9) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
-  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: 'Inter', sans-serif;
+  padding: 0.8rem 0 !important;
 }
 
 .brand-logo-mark {
-  width: 36px;
-  height: 36px;
-  background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #0f766e 0%, #042f2e 100%);
   color: #fff;
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Playfair Display', serif;
   font-weight: 700;
-  font-size: 1.3rem;
-  box-shadow: 0 4px 10px rgba(6, 78, 59, 0.2);
+  font-size: 1.4rem;
+  box-shadow: 0 4px 15px rgba(15, 118, 110, 0.25);
+  transition: transform 0.3s ease;
+}
+
+.navbar-brand-custom:hover .brand-logo-mark {
+  transform: rotate(-5deg) scale(1.05);
 }
 
 .navbar-brand-custom .brand-text {
   font-family: 'Playfair Display', serif;
   font-weight: 700;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   color: #111827;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
+  margin-left: 0.25rem;
 }
 
 .navbar-brand-custom .dot {
-  color: #d97706; /* Warm gold accent */
+  color: #0f766e;
+}
+
+.nav-custom {
+  background: rgba(243, 244, 246, 0.6);
+  padding: 0.35rem 0.5rem;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .custom-link {
   color: #4b5563 !important;
   font-weight: 500;
   font-size: 0.95rem;
-  padding: 0.5rem 1rem !important;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  padding: 0.5rem 1.2rem !important;
+  border-radius: 100px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  overflow: hidden;
 }
 
 .custom-link:hover {
-  color: #064e3b !important;
-  background: rgba(6, 78, 59, 0.05);
+  color: #0f766e !important;
+  background: rgba(15, 118, 110, 0.08);
 }
 
 .custom-link.active {
-  color: #064e3b !important;
+  color: #0f766e !important;
   font-weight: 600;
-}
-
-.custom-link.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 3px;
-  background-color: #d97706;
-  border-radius: 3px 3px 0 0;
+  background: rgba(15, 118, 110, 0.12);
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.05);
 }
 
 .icon-btn {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #4b5563;
-  background: #f3f4f6;
-  border: none;
-  font-size: 1.1rem;
-  transition: all 0.2s ease;
+  background: transparent;
+  border: 1px solid transparent;
+  font-size: 1.2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .icon-btn:hover {
-  background: #e5e7eb;
-  color: #111827;
-  transform: translateY(-1px);
+  background: #f3f4f6;
+  color: #0f766e;
+  border-color: #e5e7eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .badge-dot {
   position: absolute;
-  top: 8px;
-  right: 10px;
+  top: 10px;
+  right: 12px;
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: #ef4444;
-  border: 2px solid #f3f4f6;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.2);
 }
 
 .login-btn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1.25rem;
-  background: #064e3b;
+  padding: 0.6rem 1.5rem;
+  background: linear-gradient(135deg, #0f766e 0%, #042f2e 100%);
   color: #fff !important;
-  border-radius: 99px;
+  border-radius: 100px;
   font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(6, 78, 59, 0.15);
+  font-size: 0.95rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(15, 118, 110, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .login-btn:hover {
-  background: #047857;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(6, 78, 59, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 118, 110, 0.3);
 }
 
 .profile-chip {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.4rem 1rem 0.4rem 0.4rem;
-  border-radius: 99px;
-  background: #f3f4f6;
+  gap: 0.7rem;
+  padding: 0.35rem 1rem 0.35rem 0.35rem;
+  border-radius: 100px;
+  background: #ffffff;
   border: 1px solid #e5e7eb;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 .profile-chip:hover {
-  background: #e5e7eb;
-  border-color: #d1d5db;
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .avatar-circle {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  background: linear-gradient(135deg, #0f766e 0%, #042f2e 100%);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
-  font-weight: 700;
-  box-shadow: 0 2px 6px rgba(217, 119, 6, 0.2);
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.25);
 }
 
 .profile-name {
-  color: #111827;
+  color: #1e293b;
+  font-weight: 600;
 }
 
 .small-chevron {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  transition: transform 0.3s ease;
+}
+
+.profile-chip[aria-expanded="true"] .small-chevron {
+  transform: rotate(180deg);
 }
 
 .custom-dropdown {
-  min-width: 240px;
-  animation: dropdownFade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 260px;
+  animation: dropdownFade 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+}
+
+.dropdown-header {
+  padding: 1rem 1.25rem;
+  background: #f8fafc;
+  border-radius: 12px 12px 0 0;
+  margin-top: -0.5rem;
 }
 
 .dropdown-item {
-  padding: 0.6rem 1rem;
-  font-size: 0.9rem;
+  padding: 0.7rem 1.25rem;
+  font-size: 0.95rem;
   font-weight: 500;
-  color: #4b5563;
-  transition: background-color 0.15s ease;
+  color: #475569;
+  transition: all 0.2s ease;
+  margin: 0.25rem 0.5rem;
+  width: calc(100% - 1rem);
+}
+
+.dropdown-item i {
+  color: #94a3b8;
+  transition: color 0.2s ease;
 }
 
 .dropdown-item:hover {
-  background-color: #f3f4f6;
-  color: #111827;
+  background-color: #f1f5f9;
+  color: #0f766e;
+}
+
+.dropdown-item:hover i {
+  color: #0f766e;
 }
 
 .dropdown-item.text-danger:hover {
   background-color: #fef2f2;
-  color: #dc2626 !important;
+  color: #ef4444 !important;
+}
+
+.dropdown-item.text-danger:hover i {
+  color: #ef4444;
 }
 
 @keyframes dropdownFade {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-10px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 </style>

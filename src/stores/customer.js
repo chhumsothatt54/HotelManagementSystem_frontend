@@ -12,6 +12,7 @@ export const useCustomerStore = defineStore("customer", () => {
   const currentBooking = ref(null);
   const notifications = ref([]);
   const profile = ref(null);
+  const wishlist = ref([]);
   
   const loading = ref(false);
   const error = ref(null);
@@ -310,6 +311,54 @@ export const useCustomerStore = defineStore("customer", () => {
     }
   };
 
+  // Wishlist
+  const getWishlist = async () => {
+    loading.value = true;
+    error.value = null;
+    try {
+      const response = await api.get("/v1/customer/wishlist");
+      wishlist.value = response.data;
+      return response.data;
+    } catch (err) {
+      error.value = getErrorMessage(err, "Failed to load wishlist");
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const addToWishlist = async (hotelId) => {
+    loading.value = true;
+    error.value = null;
+    try {
+      const response = await api.post("/v1/customer/wishlist", { hotel_id: hotelId });
+      // Optionally refresh wishlist
+      await getWishlist();
+      return response.data;
+    } catch (err) {
+      error.value = getErrorMessage(err, "Failed to add to wishlist");
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const removeFromWishlist = async (hotelId) => {
+    loading.value = true;
+    error.value = null;
+    try {
+      const response = await api.delete(`/v1/customer/wishlist/${hotelId}`);
+      // Refresh wishlist after removal
+      await getWishlist();
+      return response.data;
+    } catch (err) {
+      error.value = getErrorMessage(err, "Failed to remove from wishlist");
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
     hotels,
     currentHotel,
@@ -341,5 +390,9 @@ export const useCustomerStore = defineStore("customer", () => {
     getNotifications,
     readNotification,
     readAllNotifications,
+    wishlist,
+    getWishlist,
+    addToWishlist,
+    removeFromWishlist,
   };
 });

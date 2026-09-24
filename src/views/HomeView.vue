@@ -81,7 +81,7 @@
             <div class="stay-img-wrap-premium">
               <img :src="s.img" :alt="s.name">
               <span v-if="s.tag" class="stay-tag-premium">{{ s.tag }}</span>
-              <button class="stay-fav-premium" :class="{ active: s.fav }" @click="s.fav = !s.fav">
+              <button class="stay-fav-premium" :class="{ active: s.fav }" @click="toggleWishlist(s)">
                 <i class="bi" :class="s.fav ? 'bi-heart-fill text-danger' : 'bi-heart'"></i>
               </button>
             </div>
@@ -130,9 +130,11 @@ import NavbarView from '@/components/layout/customer/NavbarView.vue'
 import FooterView from '@/components/layout/customer/FooterView.vue'
 import ReviewView from '@/components/layout/customer/ReviewView.vue'
 import { useCustomerStore } from '@/stores/customer'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 const customerStore = useCustomerStore()
+const authStore = useAuthStore()
 
 const search = ref({
   keyword: '',
@@ -159,16 +161,21 @@ const destinations = computed(() => {
 onMounted(async () => {
   try {
     await customerStore.getHotels()
+    if (authStore.isLogin) {
+      await customerStore.getWishlist()
+    }
   } catch (err) {
-    console.error('Failed to load hotels:', err)
+    console.error('Failed to load data:', err)
   }
 })
 
 const stays = computed(() => {
   if (!customerStore.hotels || customerStore.hotels.length === 0) return []
 
+  const wishlistHotelIds = customerStore.wishlist?.data?.map(w => w.hotel_id) || []
+
   return customerStore.hotels.map(h => {
-    let basePrice = 50;
+    let basePrice = 15;
     let ams = ['Free WiFi', 'Pool', 'Breakfast Included'];
     let image = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop';
     
@@ -191,7 +198,7 @@ const stays = computed(() => {
       price: basePrice,
       oldPrice: null,
       tag: 'Popular',
-      fav: false,
+      fav: wishlistHotelIds.includes(h.id),
       amenities: ams,
       img: image
     }
@@ -237,6 +244,23 @@ async function executeSearch() {
 
 function goToDetail(id) {
   router.push({ name: 'hotel-detail', params: { id } })
+}
+
+async function toggleWishlist(s) {
+  if (!authStore.isLogin) {
+    router.push('/login')
+    return
+  }
+  
+  try {
+    if (s.fav) {
+      await customerStore.removeFromWishlist(s.id)
+    } else {
+      await customerStore.addToWishlist(s.id)
+    }
+  } catch (error) {
+    console.error('Wishlist toggle failed:', error)
+  }
 }
 </script>
 

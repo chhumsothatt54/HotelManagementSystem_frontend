@@ -40,7 +40,7 @@
                 <th scope="col" style="width: 15%;">STATUS</th>
                 <th scope="col" style="width: 11%;">AMOUNT</th>
                 <th scope="col" style="width: 13%;">PAYMENT</th>
-                <th scope="col" style="width: 11%;">PAYMENT METHOD</th>
+                <!-- <th scope="col" style="width: 11%;">PAYMENT METHOD</th> -->
                 <th scope="col" class="text-end" style="width: 12%;">ACTION</th>
               </tr>
             </thead>
@@ -108,11 +108,11 @@
                 </td>
 
                 <!-- PAYMENT METHOD -->
-                <td>
+                <!-- <td>
                   <span class="payment-method">
                     {{ getPaymentMethod(booking) }}
                   </span>
-                </td>
+                </td> -->
                 
                 <td class="text-end">
                   <select 
@@ -125,8 +125,8 @@
                     <option value="confirmed">Confirmed</option>
                     <option value="checked_in">Checked-in</option>
                     <option value="checked_out">Checked-out</option>
-                    <option value="cancelled">Cancelled</option>
-                    <option value="rejected">Rejected</option>
+                    <!-- <option value="cancelled">Cancelled</option> -->
+                    <!-- <option value="rejected">Rejected</option> -->
                   </select>
                 </td>
               </tr>
@@ -300,7 +300,7 @@ const managerStore = useManagerStore()
 const currentFilter = ref('All')
 const updatingId = ref(null)
 
-const filterOptions = ['All', 'Pending', 'Confirmed', 'Checked-in', 'Checked-out', 'Cancelled', 'Rejected']
+const filterOptions = ['All', 'Pending', 'Confirmed', 'Checked-in', 'Checked-out']
 
 // Fetch data on mounted
 onMounted(async () => {
@@ -394,14 +394,7 @@ const formatDate = (dateString) => {
 
 // Payment Status Helpers
 const getPaymentStatus = (booking) => {
-  const payments = booking.payments || []
-
-  if (payments.length === 0) {
-    return 'pending'
-  }
-
-  const payment = payments[payments.length - 1]
-  return payment.status || 'pending'
+  return booking.payment_status || 'unpaid'
 }
 
 const formatPaymentStatus = (booking) => {
@@ -411,10 +404,11 @@ const formatPaymentStatus = (booking) => {
     pending: 'Pending',
     paid: 'Paid',
     failed: 'Failed',
-    refunded: 'Refunded'
+    refunded: 'Refunded',
+    unpaid: 'Unpaid'
   }
 
-  return labels[status] || status
+  return labels[status] || (status.charAt(0).toUpperCase() + status.slice(1).toLowerCase())
 }
 
 const getPaymentStatusClass = (booking) => {
@@ -422,6 +416,10 @@ const getPaymentStatusClass = (booking) => {
 
   if (status === 'pending' || status === 'paiding') {
     return 'payment-paiding'
+  }
+  
+  if (status === 'unpaid') {
+    return 'payment-failed' // Uses the red style similar to failed
   }
 
   return `payment-${status}`
