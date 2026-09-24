@@ -79,10 +79,10 @@
                 v-for="room in hotel.rooms" 
                 :key="room.id"
                 class="room-card border-0 rounded-4 overflow-hidden mb-4 shadow-sm position-relative"
-                :class="{ 'selected-room-ring': selectedRoom?.id === room.id, 'unavailable-room': room.status !== 'available' }"
+                :class="{ 'selected-room-ring': selectedRoom?.id === room.id, 'unavailable-room': room.status === 'maintenance' }"
               >
                 <!-- UNAVAILABLE OVERLAY -->
-                <div v-if="room.status !== 'available'" class="unavailable-overlay">
+                <div v-if="room.status === 'maintenance'" class="unavailable-overlay">
                   <div class="unavailable-badge">
                     <i class="bi bi-lock-fill me-1"></i> Booked / Unavailable
                   </div>
@@ -128,10 +128,10 @@
                       <button 
                         class="btn px-4 py-2 fw-semibold rounded-pill select-btn shadow-sm"
                         :class="selectedRoom?.id === room.id ? 'btn-emerald' : 'btn-outline-emerald'"
-                        :disabled="room.status !== 'available'"
+                        :disabled="room.status === 'maintenance'"
                         @click="selectRoom(room)"
                       >
-                        {{ room.status !== 'available' ? 'Unavailable' : (selectedRoom?.id === room.id ? 'Selected' : 'Select Room') }}
+                        {{ room.status === 'maintenance' ? 'Unavailable' : (selectedRoom?.id === room.id ? 'Selected' : 'Select Room') }}
                       </button>
                     </div>
                   </div>

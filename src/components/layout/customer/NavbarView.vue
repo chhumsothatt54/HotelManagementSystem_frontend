@@ -54,8 +54,8 @@
           <template v-else>
             <div class="dropdown profile-dropdown-container">
               <a href="#" class="profile-chip text-decoration-none" @click.prevent="toggleDropdown" :aria-expanded="isDropdownOpen" role="button">
-                <div class="avatar-circle overflow-hidden border-0 p-0" v-if="authStore.user?.avatar">
-                  <img :src="authStore.user.avatar.startsWith('http') ? authStore.user.avatar : `http://127.0.0.1:8000/storage/${authStore.user.avatar}`" class="w-100 h-100 object-fit-cover" alt="User Avatar">
+                <div class="avatar-circle overflow-hidden border-0 p-0" v-if="userAvatarUrl">
+                  <img :src="userAvatarUrl" class="w-100 h-100 object-fit-cover" alt="User Avatar">
                 </div>
                 <div class="avatar-circle" v-else>{{ userInitials }}</div>
                 <span class="fw-semibold small profile-name">{{ authStore.user?.name || 'Profile' }}</span>
@@ -133,6 +133,14 @@ const userInitials = computed(() => {
     return String(authStore.user.name).charAt(0).toUpperCase();
   }
   return 'U';
+});
+
+const userAvatarUrl = computed(() => {
+  const avatar = authStore.user?.avatar;
+  if (!avatar) return null;
+  if (avatar.startsWith('http')) return avatar;
+  if (avatar.startsWith('uploads')) return `http://127.0.0.1:8000/${avatar}`;
+  return `http://127.0.0.1:8000/storage/${avatar}`;
 });
 
 const handleLogout = () => {
