@@ -8,14 +8,14 @@
       <div class="showcase-content">
 
         <router-link
-          to="/login"
+          to="/"
           class="brand"
         >
           <div class="brand-icon">
             <i class="bi bi-building"></i>
           </div>
 
-          <span>StayNest</span>
+          <span>AngkorStay</span>
         </router-link>
 
         <div class="showcase-center">

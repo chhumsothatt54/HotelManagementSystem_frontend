@@ -5,7 +5,7 @@
       <div class="showcase-overlay"></div>
 
       <div class="showcase-content">
-        <router-link to="/login" class="brand">
+        <router-link to="/" class="brand">
           <div class="brand-icon">
             <i class="bi bi-building"></i>
           </div>

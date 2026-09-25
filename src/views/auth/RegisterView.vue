@@ -6,13 +6,13 @@
       <div class="showcase-overlay"></div>
 
       <div class="showcase-content">
-        <div class="brand">
+        <RouterLink to="/" class="brand">
           <div class="brand-icon">
             <i class="bi bi-building"></i>
           </div>
 
           <span>AngkorStay</span>
-        </div>
+        </RouterLink>
 
         <div class="showcase-text">
           <span class="eyebrow">YOUR NEXT STAY STARTS HERE</span>
