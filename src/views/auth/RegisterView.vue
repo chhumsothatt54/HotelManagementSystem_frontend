@@ -438,7 +438,7 @@ const confirmRegister = async () => {
 
   overflow: hidden;
 
-  background: white;
+  background: var(--bg-card, white);
   color: var(--ink);
 
   font-family:
@@ -494,7 +494,7 @@ const confirmRegister = async () => {
   align-items: center;
   gap: 12px;
 
-  color: white;
+  color: var(--bg-card, white);
 
   font-size: 24px;
   font-weight: 800;
@@ -516,7 +516,7 @@ const confirmRegister = async () => {
 
   backdrop-filter: blur(10px);
 
-  color: white;
+  color: var(--bg-card, white);
   font-size: 19px;
 }
 
@@ -546,7 +546,7 @@ const confirmRegister = async () => {
 .showcase-text h1 {
   margin: 0;
 
-  color: white;
+  color: var(--bg-card, white);
 
   font-size: clamp(42px, 4vw, 64px);
   line-height: 1.05;
@@ -607,7 +607,7 @@ const confirmRegister = async () => {
   overflow-y: auto;
   overflow-x: hidden;
 
-  background: white;
+  background: var(--bg-card, white);
 
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -698,7 +698,7 @@ const confirmRegister = async () => {
   border: 1px solid var(--line);
   border-radius: 10px;
 
-  background: white;
+  background: var(--bg-card, white);
 
   transition:
     border-color 0.2s ease,
@@ -801,7 +801,7 @@ const confirmRegister = async () => {
   border: 1px solid var(--line);
   border-radius: 10px;
 
-  background: white;
+  background: var(--bg-card, white);
 
   text-align: left;
 
@@ -843,7 +843,7 @@ const confirmRegister = async () => {
 }
 
 .role-card.selected .role-icon {
-  background: white;
+  background: var(--bg-card, white);
 }
 
 .role-info {
@@ -886,7 +886,7 @@ const confirmRegister = async () => {
   border: 1px solid #CCD8D3;
   border-radius: 50%;
 
-  color: white;
+  color: var(--bg-card, white);
   font-size: 11px;
 }
 
@@ -941,7 +941,7 @@ const confirmRegister = async () => {
 
   background: var(--blue);
 
-  color: white;
+  color: var(--bg-card, white);
 
   font-size: 13px;
   font-weight: 750;
@@ -979,7 +979,7 @@ const confirmRegister = async () => {
   height: 15px;
 
   border: 2px solid rgba(255, 255, 255, 0.35);
-  border-top-color: white;
+  border-top-color: var(--bg-card, white);
 
   border-radius: 50%;
 
@@ -1043,7 +1043,7 @@ const confirmRegister = async () => {
 
   border-radius: 14px;
 
-  background: white;
+  background: var(--bg-card, white);
 
   box-shadow: 0 20px 50px rgba(6, 59, 50, 0.25);
 
@@ -1126,7 +1126,7 @@ const confirmRegister = async () => {
 
 .modal-btn-cancel {
   border: 1px solid var(--line);
-  background: white;
+  background: var(--bg-card, white);
   color: var(--ink);
 }
 
@@ -1137,7 +1137,7 @@ const confirmRegister = async () => {
 .modal-btn-confirm {
   border: 0;
   background: var(--blue);
-  color: white;
+  color: var(--bg-card, white);
 }
 
 .modal-btn-confirm:hover {

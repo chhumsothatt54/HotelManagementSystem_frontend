@@ -518,7 +518,7 @@ onMounted(() => {
 
   background: var(--accent);
 
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
 
   display: flex;
   align-items: center;
@@ -560,7 +560,7 @@ onMounted(() => {
 }
 
 .sidebar-user .name {
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
 
   font-size: 14px;
 
@@ -576,6 +576,6 @@ onMounted(() => {
 }
 
 .sidebar-user:hover .name {
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
 }
 </style>

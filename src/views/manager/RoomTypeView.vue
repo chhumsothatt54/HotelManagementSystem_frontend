@@ -315,14 +315,14 @@ onMounted(async () => {
 /* Emerald UI Colors */
 .btn-emerald {
   background-color: #059669;
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
   border: none;
   border-radius: 0.375rem;
 }
 
 .btn-emerald:hover {
   background-color: #047857;
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
 }
 
 
@@ -339,7 +339,7 @@ onMounted(async () => {
 }
 
 .btn-icon:hover {
-  background-color: #f3f4f6;
+  background-color: var(--bg-card, #f3f4f6);
 }
 
 .custom-card {
@@ -384,7 +384,7 @@ onMounted(async () => {
 }
 
 .custom-modal-content {
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
   border-radius: 0.625rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   overflow: hidden;

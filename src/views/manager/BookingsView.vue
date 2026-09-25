@@ -141,7 +141,7 @@
 <style scoped>
 /* Page Layout Wrapper */
 .page-content {
-  background-color: #f8fafc;
+  background-color: var(--bg-soft, #f8fafc);
   min-height: 100vh;
   padding-left: 1rem !important; 
   padding-right: 1rem !important;
@@ -182,8 +182,8 @@ main {
 
 /* Filter Pills */
 .filter-btn {
-  border: 1px solid #e5e7eb;
-  background-color: #ffffff;
+  border: 1px solid var(--border-color, #e5e7eb);
+  background-color: var(--bg-card, #ffffff);
   color: #087F68;
   border-radius: 20px;
   padding: 0.35rem 1rem;
@@ -194,18 +194,18 @@ main {
 
 .filter-btn:hover {
   background-color: #087F68;
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
 }
 
 .filter-btn.active {
   background-color: #087F68;
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
   border-color: #087F68;
 }
 
 /* Card Scaffolding & Table */
 .card-table-wrapper {
-  background-color: #ffffff;
+  background-color: var(--bg-card, #ffffff);
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
@@ -216,14 +216,14 @@ main {
   font-size: 0.725rem;
   font-weight: 700;
   letter-spacing: 0.5px;
-  color: #6b7280;
+  color: var(--text-muted, #6b7280);
   border-bottom: 1px solid #e2e8f0;
   padding-bottom: 1rem;
 }
 
 .table td {
   padding: 1rem 0.5rem;
-  color: #374151;
+  color: var(--text-main, #374151);
   font-size: 0.875rem;
   border-bottom: 1px solid #f1f5f9;
 }
@@ -240,18 +240,18 @@ main {
 .status-pending { background-color: #fef3c7; color: #d97706; }
 .status-confirmed { background-color: #d1fae5; color: #059669; }
 .status-checkedin { background-color: #c4fed8; color: rgb(18, 89, 25); }
-.status-checkedout { background-color: #f3f4f6; color: #4b5563; }
+.status-checkedout { background-color: var(--bg-card, #f3f4f6); color: var(--text-main, #4b5563); }
 .status-cancelled { background-color: #fee2e2; color: #dc2626; }
-.status-rejected { background-color: #f3f4f6; color: #9ca3af; }
+.status-rejected { background-color: var(--bg-card, #f3f4f6); color: var(--text-muted, #9ca3af); }
 
 /* Action Select Dropdown */
 .action-select {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color, #e5e7eb);
   border-radius: 6px;
   padding: 0.25rem 0.6rem;
   font-size: 0.8125rem;
-  color: #374151;
-  background-color: #ffffff;
+  color: var(--text-main, #374151);
+  background-color: var(--bg-card, #ffffff);
   width: 130px;
 }
 

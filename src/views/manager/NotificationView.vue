@@ -951,7 +951,7 @@ onMounted(() => {
 
 .mark-all-btn {
   border: 1px solid #d9e3df;
-  background: white;
+  background: var(--bg-card, white);
   color: #087f68;
   padding: 11px 17px;
   border-radius: 10px;
@@ -966,7 +966,7 @@ onMounted(() => {
 
 .mark-all-btn:hover {
   background: #087f68;
-  color: white;
+  color: var(--bg-card, white);
   border-color: #087f68;
 }
 
@@ -982,7 +982,7 @@ onMounted(() => {
 }
 
 .summary-card {
-  background: white;
+  background: var(--bg-card, white);
   border: 1px solid #e7ecea;
   border-radius: 14px;
   padding: 18px;
@@ -1039,7 +1039,7 @@ onMounted(() => {
 ========================= */
 
 .notification-toolbar {
-  background: white;
+  background: var(--bg-card, white);
   border: 1px solid #e7ecea;
   border-radius: 14px;
   padding: 14px 16px;
@@ -1120,7 +1120,7 @@ onMounted(() => {
 ========================= */
 
 .notification-card {
-  background: white;
+  background: var(--bg-card, white);
   border: 1px solid #e7ecea;
   border-radius: 16px;
   overflow: hidden;
@@ -1352,7 +1352,7 @@ onMounted(() => {
   margin-top: 20px;
   border: none;
   background: #087f68;
-  color: white;
+  color: var(--bg-card, white);
   padding: 10px 18px;
   border-radius: 8px;
   font-size: 13px;

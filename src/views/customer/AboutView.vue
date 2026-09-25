@@ -115,7 +115,7 @@ const team = ref([
 <style scoped>
 /* GENERAL */
 .about-page {
-  background-color: #f8fafc;
+  background-color: var(--bg-soft, #f8fafc);
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -140,7 +140,7 @@ const team = ref([
   height: 130px;
   border-radius: 50%;
   padding: 6px;
-  background: white;
+  background: var(--bg-card, white);
 }
 
 .brand-logo {
@@ -249,12 +249,12 @@ const team = ref([
 
 .team-avatar, .team-avatar-fallback {
   border-radius: 50%;
-  border: 4px solid #fff;
+  border: 4px solid var(--bg-card, #fff);
 }
 
 .team-avatar-fallback {
   background: #063b32;
-  color: #fff;
+  color: var(--bg-card, #fff);
   font-size: 2.5rem;
   font-weight: 700;
 }
@@ -309,7 +309,7 @@ const team = ref([
 
 .social-icon:hover {
   background: #087f68;
-  color: #fff;
+  color: var(--bg-card, #fff);
   transform: translateY(-3px);
   box-shadow: 0 4px 10px rgba(8, 127, 104, 0.2);
 }

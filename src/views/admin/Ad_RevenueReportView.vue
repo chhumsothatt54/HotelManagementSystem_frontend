@@ -111,12 +111,12 @@ onMounted(() => {
 
 <style scoped>
 .page-container {
-    background-color: #f6f8f7;
+    background-color: var(--bg-card, #f6f8f7);
     min-height: 100vh;
 }
 
 .panel-card {
-    background: #ffffff;
+    background: var(--bg-card, #ffffff);
     border-radius: 16px;
     border: 1px solid #eef2f0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);

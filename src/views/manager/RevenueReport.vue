@@ -231,7 +231,7 @@ onMounted(() => {
 
 .btn-emerald {
   background-color: var(--emerald);
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
   border: none;
   font-weight: 600;
   font-size: 0.875rem;
@@ -250,7 +250,7 @@ onMounted(() => {
 
 /* Panel Card Container */
 .main-card-panel {
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 1.75rem;
@@ -303,7 +303,7 @@ onMounted(() => {
   letter-spacing: 0.05em;
   border-bottom: 1px solid var(--line);
   padding: 0.85rem 0.75rem;
-  background-color: #f8fafc;
+  background-color: var(--bg-soft, #f8fafc);
 }
 
 .custom-table td {

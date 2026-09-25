@@ -419,7 +419,7 @@ onMounted(() => {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background: #f8faf9;
+  background: var(--bg-soft, #f8faf9);
 }
 
 
@@ -445,7 +445,7 @@ onMounted(() => {
 .occupancy-page {
   width: 100%;
   min-height: 100vh;
-  background: #f8faf9;
+  background: var(--bg-soft, #f8faf9);
   box-sizing: border-box;
   overflow-x: hidden;
 }
@@ -470,7 +470,7 @@ onMounted(() => {
 
   padding: 24px 30px;
 
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
   border-bottom: 1px solid #e8eeee;
 
   z-index: 10;
@@ -559,7 +559,7 @@ onMounted(() => {
 .stat-card {
   min-width: 0;
 
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
   border: 1px solid #e8eeee;
   border-radius: 14px;
 
@@ -647,7 +647,7 @@ onMounted(() => {
 .card-box {
   min-width: 0;
 
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
   border: 1px solid #e8eeee;
   border-radius: 14px;
 
@@ -716,7 +716,7 @@ onMounted(() => {
   width: 135px;
   height: 135px;
 
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
   border-radius: 50%;
 }
 
@@ -913,7 +913,7 @@ onMounted(() => {
 .empty-state {
   margin-top: 25px;
 
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
 
   border: 1px dashed #cddbd6;
   border-radius: 14px;

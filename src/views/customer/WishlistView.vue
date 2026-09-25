@@ -188,17 +188,17 @@ onMounted(() => {
 }
 
 .section-sub-premium {
-  color: #6b7280;
+  color: var(--text-muted, #6b7280);
   font-size: 1.05rem;
 }
 
 .stay-card-premium {
-  background: #fff;
+  background: var(--bg-card, #fff);
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 10px 25px rgba(0,0,0,0.03);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #f3f4f6;
+  border: 1px solid var(--bg-card, #f3f4f6);
   height: 100%;
 }
 
@@ -237,7 +237,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   font-size: 1.1rem;
-  color: #9ca3af;
+  color: var(--text-muted, #9ca3af);
   transition: all 0.2s ease;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
@@ -260,20 +260,20 @@ onMounted(() => {
 }
 
 .stay-loc-premium {
-  color: #6b7280;
+  color: var(--text-muted, #6b7280);
   font-size: 0.85rem;
 }
 
 .stay-rating-premium {
   font-weight: 600;
-  color: #111827;
+  color: var(--text-main, #111827);
   font-size: 0.95rem;
   display: flex;
   align-items: center;
 }
 
 .border-top-premium {
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--bg-card, #f3f4f6);
 }
 
 .price-box {
@@ -289,13 +289,13 @@ onMounted(() => {
 }
 
 .price-unit-premium {
-  color: #6b7280;
+  color: var(--text-muted, #6b7280);
   font-size: 0.85rem;
 }
 
 .btn-view-hotel-premium {
   background: #064e3b;
-  color: #fff;
+  color: var(--bg-card, #fff);
   border: none;
   padding: 0.5rem 1.2rem;
   border-radius: 8px;
@@ -309,6 +309,6 @@ onMounted(() => {
   background: #065f46;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(6, 78, 59, 0.2);
-  color: white;
+  color: var(--bg-card, white);
 }
 </style>

@@ -498,7 +498,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.45);
-  color: white;
+  color: var(--bg-card, white);
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -537,7 +537,7 @@ onMounted(() => {
   height: 42px;
   border-radius: 10px;
   background: var(--sky);
-  color: #fff;
+  color: var(--bg-card, #fff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -548,7 +548,7 @@ onMounted(() => {
 }
 
 .brand-name {
-  color: #fff;
+  color: var(--bg-card, #fff);
   font-weight: 700;
   font-size: 0.95rem;
   line-height: 1.25;
@@ -598,12 +598,12 @@ onMounted(() => {
 
 .sidebar-link:hover {
   background: rgba(255, 255, 255, 0.06);
-  color: #fff;
+  color: var(--bg-card, #fff);
 }
 
 .sidebar-link.active {
   background: var(--blue);
-  color: #fff;
+  color: var(--bg-card, #fff);
 }
 
 .sidebar-footer {
@@ -620,7 +620,7 @@ onMounted(() => {
   height: 38px;
   border-radius: 50%;
   background: var(--sky);
-  color: #fff;
+  color: var(--bg-card, #fff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -630,7 +630,7 @@ onMounted(() => {
 }
 
 .sidebar-footer-name {
-  color: #fff;
+  color: var(--bg-card, #fff);
   font-size: 0.85rem;
   font-weight: 600;
   margin: 0;
@@ -650,7 +650,7 @@ onMounted(() => {
 }
 
 .topbar {
-  background: #fff;
+  background: var(--bg-card, #fff);
   border-bottom: 1px solid var(--line);
   padding: 1.1rem 2rem;
   display: flex;
@@ -677,7 +677,7 @@ onMounted(() => {
   height: 40px;
   border-radius: 50%;
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--bg-card, #fff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -713,7 +713,7 @@ onMounted(() => {
   height: 38px;
   border-radius: 50%;
   background: var(--navy);
-  color: #fff;
+  color: var(--bg-card, #fff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -763,7 +763,7 @@ onMounted(() => {
 .btn-brand {
   background: var(--blue);
   border: 1px solid var(--blue);
-  color: #fff;
+  color: var(--bg-card, #fff);
   font-weight: 600;
   font-size: 0.875rem;
   padding: 0.6rem 1.15rem;
@@ -776,7 +776,7 @@ onMounted(() => {
 .btn-brand:hover {
   background: var(--navy);
   border-color: var(--navy);
-  color: #fff;
+  color: var(--bg-card, #fff);
 }
 .btn-brand:disabled {
   opacity: 0.65;
@@ -786,7 +786,7 @@ onMounted(() => {
 .btn-logout {
   border: 1px solid #dc3545;
   background: #dc3545;
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
   padding: 10px 16px;
   border-radius: 8px;
   font-size: 14px;
@@ -797,7 +797,7 @@ onMounted(() => {
 
 .btn-logout:hover {
   background: #8d222d;
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
 }
 
 .btn-outline-brand {
@@ -813,11 +813,11 @@ onMounted(() => {
 .btn-outline-brand:hover {
   background: var(--sky);
   border-color: var(--sky);
-  color: #fff;
+  color: var(--bg-card, #fff);
 }
 
 .card-panel {
-  background: #fff;
+  background: var(--bg-card, #fff);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 1.6rem;
@@ -851,7 +851,7 @@ onMounted(() => {
   height: 88px;
   border-radius: 50%;
   background: var(--blue);
-  color: #fff;
+  color: var(--bg-card, #fff);
   font-family: "Lora", serif;
   font-weight: 700;
   font-size: 2.1rem;
@@ -900,7 +900,7 @@ onMounted(() => {
   border-radius: 9px;
   padding: 0.62rem 0.85rem;
   font-size: 0.88rem;
-  background: #fff;
+  background: var(--bg-card, #fff);
 }
 
 .form-control:focus,
@@ -965,7 +965,7 @@ onMounted(() => {
   border: 1px solid var(--blue);
   border-radius: 8px;
 
-  background: white;
+  background: var(--bg-card, white);
   color: var(--blue);
 
   font-size: 13px;
@@ -978,7 +978,7 @@ onMounted(() => {
 
 .btn-outline-brand:hover {
   background: var(--blue);
-  color: white;
+  color: var(--bg-card, white);
 }
 
 @media (max-width: 991.98px) {

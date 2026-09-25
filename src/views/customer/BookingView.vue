@@ -467,11 +467,11 @@ function proceedToPayment() {
   left: 0 !important;
   right: 0 !important;
   z-index: 1050 !important;
-  background-color: #ffffff !important;
+  background-color: var(--bg-card, #ffffff) !important;
 }
 
 .booking-header {
-  background: #f8f9fa;
+  background: var(--bg-card, #f8f9fa);
   padding: 6rem 0 2rem;
   text-align: left;
 }
@@ -498,7 +498,7 @@ function proceedToPayment() {
 .booking-card {
   border: 1px solid #E1E9E5;
   border-radius: 12px;
-  background: #fff;
+  background: var(--bg-card, #fff);
   padding: 1.4rem;
 }
 
@@ -637,7 +637,7 @@ function proceedToPayment() {
 .summary-card {
   border: 1px solid #E1E9E5;
   border-radius: 12px;
-  background: #fff;
+  background: var(--bg-card, #fff);
   overflow: hidden;
   position: sticky;
   top: 95px;
@@ -683,18 +683,18 @@ function proceedToPayment() {
 
 .btn-primary-brand {
   background: #087F68;
-  color: #fff;
+  color: var(--bg-card, #fff);
   border: none;
 }
 
 .btn-primary-brand:hover {
   background: #063B32;
-  color: #fff;
+  color: var(--bg-card, #fff);
 }
 
 .amenity-pill {
   display: inline-block;
-  background: #fff;
+  background: var(--bg-card, #fff);
   color: #087F68;
   font-size: 0.75rem;
   padding: 0.2rem 0.5rem;

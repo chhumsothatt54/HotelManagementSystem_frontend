@@ -199,14 +199,14 @@ const getIconClass = (notification) => {
 
 .btn-outline-brand:hover {
   background-color: #087F68;
-  color: #fff;
+  color: var(--bg-card, #fff);
 }
 
 .empty-icon-wrapper {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background-color: #f8f9fa;
+  background-color: var(--bg-card, #f8f9fa);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -219,7 +219,7 @@ const getIconClass = (notification) => {
 }
 
 .notification-item:hover {
-  background-color: #f8f9fa;
+  background-color: var(--bg-card, #f8f9fa);
 }
 
 .notification-item.unread {

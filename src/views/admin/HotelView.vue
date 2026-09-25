@@ -218,11 +218,11 @@ onMounted(() => {
 }
 
 .topbar-title {
-  color: #111827;
+  color: var(--text-main, #111827);
 }
 
 .icon-btn {
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
   border: 1px solid #e2e8f0;
   width: 40px;
   height: 40px;
@@ -248,7 +248,7 @@ onMounted(() => {
   gap: 12px;
   padding: 6px 12px;
   border-radius: 30px;
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
   cursor: pointer;
 }
 
@@ -257,7 +257,7 @@ onMounted(() => {
   height: 32px;
   border-radius: 50%;
   background-color: #0f766e;
-  color: white;
+  color: var(--bg-card, white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -290,13 +290,13 @@ onMounted(() => {
 .main-title {
   font-size: 28px;
   font-family: Georgia, 'Times New Roman', serif;
-  color: #111827;
+  color: var(--text-main, #111827);
   font-weight: 600;
   margin-bottom: 6px;
 }
 
 .main-subtitle {
-  color: #6b7280;
+  color: var(--text-muted, #6b7280);
   font-size: 14px;
   margin-bottom: 24px;
 }
@@ -310,8 +310,8 @@ onMounted(() => {
 
 .tab-pill {
   border: 1px solid #eef2f0;
-  background: #ffffff;
-  color: #374151;
+  background: var(--bg-card, #ffffff);
+  color: var(--text-main, #374151);
   padding: 6px 18px;
   border-radius: 20px;
   font-size: 13px;
@@ -324,16 +324,16 @@ onMounted(() => {
 .tab-pill.active {
   background-color: #0f766e;
   border-color: #0f766e;
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
 }
 
 .tab-pill:hover:not(.active) {
-  background-color: #f9fafb;
+  background-color: var(--bg-card, #f9fafb);
 }
 
 /* Card & Table */
 .table-card {
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
   border-radius: 12px;
   border: 1px solid #eef2f0;
   padding: 24px;
@@ -348,21 +348,21 @@ onMounted(() => {
 .custom-table th {
   font-size: 11px;
   font-weight: 700;
-  color: #6b7280;
+  color: var(--text-muted, #6b7280);
   letter-spacing: 0.5px;
   padding: 16px 12px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--bg-card, #f3f4f6);
   text-transform: uppercase;
 }
 
 .custom-table td {
   padding: 18px 12px;
-  border-bottom: 1px solid #f9fafb;
+  border-bottom: 1px solid var(--bg-card, #f9fafb);
   font-size: 14px;
 }
 
 .hotel-name {
-  color: #111827;
+  color: var(--text-main, #111827);
 }
 
 /* Status Badges */
@@ -405,8 +405,8 @@ onMounted(() => {
   border-radius: 8px;
   padding: 6px 24px 6px 12px;
   font-size: 13px;
-  color: #374151;
-  background-color: #ffffff;
+  color: var(--text-main, #374151);
+  background-color: var(--bg-card, #ffffff);
   outline: none;
   cursor: pointer;
   appearance: none;
@@ -421,7 +421,7 @@ onMounted(() => {
   height: 32px;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
-  background-color: #ffffff;
+  background-color: var(--bg-card, #ffffff);
   display: flex;
   align-items: center;
   justify-content: center;

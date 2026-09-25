@@ -288,7 +288,7 @@ async function deleteAmenity(amenity) {
 /* Emerald Primary Action */
 .btn-emerald {
   background-color: #059669;
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
   border: none;
   transition: all 0.2s ease;
   
@@ -296,7 +296,7 @@ async function deleteAmenity(amenity) {
 
 .btn-emerald:hover:not(:disabled) {
   background-color: #047857;
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
 }
 
 /* Table Styling */
@@ -315,7 +315,7 @@ async function deleteAmenity(amenity) {
 }
 
 .custom-table tbody tr:hover {
-  background-color: #f8fafc;
+  background-color: var(--bg-soft, #f8fafc);
 }
 
 .custom-table td {

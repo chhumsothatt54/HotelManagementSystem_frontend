@@ -214,13 +214,13 @@ onMounted(async () => {
 /* Emerald Palette & Accents */
 .btn-emerald {
   background-color: #059669;
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
   border: none;
 }
 
 .btn-emerald:hover {
   background-color: #047857;
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
 }
 
 .bg-emerald {

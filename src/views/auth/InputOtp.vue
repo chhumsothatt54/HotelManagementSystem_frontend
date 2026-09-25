@@ -386,7 +386,7 @@ onBeforeUnmount(() => {
   align-items:center;
   gap:12px;
 
-  color:white;
+  color:var(--bg-card, white);
 
   font-size:24px;
   font-weight:800;
@@ -406,7 +406,7 @@ onBeforeUnmount(() => {
 
   background:rgba(255,255,255,.16);
 
-  color:white;
+  color:var(--bg-card, white);
 }
 
 .showcase-center {
@@ -427,7 +427,7 @@ onBeforeUnmount(() => {
 .showcase-center h1 {
   margin:15px 0;
 
-  color:white;
+  color:var(--bg-card, white);
 
   font-size:58px;
   line-height:1.05;
@@ -626,7 +626,7 @@ onBeforeUnmount(() => {
 
   background:var(--blue);
 
-  color:white;
+  color:var(--bg-card, white);
 
   font-size:13px;
   font-weight:750;
@@ -655,7 +655,7 @@ onBeforeUnmount(() => {
   height:15px;
 
   border:2px solid rgba(255,255,255,.4);
-  border-top-color:white;
+  border-top-color:var(--bg-card, white);
 
   border-radius:50%;
 

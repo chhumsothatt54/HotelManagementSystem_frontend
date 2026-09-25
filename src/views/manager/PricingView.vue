@@ -214,14 +214,14 @@ const handleSave = async () => {
 /* Buttons */
 .btn-emerald {
   background-color: #059669;
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
   border: none;
   transition: all 0.2s ease;
 }
 
 .btn-emerald:hover:not(:disabled) {
   background-color: #047857;
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
 }
 
 /* Table Styling */
@@ -240,7 +240,7 @@ const handleSave = async () => {
 }
 
 .custom-table tbody tr:hover {
-  background-color: #f8fafc;
+  background-color: var(--bg-soft, #f8fafc);
 }
 
 .custom-table td {
@@ -264,12 +264,12 @@ const handleSave = async () => {
   border-bottom-right-radius: 0.5rem;
   font-weight: 600;
   color: #0f172a;
-  background-color: #f8fafc;
+  background-color: var(--bg-soft, #f8fafc);
   transition: all 0.2s ease;
 }
 
 .price-input:focus {
-  background-color: #ffffff;
+  background-color: var(--bg-card, #ffffff);
   border-color: #10b981;
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
   outline: none;
@@ -280,7 +280,7 @@ const handleSave = async () => {
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background-color: #f8fafc;
+  background-color: var(--bg-soft, #f8fafc);
   border: 1px dashed #e2e8f0;
 }
 </style>

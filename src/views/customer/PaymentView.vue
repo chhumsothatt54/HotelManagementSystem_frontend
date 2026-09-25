@@ -315,7 +315,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .payment-page {
-  background-color: #f8fafc;
+  background-color: var(--bg-soft, #f8fafc);
   min-height: 100vh;
 }
 
@@ -327,7 +327,7 @@ onBeforeUnmount(() => {
   left: 0 !important;
   right: 0 !important;
   z-index: 1050 !important;
-  background-color: #ffffff !important;
+  background-color: var(--bg-card, #ffffff) !important;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
@@ -362,7 +362,7 @@ onBeforeUnmount(() => {
 }
 
 .custom-card {
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
   border: 1px solid #e2e8f0;
   border-radius: 1rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
@@ -389,12 +389,12 @@ onBeforeUnmount(() => {
   padding: 1rem 1.25rem;
   cursor: pointer;
   transition: all 0.25s ease;
-  background-color: #ffffff;
+  background-color: var(--bg-card, #ffffff);
 }
 
 .payment-option-card:hover {
   border-color: #34d399;
-  background-color: #f8fafc;
+  background-color: var(--bg-soft, #f8fafc);
 }
 
 .payment-option-card.active {
@@ -429,14 +429,14 @@ onBeforeUnmount(() => {
 
 .btn-teal-brand {
   background: #059669;
-  color: #fff;
+  color: var(--bg-card, #fff);
   border: none;
   transition: all 0.2s;
 }
 
 .btn-teal-brand:hover {
   background: #047857;
-  color: #fff;
+  color: var(--bg-card, #fff);
   transform: translateY(-1px);
 }
 

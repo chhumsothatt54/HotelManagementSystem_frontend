@@ -513,11 +513,11 @@ async function handleCancel(id) {
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  background: #fff;
+  background: var(--bg-card, #fff);
   padding: 1rem 1.5rem;
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-  border: 1px solid #f3f4f6;
+  border: 1px solid var(--bg-card, #f3f4f6);
   overflow-x: auto;
   white-space: nowrap;
 }
@@ -538,7 +538,7 @@ async function handleCancel(id) {
   text-align: left;
   padding: 1rem 1.25rem;
   border-radius: 12px;
-  color: #6b7280;
+  color: var(--text-muted, #6b7280);
   font-weight: 500;
   font-size: 1rem;
   transition: all 0.3s ease;
@@ -546,18 +546,18 @@ async function handleCancel(id) {
 
 .tab-btn-premium i {
   font-size: 1.2rem;
-  color: #9ca3af;
+  color: var(--text-muted, #9ca3af);
   transition: all 0.3s ease;
 }
 
 .tab-btn-premium:hover {
-  background-color: #f9fafb;
-  color: #111827;
+  background-color: var(--bg-card, #f9fafb);
+  color: var(--text-main, #111827);
 }
 
 .tab-btn-premium.active {
   background-color: var(--color-emerald-900, #064e3b);
-  color: #fff;
+  color: var(--bg-card, #fff);
   box-shadow: 0 8px 16px rgba(6, 78, 59, 0.2);
 }
 
@@ -567,17 +567,17 @@ async function handleCancel(id) {
 
 /* PROFILE CARD */
 .profile-card-premium {
-  background: #fff;
+  background: var(--bg-card, #fff);
   border-radius: 20px;
   padding: 2.5rem;
   box-shadow: 0 15px 40px rgba(0,0,0,0.03);
-  border: 1px solid #f3f4f6;
+  border: 1px solid var(--bg-card, #f3f4f6);
 }
 
 .card-title-premium {
   font-family: 'Playfair Display', serif;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-main, #111827);
   font-size: 1.5rem;
 }
 
@@ -592,7 +592,7 @@ async function handleCancel(id) {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  background: linear-gradient(135deg, var(--bg-card, #f3f4f6) 0%, var(--border-color, #e5e7eb) 100%);
   color: var(--color-emerald-900, #064e3b);
   display: flex;
   align-items: center;
@@ -601,7 +601,7 @@ async function handleCancel(id) {
   font-weight: 700;
   font-family: 'Playfair Display', serif;
   box-shadow: inset 0 4px 10px rgba(0,0,0,0.05), 0 10px 20px rgba(0,0,0,0.05);
-  border: 4px solid #fff;
+  border: 4px solid var(--bg-card, #fff);
 }
 
 .camera-btn-premium {
@@ -611,9 +611,9 @@ async function handleCancel(id) {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #fff;
+  background-color: var(--bg-card, #fff);
   color: var(--color-emerald-900, #064e3b);
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color, #e5e7eb);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -634,42 +634,42 @@ async function handleCancel(id) {
   display: block;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #4b5563;
+  color: var(--text-main, #4b5563);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .form-group-premium .form-control {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color, #e5e7eb);
   border-radius: 12px;
   padding: 0.8rem 1.2rem;
   font-size: 1rem;
-  color: #111827;
-  background-color: #f9fafb;
+  color: var(--text-main, #111827);
+  background-color: var(--bg-card, #f9fafb);
   transition: all 0.3s ease;
 }
 
 .form-group-premium .form-control:focus {
-  background-color: #fff;
+  background-color: var(--bg-card, #fff);
   border-color: var(--color-emerald-900, #064e3b);
   box-shadow: 0 0 0 4px rgba(6, 78, 59, 0.1);
   outline: none;
 }
 
 .form-group-premium .form-control::placeholder {
-  color: #9ca3af;
+  color: var(--text-muted, #9ca3af);
   font-weight: 400;
 }
 
 /* BUTTONS */
 .border-top-premium {
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--bg-card, #f3f4f6);
 }
 
 .btn-save-premium {
   background-color: var(--color-emerald-900, #064e3b);
-  color: #fff;
+  color: var(--bg-card, #fff);
   font-weight: 500;
   padding: 0.75rem 2rem;
   border-radius: 12px;
@@ -685,17 +685,17 @@ async function handleCancel(id) {
 
 .btn-outline-premium {
   background-color: transparent;
-  color: #4b5563;
+  color: var(--text-main, #4b5563);
   font-weight: 500;
   padding: 0.75rem 2rem;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color, #e5e7eb);
   transition: all 0.3s ease;
 }
 
 .btn-outline-premium:hover {
-  background-color: #f3f4f6;
-  color: #111827;
+  background-color: var(--bg-card, #f3f4f6);
+  color: var(--text-main, #111827);
 }
 
 /* EMPTY STATE */
@@ -703,12 +703,12 @@ async function handleCancel(id) {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: #f3f4f6;
+  background: var(--bg-card, #f3f4f6);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2.5rem;
-  color: #9ca3af;
+  color: var(--text-muted, #9ca3af);
 }
 
 /* RESPONSIVE */
@@ -726,13 +726,13 @@ async function handleCancel(id) {
 /* BOOKING TABLE STYLES */
 .text-brand { color: #087F68; }
 .text-emerald { color: #0d9488; }
-.status-filter { min-width: 170px; border-color: #E2E8F0; border-radius: 10px; padding: 0.5rem 0.8rem; background-color: #ffffff; }
+.status-filter { min-width: 170px; border-color: #E2E8F0; border-radius: 10px; padding: 0.5rem 0.8rem; background-color: var(--bg-card, #ffffff); }
 .status-filter:focus { border-color: #087F68; box-shadow: 0 0 0 3px rgba(8, 127, 104, 0.15); }
 .custom-table { font-size: 0.9rem; }
-.custom-table thead th { background-color: #F8FAFC; color: #475569; font-weight: 600; padding: 1.1rem 1rem; border-bottom: 1px solid #E2E8F0; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
+.custom-table thead th { background-color: var(--bg-soft, #F8FAFC); color: #475569; font-weight: 600; padding: 1.1rem 1rem; border-bottom: 1px solid #E2E8F0; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
 .custom-table tbody td { padding: 1rem; border-bottom: 1px solid #F1F5F9; }
 .booking-row { transition: background-color 0.15s ease-in-out; }
-.booking-row:hover { background-color: #F8FAF9 !important; }
+.booking-row:hover { background-color: var(--bg-card, #f8faf9) !important; }
 .hotel-thumb { width: 54px; height: 54px; object-fit: cover; border-radius: 8px; }
 .date-box { min-width: 135px; }
 .status-badge { padding: 0.45em 0.8em; font-weight: 600; border-radius: 20px; font-size: 0.78rem; }
