@@ -169,7 +169,7 @@ body {
 }
 
 .brand-title {
-  color: #fff;
+  color: var(--bg-card, #fff);
 
   font-weight: 700;
   font-size: 0.98rem;
@@ -217,7 +217,7 @@ body {
 
   border: 1px solid var(--card-border);
 
-  background: #fff;
+  background: var(--bg-card, #fff);
 
   color: var(--accent);
 
@@ -328,7 +328,7 @@ body {
 .sidebar-link:hover {
   background: rgba(255, 255, 255, 0.06);
 
-  color: #fff;
+  color: var(--bg-card, #fff);
 }
 
 .sidebar-link.active {
@@ -427,7 +427,7 @@ body {
 }
 
 .sidebar-user .name {
-  color: #fff;
+  color: var(--bg-card, #fff);
 
   font-size: 0.85rem;
 
@@ -514,7 +514,7 @@ body {
 
   border: 1px solid var(--card-border);
 
-  background: #fff;
+  background: var(--bg-card, #fff);
 
   display: flex;
   align-items: center;
@@ -555,7 +555,7 @@ body {
 .user-chip .avatar-circle {
   background: var(--accent);
 
-  color: #fff;
+  color: var(--bg-card, #fff);
 }
 
 .user-chip .name {
@@ -605,7 +605,7 @@ body {
 .date-pill {
   border: 1px solid var(--card-border);
 
-  background: #fff;
+  background: var(--bg-card, #fff);
 
   border-radius: 10px;
 
@@ -631,7 +631,7 @@ body {
 
 .stat-card,
 .panel-card {
-  background: #fff;
+  background: var(--bg-card, #fff);
 
   border: 1px solid var(--card-border);
 
@@ -860,7 +860,7 @@ table.bookings tr:last-child td {
   width: 140px;
   height: 140px;
 
-  background: #fff;
+  background: var(--bg-card, #fff);
 
   border-radius: 50%;
 }

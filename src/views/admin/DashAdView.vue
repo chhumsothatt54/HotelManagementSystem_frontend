@@ -163,7 +163,7 @@ onMounted(async () => {
 }
 
 .stat-card {
-    background: #fff;
+    background: var(--bg-card, #fff);
     border-radius: 12px;
     padding: 20px;
     border: 1px solid #eef2f0;
@@ -173,7 +173,7 @@ onMounted(async () => {
 .stat-label {
     font-size: 0.875rem;
     font-weight: 600;
-    color: #6b7280;
+    color: var(--text-muted, #6b7280);
     text-transform: uppercase;
 }
 
@@ -185,7 +185,7 @@ onMounted(async () => {
 
 .stat-foot {
     font-size: 0.8rem;
-    color: #9ca3af;
+    color: var(--text-muted, #9ca3af);
 }
 
 .stat-icon {
@@ -201,7 +201,7 @@ onMounted(async () => {
 }
 
 .panel-card {
-    background: #fff;
+    background: var(--bg-card, #fff);
     border-radius: 12px;
     padding: 24px;
     border: 1px solid #eef2f0;
@@ -215,7 +215,7 @@ onMounted(async () => {
 
 .panel-sub {
     font-size: 0.875rem;
-    color: #6b7280;
+    color: var(--text-muted, #6b7280);
 }
 
 /* Custom CSS Bar Chart */
@@ -237,7 +237,7 @@ onMounted(async () => {
 
 .chart-val {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--text-muted, #6b7280);
     font-weight: 600;
 }
 
@@ -262,7 +262,7 @@ onMounted(async () => {
 
 .chart-label {
     font-size: 13px;
-    color: #9ca3af;
+    color: var(--text-muted, #9ca3af);
     font-weight: 500;
     margin-top: 4px;
 }

@@ -640,7 +640,7 @@ const statusClass = (status) => {
 }
 
 .section-desc {
-    color: #6b7280;
+    color: var(--text-muted, #6b7280);
     margin-bottom: 20px;
 }
 
@@ -659,9 +659,9 @@ const statusClass = (status) => {
     align-items: center;
     gap: 10px;
 
-    background: #fff;
+    background: var(--bg-card, #fff);
 
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-color, #e5e7eb);
 
     border-radius: 10px;
 
@@ -677,15 +677,15 @@ const statusClass = (status) => {
 }
 
 .filter-select {
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-color, #e5e7eb);
 
     border-radius: 10px;
 
     padding: 9px 14px;
 
-    background: #fff;
+    background: var(--bg-card, #fff);
 
-    color: #374151;
+    color: var(--text-main, #374151);
 
     font-size: 14px;
 
@@ -694,7 +694,7 @@ const statusClass = (status) => {
 
 .results-count {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--text-muted, #6b7280);
 }
 
 
@@ -703,7 +703,7 @@ const statusClass = (status) => {
 ========================================== */
 
 .panel-card {
-    background: #fff;
+    background: var(--bg-card, #fff);
 
     border-radius: 12px;
 
@@ -721,7 +721,7 @@ const statusClass = (status) => {
 
     letter-spacing: 0.02em;
 
-    color: #6b7280;
+    color: var(--text-muted, #6b7280);
 
     font-weight: 600;
 
@@ -746,11 +746,11 @@ const statusClass = (status) => {
 
     vertical-align: middle;
 
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid var(--bg-card, #f3f4f6);
 
     font-size: 14px;
 
-    color: #374151;
+    color: var(--text-main, #374151);
 }
 
 .users-table tbody tr:last-child td {
@@ -767,7 +767,7 @@ const statusClass = (status) => {
 
     padding: 48px 20px;
 
-    color: #9ca3af;
+    color: var(--text-muted, #9ca3af);
 
     font-size: 14px;
 }
@@ -789,7 +789,7 @@ const statusClass = (status) => {
 
     margin: 0 auto 8px;
 
-    border: 2px solid #e5e7eb;
+    border: 2px solid var(--border-color, #e5e7eb);
 
     border-top-color: #0f7a5f;
 
@@ -849,7 +849,7 @@ const statusClass = (status) => {
 .user-name {
     font-weight: 600;
 
-    color: #1f2937;
+    color: var(--text-main, #1f2937);
 
     line-height: 1.3;
 }
@@ -857,7 +857,7 @@ const statusClass = (status) => {
 .user-email {
     font-size: 12px;
 
-    color: #9ca3af;
+    color: var(--text-muted, #9ca3af);
 }
 
 
@@ -918,12 +918,12 @@ const statusClass = (status) => {
 }
 
 .status-inactive {
-    background: #f3f4f6;
-    color: #6b7280;
+    background: var(--bg-card, #f3f4f6);
+    color: var(--text-muted, #6b7280);
 }
 
 .status-inactive .status-dot {
-    background: #9ca3af;
+    background: var(--text-muted, #9ca3af);
 }
 
 .status-blocked {
@@ -947,9 +947,9 @@ const statusClass = (status) => {
 
     border-radius: 8px;
 
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-color, #e5e7eb);
 
-    background: #fff;
+    background: var(--bg-card, #fff);
 
     display: inline-flex;
 
@@ -957,7 +957,7 @@ const statusClass = (status) => {
 
     justify-content: center;
 
-    color: #6b7280;
+    color: var(--text-muted, #6b7280);
 
     transition:
         background-color 0.12s ease,
@@ -968,9 +968,9 @@ const statusClass = (status) => {
 }
 
 .action-icon-btn:hover {
-    background: #f3f4f6;
+    background: var(--bg-card, #f3f4f6);
 
-    color: #1f2937;
+    color: var(--text-main, #1f2937);
 }
 
 
@@ -981,13 +981,13 @@ const statusClass = (status) => {
 .page-indicator {
     font-size: 13px;
 
-    color: #6b7280;
+    color: var(--text-muted, #6b7280);
 }
 
 .page-btn {
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-color, #e5e7eb);
 
-    background: #fff;
+    background: var(--bg-card, #fff);
 
     border-radius: 8px;
 
@@ -995,7 +995,7 @@ const statusClass = (status) => {
 
     font-size: 13px;
 
-    color: #374151;
+    color: var(--text-main, #374151);
 
     cursor: pointer;
 }
@@ -1007,7 +1007,7 @@ const statusClass = (status) => {
 }
 
 .page-btn:not(:disabled):hover {
-    background: #f3f4f6;
+    background: var(--bg-card, #f3f4f6);
 }
 
 
@@ -1041,7 +1041,7 @@ const statusClass = (status) => {
 
     max-width: 650px;
 
-    background: #fff;
+    background: var(--bg-card, #fff);
 
     border-radius: 14px;
 
@@ -1070,7 +1070,7 @@ const statusClass = (status) => {
 .detail-header h5 {
     margin: 0 0 4px;
 
-    color: #1f2937;
+    color: var(--text-main, #1f2937);
 
     font-weight: 600;
 }
@@ -1078,7 +1078,7 @@ const statusClass = (status) => {
 .detail-header p {
     margin: 0;
 
-    color: #9ca3af;
+    color: var(--text-muted, #9ca3af);
 
     font-size: 13px;
 }
@@ -1088,13 +1088,13 @@ const statusClass = (status) => {
 
     height: 34px;
 
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-color, #e5e7eb);
 
-    background: #fff;
+    background: var(--bg-card, #fff);
 
     border-radius: 8px;
 
-    color: #6b7280;
+    color: var(--text-muted, #6b7280);
 
     display: flex;
 
@@ -1106,9 +1106,9 @@ const statusClass = (status) => {
 }
 
 .close-btn:hover {
-    background: #f3f4f6;
+    background: var(--bg-card, #f3f4f6);
 
-    color: #1f2937;
+    color: var(--text-main, #1f2937);
 }
 
 
@@ -1154,7 +1154,7 @@ const statusClass = (status) => {
 
     font-size: 18px;
 
-    color: #1f2937;
+    color: var(--text-main, #1f2937);
 }
 
 .detail-profile p {
@@ -1162,7 +1162,7 @@ const statusClass = (status) => {
 
     font-size: 13px;
 
-    color: #9ca3af;
+    color: var(--text-muted, #9ca3af);
 }
 
 
@@ -1188,7 +1188,7 @@ const statusClass = (status) => {
 .detail-label {
     font-size: 12px;
 
-    color: #9ca3af;
+    color: var(--text-muted, #9ca3af);
 
     font-weight: 500;
 }
@@ -1196,7 +1196,7 @@ const statusClass = (status) => {
 .detail-value {
     font-size: 14px;
 
-    color: #374151;
+    color: var(--text-main, #374151);
 
     font-weight: 500;
 }
@@ -1216,9 +1216,9 @@ const statusClass = (status) => {
 }
 
 .btn-close-detail {
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-color, #e5e7eb);
 
-    background: #fff;
+    background: var(--bg-card, #fff);
 
     border-radius: 8px;
 
@@ -1226,13 +1226,13 @@ const statusClass = (status) => {
 
     font-size: 14px;
 
-    color: #374151;
+    color: var(--text-main, #374151);
 
     cursor: pointer;
 }
 
 .btn-close-detail:hover {
-    background: #f3f4f6;
+    background: var(--bg-card, #f3f4f6);
 }
 
 

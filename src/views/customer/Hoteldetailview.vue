@@ -79,10 +79,10 @@
                 v-for="room in hotel.rooms" 
                 :key="room.id"
                 class="room-card border-0 rounded-4 overflow-hidden mb-4 shadow-sm position-relative"
-                :class="{ 'selected-room-ring': selectedRoom?.id === room.id, 'unavailable-room': room.status !== 'available' }"
+                :class="{ 'selected-room-ring': selectedRoom?.id === room.id, 'unavailable-room': room.status === 'maintenance' }"
               >
                 <!-- UNAVAILABLE OVERLAY -->
-                <div v-if="room.status !== 'available'" class="unavailable-overlay">
+                <div v-if="room.status === 'maintenance'" class="unavailable-overlay">
                   <div class="unavailable-badge">
                     <i class="bi bi-lock-fill me-1"></i> Booked / Unavailable
                   </div>
@@ -128,10 +128,10 @@
                       <button 
                         class="btn px-4 py-2 fw-semibold rounded-pill select-btn shadow-sm"
                         :class="selectedRoom?.id === room.id ? 'btn-emerald' : 'btn-outline-emerald'"
-                        :disabled="room.status !== 'available'"
+                        :disabled="room.status === 'maintenance'"
                         @click="selectRoom(room)"
                       >
-                        {{ room.status !== 'available' ? 'Unavailable' : (selectedRoom?.id === room.id ? 'Selected' : 'Select Room') }}
+                        {{ room.status === 'maintenance' ? 'Unavailable' : (selectedRoom?.id === room.id ? 'Selected' : 'Select Room') }}
                       </button>
                     </div>
                   </div>
@@ -392,7 +392,7 @@ function goToBooking() {
 /* EMERALD / GREEN THEME COLORS */
 .btn-emerald {
   background: linear-gradient(135deg, #087f68 0%, #065b4a 100%);
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
   border: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -400,7 +400,7 @@ function goToBooking() {
 .btn-emerald:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(8, 127, 104, 0.3);
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
 }
 
 .btn-outline-emerald {
@@ -412,7 +412,7 @@ function goToBooking() {
 
 .btn-outline-emerald:hover {
   background-color: #087f68;
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
 }
 
 .alert-emerald {
@@ -456,7 +456,7 @@ function goToBooking() {
 /* ROOM CARD STYLES */
 .room-card {
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
 }
 .room-card:hover {
   box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important;
@@ -491,7 +491,7 @@ function goToBooking() {
 }
 .unavailable-badge {
   background: rgba(220, 53, 69, 0.9);
-  color: white;
+  color: var(--bg-card, white);
   padding: 10px 20px;
   border-radius: 30px;
   font-weight: 600;

@@ -78,7 +78,7 @@ import SidebarView from '@/components/layout/admin/SidebarView.vue';
 }
 
 .brand-title {
-    color: #fff;
+    color: var(--bg-card, #fff);
     font-weight: 700;
     font-size: .98rem;
     line-height: 1.2;
@@ -113,7 +113,7 @@ import SidebarView from '@/components/layout/admin/SidebarView.vue';
     height: 26px;
     border-radius: 50%;
     border: 1px solid var(--card-border);
-    background: #fff;
+    background: var(--bg-card, #fff);
     color: var(--accent);
     display: flex;
     align-items: center;
@@ -161,7 +161,7 @@ import SidebarView from '@/components/layout/admin/SidebarView.vue';
 
 .sidebar-link:hover {
     background: rgba(255, 255, 255, .06);
-    color: #fff;
+    color: var(--bg-card, #fff);
 }
 
 .sidebar-link.active {
@@ -208,7 +208,7 @@ import SidebarView from '@/components/layout/admin/SidebarView.vue';
 }
 
 .sidebar-user .name {
-    color: #fff;
+    color: var(--bg-card, #fff);
     font-size: .85rem;
     font-weight: 600;
     line-height: 1.2;
@@ -271,7 +271,7 @@ import SidebarView from '@/components/layout/admin/SidebarView.vue';
     height: 38px;
     border-radius: 50%;
     border: 1px solid var(--card-border);
-    background: #fff;
+    background: var(--bg-card, #fff);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -300,7 +300,7 @@ import SidebarView from '@/components/layout/admin/SidebarView.vue';
 
 .user-chip .avatar-circle {
     background: var(--accent);
-    color: #fff;
+    color: var(--bg-card, #fff);
 }
 
 .user-chip .name {
@@ -335,7 +335,7 @@ import SidebarView from '@/components/layout/admin/SidebarView.vue';
 
 .date-pill {
     border: 1px solid var(--card-border);
-    background: #fff;
+    background: var(--bg-card, #fff);
     border-radius: 10px;
     padding: .55rem 1rem;
     font-size: .88rem;
@@ -350,7 +350,7 @@ import SidebarView from '@/components/layout/admin/SidebarView.vue';
 /* Cards */
 .stat-card,
 .panel-card {
-    background: #fff;
+    background: var(--bg-card, #fff);
     border: 1px solid var(--card-border);
     border-radius: 14px;
     padding: 1.25rem 1.35rem;
@@ -511,7 +511,7 @@ table.bookings tr:last-child td {
     position: absolute;
     width: 140px;
     height: 140px;
-    background: #fff;
+    background: var(--bg-card, #fff);
     border-radius: 50%;
 }
 

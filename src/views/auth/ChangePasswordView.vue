@@ -389,7 +389,7 @@ async function submitForm() {
 
   overflow: hidden;
 
-  background: white;
+  background: var(--bg-card, white);
 
   font-family:
     Inter,
@@ -459,7 +459,7 @@ async function submitForm() {
 
   gap: 12px;
 
-  color: white;
+  color: var(--bg-card, white);
 
   font-size: 24px;
 
@@ -484,7 +484,7 @@ async function submitForm() {
 
   background: rgba(255, 255, 255, .16);
 
-  color: white;
+  color: var(--bg-card, white);
 
 }
 
@@ -515,7 +515,7 @@ async function submitForm() {
 
   margin: 15px 0 0;
 
-  color: white;
+  color: var(--bg-card, white);
 
   font-size: clamp(42px, 4vw, 64px);
 
@@ -820,7 +820,7 @@ async function submitForm() {
 
   background: var(--blue);
 
-  color: white;
+  color: var(--bg-card, white);
 
   font-size: 13px;
 
@@ -879,7 +879,7 @@ async function submitForm() {
 
   border: 2px solid rgba(255, 255, 255, .4);
 
-  border-top-color: white;
+  border-top-color: var(--bg-card, white);
 
   border-radius: 50%;
 

@@ -217,10 +217,10 @@ function resetForm() {
 }
 
 const contactMethods = ref([
-  { iconClass: 'bi bi-envelope-fill', label: 'Email', value: 'hello@staynest.com' },
-  { iconClass: 'bi bi-telephone-fill', label: 'Phone', value: '+855 23 456 789' },
+  { iconClass: 'bi bi-envelope-fill', label: 'Email', value: 'angkorstay@gmail.com' },
+  { iconClass: 'bi bi-telephone-fill', label: 'Phone', value: '+855 718223195' },
   { iconClass: 'bi bi-geo-alt-fill', label: 'Address', value: 'Street 240, Phnom Penh, Cambodia' },
-  { iconClass: 'bi bi-clock-fill', label: 'Hours', value: 'Mon–Sat, 8:00 AM – 6:00 PM' }
+  { iconClass: 'bi bi-clock-fill', label: 'Hours', value: 'Mon–Sat, 8:00 AM – 5:00 PM' }
 ])
 
 const socials = ref([
@@ -277,14 +277,14 @@ const faqs = ref([
   left: 0 !important;
   right: 0 !important;
   z-index: 1050 !important;
-  background-color: #ffffff !important;
+  background-color: var(--bg-card, #ffffff) !important;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
 }
 
 /* HERO SECTION */
 .contact-hero {
   background: linear-gradient(135deg, rgba(6, 59, 50, 0.85) 0%, rgba(8, 127, 104, 0.75) 100%), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
-  color: #fff;
+  color: var(--bg-card, #fff);
   padding: 10rem 0 8rem;
   margin-top: 0;
   position: relative;
@@ -335,7 +335,7 @@ const faqs = ref([
 }
 
 .contact-card-premium {
-  background: #fff;
+  background: var(--bg-card, #fff);
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(6, 59, 50, 0.15);
@@ -344,7 +344,7 @@ const faqs = ref([
 /* LEFT PANEL */
 .contact-info-premium {
   background: #063B32;
-  color: #fff;
+  color: var(--bg-card, #fff);
   position: relative;
   overflow: hidden;
 }
@@ -410,7 +410,7 @@ const faqs = ref([
 .method-value {
   font-size: 1rem;
   font-weight: 500;
-  color: #fff;
+  color: var(--bg-card, #fff);
 }
 
 .border-top-premium {
@@ -422,7 +422,7 @@ const faqs = ref([
   height: 45px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  color: var(--bg-card, #fff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -432,7 +432,7 @@ const faqs = ref([
 }
 
 .social-btn:hover {
-  background: #fff;
+  background: var(--bg-card, #fff);
   color: #063B32;
   transform: translateY(-3px);
 }
@@ -466,13 +466,13 @@ const faqs = ref([
 .form-group-premium .form-control:focus,
 .form-group-premium .form-select:focus {
   border-color: #087F68;
-  background: #fff;
+  background: var(--bg-card, #fff);
   box-shadow: 0 0 0 4px rgba(8, 127, 104, 0.1);
 }
 
 .btn-save-premium {
   background: #087F68;
-  color: #fff;
+  color: var(--bg-card, #fff);
   border: none;
   border-radius: 8px;
   font-weight: 600;
@@ -513,7 +513,7 @@ const faqs = ref([
 }
 .btn-outline-premium:hover {
   background: #087F68;
-  color: #fff;
+  color: var(--bg-card, #fff);
 }
 
 /* OFFICES SECTION */
@@ -535,7 +535,7 @@ const faqs = ref([
 }
 
 .office-card-premium {
-  background: #fff;
+  background: var(--bg-card, #fff);
   border: 1px solid #E1E9E5;
   border-radius: 16px;
   padding: 2rem;
@@ -576,14 +576,14 @@ const faqs = ref([
   border-radius: 12px;
   margin-bottom: 1rem;
   overflow: hidden;
-  background: #fff;
+  background: var(--bg-card, #fff);
 }
 
 .custom-accordion .accordion-button {
   font-weight: 600;
   color: #063B32;
   padding: 1.25rem 1.5rem;
-  background: #fff;
+  background: var(--bg-card, #fff);
   box-shadow: none;
 }
 

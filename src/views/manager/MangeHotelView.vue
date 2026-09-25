@@ -1497,7 +1497,7 @@ function getAccountStatusClass(status) {
   border-radius: 10px;
 
   background: var(--green);
-  color: white;
+  color: var(--bg-card, white);
 
   font-size: 12px;
   font-weight: 700;
@@ -1568,12 +1568,7 @@ function getAccountStatusClass(status) {
 
   text-align: center;
 
-  background:
-    linear-gradient(
-      180deg,
-      #f1faf7 0%,
-      #ffffff 100%
-    );
+  background: linear-gradient( 180deg, #f1faf7 0%, var(--bg-card, #ffffff) 100% );
 
   border-bottom: 1px solid var(--border-light);
 }
@@ -1588,7 +1583,7 @@ function getAccountStatusClass(status) {
 
   border-radius: 50%;
 
-  background: white;
+  background: var(--bg-card, white);
 
   box-shadow:
     0 8px 25px rgba(16, 32, 51, 0.12);
@@ -1966,7 +1961,7 @@ function getAccountStatusClass(status) {
 
   outline: none;
 
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
   color: var(--text);
 
   font-size: 12px;
@@ -2038,7 +2033,7 @@ textarea {
 
   outline: none;
 
-  background: white;
+  background: var(--bg-card, white);
   color: var(--text);
 
   font-family: inherit;
@@ -2097,7 +2092,7 @@ textarea:focus {
   border: 1px solid var(--green);
 
   background: var(--green);
-  color: white;
+  color: var(--bg-card, white);
 
   box-shadow:
     0 6px 14px rgba(8, 127, 104, 0.17);
@@ -2122,7 +2117,7 @@ textarea:focus {
 
   border: 1px solid var(--border);
 
-  background: white;
+  background: var(--bg-card, white);
   color: #64748b;
 }
 

@@ -117,7 +117,7 @@ const pageSubtitle = computed(() => currentPage.value.subtitle)
 
   min-height: 100vh;
 
-  background: #f5f8f7;
+  background: var(--bg-soft, #f5f8f7);
 }
 
 .manager-main {
@@ -141,4 +141,7 @@ const pageSubtitle = computed(() => currentPage.value.subtitle)
   }
 
 }
+
+[data-bs-theme="dark"] .manager-layout { background-color: #0f172a !important; }
+
 </style>

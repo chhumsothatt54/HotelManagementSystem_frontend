@@ -313,12 +313,12 @@ onMounted(async () => {
   padding: 0.625rem 0.875rem;
   font-size: 0.875rem;
   color: #1e293b;
-  background-color: #f8fafc;
+  background-color: var(--bg-soft, #f8fafc);
   transition: all 0.2s ease;
 }
 
 .custom-select:focus {
-  background-color: #ffffff;
+  background-color: var(--bg-card, #ffffff);
   border-color: #10b981;
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
@@ -326,7 +326,7 @@ onMounted(async () => {
 /* Upload Zone Styling */
 .upload-zone {
   border: 2px dashed #e2e8f0;
-  background-color: #f8fafc;
+  background-color: var(--bg-soft, #f8fafc);
   min-height: 180px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
@@ -342,13 +342,13 @@ onMounted(async () => {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: var(--bg-card, #ffffff);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
 /* Empty State Styling */
 .empty-state-box {
-  background-color: #f8fafc;
+  background-color: var(--bg-soft, #f8fafc);
   border: 1px dashed #e2e8f0;
   min-height: 240px;
 }
@@ -357,7 +357,7 @@ onMounted(async () => {
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: var(--bg-card, #ffffff);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
@@ -381,7 +381,7 @@ onMounted(async () => {
 }
 
 .btn-white {
-  background-color: #ffffff;
+  background-color: var(--bg-card, #ffffff);
   border: none;
 }
 

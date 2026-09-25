@@ -219,7 +219,7 @@ async function handleCancel(id) {
   border-color: #E2E8F0;
   border-radius: 10px;
   padding: 0.5rem 0.8rem;
-  background-color: #ffffff;
+  background-color: var(--bg-card, #ffffff);
 }
 
 .status-filter:focus {
@@ -232,7 +232,7 @@ async function handleCancel(id) {
 }
 
 .custom-table thead th {
-  background-color: #F8FAFC;
+  background-color: var(--bg-soft, #F8FAFC);
   color: #475569;
   font-weight: 600;
   padding: 1.1rem 1rem;
@@ -252,7 +252,7 @@ async function handleCancel(id) {
 }
 
 .booking-row:hover {
-  background-color: #F8FAF9 !important;
+  background-color: var(--bg-card, #f8faf9) !important;
 }
 
 .hotel-thumb {

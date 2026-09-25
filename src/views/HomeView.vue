@@ -344,7 +344,7 @@ body {
 }
 
 .search-card-premium {
-  background: #fff;
+  background: var(--page-bg, #fff);
   border-radius: 20px;
   padding: 2rem;
   box-shadow: 0 20px 40px rgba(6, 78, 59, 0.08);
@@ -440,7 +440,7 @@ body {
 }
 
 .stay-card-premium {
-  background: #fff;
+  background: var(--page-bg, #fff);
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 10px 25px rgba(0,0,0,0.03);

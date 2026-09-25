@@ -163,7 +163,7 @@ const handleDelete = async (imageId) => {
             border: 1px solid var(--line);
             border-radius: 50px;
             cursor: pointer;
-            background: #ffffff;
+            background: var(--bg-card, #ffffff);
         }
 
         .avatar-circle {
@@ -171,7 +171,7 @@ const handleDelete = async (imageId) => {
             height: 32px;
             border-radius: 50%;
             background-color: var(--navy);
-            color: #ffffff;
+            color: var(--bg-card, #ffffff);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -188,7 +188,7 @@ const handleDelete = async (imageId) => {
         /* Custom Buttons */
         .btn-primary-custom {
             background-color: var(--blue);
-            color: #ffffff;
+            color: var(--bg-card, #ffffff);
             border: none;
             border-radius: 8px;
             padding: 8px 16px;
@@ -202,12 +202,12 @@ const handleDelete = async (imageId) => {
 
         .btn-primary-custom:hover {
             background-color: var(--navy);
-            color: #ffffff;
+            color: var(--bg-card, #ffffff);
         }
 
         /* Cards Styling */
         .card-custom {
-            background: #ffffff;
+            background: var(--bg-card, #ffffff);
             border: 1px solid var(--line);
             border-radius: var(--radius);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
@@ -269,7 +269,7 @@ const handleDelete = async (imageId) => {
             left: 12px;
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
-            color: #ffffff;
+            color: var(--bg-card, #ffffff);
             font-size: 11px;
             padding: 2px 8px;
             border-radius: 4px;
@@ -281,7 +281,7 @@ const handleDelete = async (imageId) => {
             right: 12px;
             width: 28px;
             height: 28px;
-            background: #ffffff;
+            background: var(--bg-card, #ffffff);
             color: #dc3545;
             border-radius: 6px;
             display: flex;
@@ -348,7 +348,7 @@ const handleDelete = async (imageId) => {
         .donut-chart-inner {
             width: 88px;
             height: 88px;
-            background: #ffffff;
+            background: var(--bg-card, #ffffff);
             border-radius: 50%;
             display: flex;
             flex-direction: column;

@@ -727,7 +727,7 @@ async function removeAmenity(amenity) {
 
   border-radius: 50%;
 
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
 
   color: var(--accent);
 
@@ -781,7 +781,7 @@ async function removeAmenity(amenity) {
 
   border-color: var(--accent);
 
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
 }
 
 
@@ -810,7 +810,7 @@ async function removeAmenity(amenity) {
 
   border-radius: 14px;
 
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
 }
 
 
@@ -838,7 +838,7 @@ async function removeAmenity(amenity) {
 .room-item {
   padding: 14px 16px;
 
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
 
   transition: 0.2s ease;
 
@@ -877,7 +877,7 @@ async function removeAmenity(amenity) {
 .room-item.selected .room-icon {
   background: var(--accent);
 
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
 }
 
 
@@ -1057,7 +1057,7 @@ async function removeAmenity(amenity) {
 
   border-radius: 10px;
 
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
 
   display: flex;
   align-items: center;
@@ -1141,7 +1141,7 @@ async function removeAmenity(amenity) {
 
   border-radius: 10px;
 
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
 
   transition: 0.2s ease;
 

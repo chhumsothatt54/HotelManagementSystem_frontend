@@ -4,7 +4,9 @@
       <div class="row g-5">
         <div class="col-lg-4">
           <div class="foot-brand mb-3 d-flex align-items-center gap-2">
-            <div class="brand-logo-mark-footer">A</div>
+            <div class="brand-logo-mark-footer">
+              <img src="@/assets/image/hotel_logo.jpg" alt="" class="w-100 h-100 object-fit-cover rounded-2">
+            </div>
             <span class="brand-text-footer">Angkor<span class="dot">Stay</span></span>
           </div>
           <p class="desc pe-lg-5">
@@ -88,7 +90,7 @@ const destinations = ref([
   width: 36px;
   height: 36px;
   background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-  color: #fff;
+  color: var(--bg-card, #fff);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -102,7 +104,7 @@ const destinations = ref([
   font-family: 'Playfair Display', serif;
   font-weight: 700;
   font-size: 1.5rem;
-  color: #fff;
+  color: var(--bg-card, #fff);
   letter-spacing: -0.01em;
 }
 
@@ -113,11 +115,11 @@ const destinations = ref([
 .desc {
   font-size: 0.95rem;
   line-height: 1.6;
-  color: #9ca3af;
+  color: var(--text-muted, #9ca3af);
 }
 
 h6 {
-  color: #fff;
+  color: var(--bg-card, #fff);
   font-family: 'Playfair Display', serif;
   font-weight: 600;
   font-size: 1.1rem;
@@ -126,7 +128,7 @@ h6 {
 }
 
 .footer-link {
-  color: #9ca3af;
+  color: var(--text-muted, #9ca3af);
   text-decoration: none;
   font-size: 0.9rem;
   transition: all 0.2s ease;
@@ -141,7 +143,7 @@ h6 {
 .newsletter-input {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff;
+  color: var(--bg-card, #fff);
   border-radius: 8px;
   padding: 0.6rem 1rem;
 }
@@ -150,16 +152,16 @@ h6 {
   background: rgba(255, 255, 255, 0.1);
   border-color: #d97706;
   box-shadow: none;
-  color: #fff;
+  color: var(--bg-card, #fff);
 }
 
 .newsletter-input::placeholder {
-  color: #6b7280;
+  color: var(--text-muted, #6b7280);
 }
 
 .btn-subscribe {
   background: #d97706;
-  color: #fff;
+  color: var(--bg-card, #fff);
   font-weight: 600;
   border-radius: 8px;
   padding: 0.6rem 1rem;
@@ -169,7 +171,7 @@ h6 {
 
 .btn-subscribe:hover {
   background: #b45309;
-  color: #fff;
+  color: var(--bg-card, #fff);
 }
 
 .border-top-custom {

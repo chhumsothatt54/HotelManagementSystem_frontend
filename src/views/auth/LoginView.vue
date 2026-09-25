@@ -257,7 +257,7 @@ async function login() {
   display: grid;
   grid-template-columns: 43% 57%;
   overflow: hidden;
-  background: white;
+  background: var(--bg-card, white);
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
@@ -288,7 +288,7 @@ async function login() {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: white;
+  color: var(--bg-card, white);
   font-size: 24px;
   font-weight: 800;
   text-decoration: none;
@@ -302,7 +302,7 @@ async function login() {
   justify-content: center;
   border-radius: 11px;
   background: rgba(255, 255, 255, 0.16);
-  color: white;
+  color: var(--bg-card, white);
 }
 
 .showcase-center {
@@ -319,7 +319,7 @@ async function login() {
 
 .showcase-center h1 {
   margin: 15px 0 0;
-  color: white;
+  color: var(--bg-card, white);
   font-size: clamp(42px, 4vw, 64px);
   line-height: 1.05;
   letter-spacing: -2.5px;
@@ -412,7 +412,7 @@ async function login() {
   gap: 10px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: white;
+  background: var(--bg-card, white);
   color: var(--ink);
   font-size: 13px;
   font-weight: 600;
@@ -422,7 +422,7 @@ async function login() {
 }
 
 .google-button:hover {
-  background: #f8faf9;
+  background: var(--bg-soft, #f8faf9);
   border-color: #cbd5e1;
 }
 
@@ -525,7 +525,7 @@ async function login() {
   border: 0;
   border-radius: 10px;
   background: var(--blue);
-  color: white;
+  color: var(--bg-card, white);
   font-size: 13px;
   font-weight: 750;
   cursor: pointer;
@@ -551,7 +551,7 @@ async function login() {
   width: 15px;
   height: 15px;
   border: 2px solid rgba(255, 255, 255, 0.4);
-  border-top-color: white;
+  border-top-color: var(--bg-card, white);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }

@@ -263,7 +263,7 @@
 
 .btn-emerald {
   background-color: var(--emerald);
-  color: #ffffff;
+  color: var(--bg-card, #ffffff);
   border: none;
   font-weight: 600;
   font-size: 0.85rem;
@@ -301,7 +301,7 @@
 }
 
 .main-card-panel {
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 1.5rem;
@@ -311,7 +311,7 @@
 
 .panel-header {
   border-bottom: 1px solid var(--line);
-  background-color: #ffffff;
+  background-color: var(--bg-card, #ffffff);
 }
 
 .btn-refresh {
@@ -365,7 +365,7 @@
   padding: 0.6rem 1rem;
   font-size: 0.85rem;
   color: var(--ink);
-  background-color: #ffffff;
+  background-color: var(--bg-card, #ffffff);
   transition: all 0.2s ease;
 }
 
@@ -405,7 +405,7 @@
   color: var(--muted);
   border-bottom: 1px solid var(--line);
   padding: 0.9rem 1.25rem;
-  background-color: #f8fafc;
+  background-color: var(--bg-soft, #f8fafc);
   text-transform: uppercase;
 }
 

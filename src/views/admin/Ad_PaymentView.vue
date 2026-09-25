@@ -181,7 +181,7 @@ onMounted(() => {
 
 <style scoped>
 .page-container {
-    background-color: #f6f8f7;
+    background-color: var(--bg-card, #f6f8f7);
     min-height: 100vh;
 }
 
@@ -220,7 +220,7 @@ onMounted(() => {
     gap: 12px;
     padding: 6px 12px;
     border-radius: 30px;
-    background: #f8fafc;
+    background: var(--bg-soft, #f8fafc);
     border: 1px solid #e2e8f0;
     cursor: pointer;
 }
@@ -230,7 +230,7 @@ onMounted(() => {
     height: 32px;
     border-radius: 50%;
     background-color: #035e4e;
-    color: white;
+    color: var(--bg-card, white);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -248,7 +248,7 @@ onMounted(() => {
 
 /* Panel & Table Styles */
 .panel-card {
-    background: #ffffff;
+    background: var(--bg-card, #ffffff);
     border-radius: 16px;
     border: 1px solid #eef2f0;
     padding: 24px;

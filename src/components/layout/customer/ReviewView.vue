@@ -67,7 +67,7 @@ const reviews = ref([
 }
 
 .review-card {
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
   border-radius: 20px;
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
@@ -107,7 +107,7 @@ const reviews = ref([
 .review-text {
   font-size: 1.05rem;
   line-height: 1.6;
-  color: #4b5563;
+  color: var(--text-main, #4b5563);
   font-style: italic;
   position: relative;
   z-index: 1;
@@ -117,7 +117,7 @@ const reviews = ref([
   width: 48px;
   height: 48px;
 background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
-  color: white;
+  color: var(--bg-card, white);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -129,12 +129,12 @@ background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
 
 .review-name {
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-main, #1f2937);
   font-size: 1rem;
 }
 
 .review-loc {
-  color: #6b7280;
+  color: var(--text-muted, #6b7280);
   font-size: 0.85rem;
   display: block;
 }
