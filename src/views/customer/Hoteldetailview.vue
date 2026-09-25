@@ -253,7 +253,7 @@ async function loadHotelData(id) {
       address: h.address || '',
       rating: h.rating || 4.5,
       reviewsCount: h.reviews_count || 42,
-      price: h.price || 50,
+      price: h.price || 0,
       oldPrice: null,
       images: imageList,
       img: imageList[0],
