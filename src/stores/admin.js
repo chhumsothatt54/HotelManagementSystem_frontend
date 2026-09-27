@@ -312,16 +312,30 @@ export const useAdminStore = defineStore('admin', () => {
         }
      }
 
-     async function  getRevenueReport() {
-        try {
-            let res = await api.get('/admin/reports/revenue');
-            revenueReport.value = res.data?.data || res.data;
-            console.log(revenueReport.value);
-            
-        } catch (error) {
-            throw error;
-        }
-     }
+async function getRevenueReport(fromDate, toDate) {
+    try {
+        const res = await api.get('/admin/reports/revenue', {
+            params: {
+                from: fromDate,
+                to: toDate
+            }
+        })
+
+        revenueReport.value = res.data?.data || res.data
+
+        console.log('Revenue Report:', revenueReport.value)
+
+        return revenueReport.value
+
+    } catch (error) {
+        console.error(
+            'Revenue report error:',
+            error.response?.data || error
+        )
+
+        throw error
+    }
+}
 
      async function getOccupancyReport(){
         try {

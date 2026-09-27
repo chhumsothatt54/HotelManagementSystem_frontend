@@ -36,7 +36,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>NAME</th>
-                                <th>ICON</th>
+                                <!-- <th>ICON</th> -->
                                 <th>DESCRIPTION</th>
                                 <th>STATUS</th>
                                 <th class="text-end">ACTIONS</th>
@@ -52,10 +52,10 @@
                             <tr v-for="amenity in filteredAmenityList" :key="amenity.id" v-else>
                                 <td class="text-muted">#{{ amenity.id }}</td>
                                 <td class="fw-bold text-dark">{{ amenity.name }}</td>
-                                <td>
+                                <!-- <td>
                                     <i :class="amenity.icon || amenity.icon_class || 'bi bi-star'"
                                         class="fs-5 text-secondary"></i>
-                                </td>
+                                </td> -->
                                 <td class="text-secondary">{{ amenity.description || 'No description provided' }}</td>
                                 <td>
                                     <span class="status-badge" :class="amenity.status || 'active'">
