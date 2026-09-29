@@ -32,11 +32,11 @@
                 </div>
             </div>
 
-            <!-- Revenue by Hotel Card -->
+            <!-- Monthly Revenue Card -->
             <div class="panel-card p-4">
                 <div class="mb-4">
-                    <div class="panel-title fw-bold fs-5 text-dark mb-1">Revenue by Hotel</div>
-                    <div class="panel-sub text-muted font-sm">{{ fromDate || '2026-08-01' }} to {{ toDate ||'2026-08-31' }}</div>
+                    <div class="panel-title fw-bold fs-5 text-dark mb-1">Monthly Revenue</div>
+                    <div class="panel-sub text-muted font-sm">Filtered Total Revenue: ${{ filteredTotalRevenue.toFixed(2) }} (Overall: ${{ revenueData.total_revenue || 0 }})</div>
                 </div>
 
                 <div class="hotel-list">
@@ -47,16 +47,15 @@
                         class="hotel-item d-flex align-items-center justify-content-between py-3 border-bottom">
                         <div class="d-flex align-items-center gap-3">
                             <div class="hotel-icon-box">
-                                <i class="bi bi-building"></i>
+                                <i class="bi bi-building-check"></i>
                             </div>
                             <div>
-                                <div class="fw-bold text-dark mb-1">{{ item.hotel_name || item.name || 'Unknown Property' }}</div>
-                                <div class="text-muted font-xs">{{ item.total_bookings || item.bookings_count || 0 }}
-                                    bookings</div>
+                                <div class="fw-bold text-dark mb-1">{{ item.hotel_name || 'Unknown Property' }}</div>
+                                <div class="text-muted font-xs">{{ getMonthName(item.month) }} {{ item.year }}</div>
                             </div>
                         </div>
-                        <div class="fw-bold fs-5 text-dark">
-                            ${{ item.revenue || item.total_revenue || 0 }}
+                        <div class="fw-bold fs-5 text-dark text-success">
+                            + ${{ item.total || 0 }}
                         </div>
                     </div>
                 </div>
@@ -73,8 +72,8 @@ import { useAdminStore } from '@/stores/admin';
 const adminStore = useAdminStore();
 const loading = ref(false);
 
-const fromDate = ref('2026-08-01');
-const toDate = ref('2026-08-31');
+const fromDate = ref('');
+const toDate = ref('');
 
 const revenueData = computed(() => {
     const data = adminStore.revenueReport;
@@ -86,12 +85,41 @@ const revenueData = computed(() => {
 });
 
 const breakdownList = computed(() => {
-    let list = revenueData.value.breakdown || revenueData.value.hotels || [];
-    if (!list.length && Array.isArray(revenueData.value.data)) {
-        list = revenueData.value.data;
+    let list = revenueData.value.monthly_revenue || [];
+    
+    if (fromDate.value || toDate.value) {
+        list = list.filter(item => {
+            const itemDate = new Date(item.year, item.month - 1, 1);
+            let isValid = true;
+            
+            if (fromDate.value) {
+                const from = new Date(fromDate.value);
+                from.setDate(1); // Compare by month
+                if (itemDate < from) isValid = false;
+            }
+            
+            if (toDate.value) {
+                const to = new Date(toDate.value);
+                const toEnd = new Date(to.getFullYear(), to.getMonth() + 1, 0); // End of the month
+                if (itemDate > toEnd) isValid = false;
+            }
+            
+            return isValid;
+        });
     }
     return list;
 });
+
+const filteredTotalRevenue = computed(() => {
+    return breakdownList.value.reduce((sum, item) => sum + parseFloat(item.total || 0), 0);
+});
+
+const getMonthName = (monthNumber) => {
+    if (!monthNumber) return '';
+    const date = new Date();
+    date.setMonth(monthNumber - 1);
+    return date.toLocaleString('en-US', { month: 'long' });
+};
 
 const loadReport = async () => {
     loading.value = true;

@@ -307,7 +307,8 @@ onMounted(async () => {
   try {
     await managerStore.getBookings()
   } catch (err) {
-    console.error('Failed to fetch bookings:', err)
+    console.log("server error");
+    
   }
 })
 

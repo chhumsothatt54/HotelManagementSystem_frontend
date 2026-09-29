@@ -32,7 +32,7 @@
                             :class="isUnread(notif) ? 'unread' : 'read'">
 
                             <div class="notif-icon-box flex-shrink-0 d-flex align-items-center justify-content-center">
-                                <i :class="notif.icon || 'bi bi-bell'"></i>
+                                <i :class="getIcon(notif)"></i>
                             </div>
 
                             <div class="flex-grow-1">
@@ -66,92 +66,70 @@ import { useAdminStore } from '@/stores/admin';
 // --- STATE VARIABLES ---
 const adminStore = useAdminStore();
 const loading = ref(false);
-const notificationList = ref([]); // Holds the array of notifications to display
+const notificationList = ref([]);
 
-// --- FUNCTIONS ---
-
-// Function to fetch data from the store
-const loadNotifications = async () => {
+const getnoti = async () => {
     loading.value = true;
     try {
-        // Fetch notifications from the backend API
         await adminStore.getNotification();
-        let responseData = adminStore.notification;
-
-        // Safely extract the notifications array.
-        // Since Laravel sends paginated data, the array is usually located in responseData.data.data
-        if (responseData && responseData.data && Array.isArray(responseData.data.data)) {
-            notificationList.value = responseData.data.data;
-        }
-        else if (responseData && Array.isArray(responseData.data)) {
-            notificationList.value = responseData.data;
-        }
-        else if (Array.isArray(responseData)) {
-            notificationList.value = responseData;
-        }
-        else {
-            notificationList.value = []; // Default to empty array if no data found
-        }
+        notificationList.value = adminStore.notification?.data?.data || adminStore.notification?.data || [];
     } catch (error) {
-        console.error('Failed to load notifications:', error);
+        console.error("Failed to fetch notifications:", error);
     } finally {
         loading.value = false;
     }
-};
+}
 
-// Helper function to safely get the notification title
 const getTitle = (notif) => {
-    return notif.data?.title || notif.title || 'System Alert';
-};
+    return notif.title || 'System Notification';
+}
 
-// Helper function to safely get the notification message
 const getMessage = (notif) => {
-    return notif.data?.message || notif.data?.content || notif.message || 'No details available.';
-};
+    return notif.message || '';
+}
 
-// Helper function to format the date correctly (e.g. 2026-09-03 08:12)
 const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) return dateString; // Return original if invalid date
+    return date.toLocaleString();
+}
 
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
-};
-
-// Helper function to check if a notification is unread
 const isUnread = (notif) => {
-    return notif.read_at === null || notif.is_read === false || notif.is_read == 0;
-};
+    return notif.is_read == false || notif.is_read == 0;
+}
+
+const getIcon = (notif) => {
+    switch (notif.type) {
+        case 'booking_confirmed': return 'bi bi-calendar-check text-success';
+        case 'checked_in': return 'bi bi-check-circle text-primary';
+        case 'hotel_created': return 'bi bi-building text-info';
+        case 'user_registered': return 'bi bi-person-plus text-warning';
+        default: return 'bi bi-bell';
+    }
+}
 
 const markAsRead = async (id) => {
-    if (!id) return;
     try {
         await adminStore.markNotificationAsRead(id);
-        await loadNotifications(); // Refresh list to get updated status
+        const notif = notificationList.value.find(n => n.id === id);
+        if (notif) notif.is_read = true;
     } catch (error) {
-        console.error('Failed to mark notification as read:', error);
+        console.error("Failed to mark as read:", error);
     }
-};
+}
 
 const markAllAsRead = async () => {
     try {
         await adminStore.markAllNotificationsAsRead();
-        await loadNotifications(); // Refresh list
+        notificationList.value.forEach(n => n.is_read = true);
     } catch (error) {
-        console.error('Failed to mark all notifications as read:', error);
+        console.error("Failed to mark all as read:", error);
     }
-};
+}
 
-// --- LIFECYCLE HOOKS ---
 onMounted(() => {
-    loadNotifications();
-});
+    getnoti();
+})
 </script>
 
 <style scoped>
@@ -199,8 +177,6 @@ onMounted(() => {
 .notif-item.read {
     background-color: transparent;
     border-bottom: 1px solid #eef2f0;
-    padding-left: 16px;
-    padding-right: 16px;
 }
 
 .notif-item.read:last-child {
@@ -213,6 +189,9 @@ onMounted(() => {
     border-radius: 50%;
     color: #035e4e;
     font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .notif-item.unread .notif-icon-box {
@@ -221,8 +200,7 @@ onMounted(() => {
 }
 
 .notif-item.read .notif-icon-box {
-    background-color: transparent;
-    padding-left: 16px;
+    background-color: #f8f9fa;
 }
 
 .mark-read-text {

@@ -151,26 +151,26 @@ export const useManagerStore = defineStore("manager", {
     },
 
     async createHotel(data) {
-  this.loading = true
-  this.error = null
+      this.loading = true
+      this.error = null
 
-  try {
-    const response = await api.post('/manager/hotel', data)
+      try {
+        const response = await api.post('/manager/hotel', data)
 
-    this.hotel = response.data.hotel
+        this.hotel = response.data.hotel
 
-    return response.data
-  } catch (error) {
-    this.error = getErrorMessage(
-      error,
-      'Failed to create hotel.'
-    )
+        return response.data
+      } catch (error) {
+        this.error = getErrorMessage(
+          error,
+          'Failed to create hotel.'
+        )
 
-    throw error
-  } finally {
-    this.loading = false
-  }
-},
+        throw error
+      } finally {
+        this.loading = false
+      }
+    },
 
     async updateHotel(id, hotelData) {
       this.loading = true;
@@ -810,8 +810,8 @@ export const useManagerStore = defineStore("manager", {
 
         return response.data;
       } catch (error) {
+        console.error("API Error:", error.response?.data?.message);
         this.error = getErrorMessage(error, "Failed to load bookings.");
-
         throw error;
       } finally {
         this.loading = false;
@@ -861,48 +861,48 @@ export const useManagerStore = defineStore("manager", {
     },
 
     async getRevenueReport() {
-  this.loading = true;
-  this.error = null;
+      this.loading = true;
+      this.error = null;
 
-  try {
-    const response = await api.get("/manager/reports/revenue");
+      try {
+        const response = await api.get("/manager/reports/revenue");
 
-    this.revenueReport = response.data.data;
+        this.revenueReport = response.data.data;
 
-    return response.data;
-  } catch (error) {
-    this.error = getErrorMessage(
-      error,
-      "Failed to load revenue report."
-    );
+        return response.data;
+      } catch (error) {
+        this.error = getErrorMessage(
+          error,
+          "Failed to load revenue report."
+        );
 
-    throw error;
-  } finally {
-    this.loading = false;
-  }
-},
+        throw error;
+      } finally {
+        this.loading = false;
+      }
+    },
 
-async getOccupancyReport() {
-  this.loading = true;
-  this.error = null;
+    async getOccupancyReport() {
+      this.loading = true;
+      this.error = null;
 
-  try {
-    const response = await api.get("/manager/reports/occupancy");
+      try {
+        const response = await api.get("/manager/reports/occupancy");
 
-    this.occupancyReport = response.data.data;
+        this.occupancyReport = response.data.data;
 
-    return response.data;
-  } catch (error) {
-    this.error = getErrorMessage(
-      error,
-      "Failed to load occupancy report."
-    );
+        return response.data;
+      } catch (error) {
+        this.error = getErrorMessage(
+          error,
+          "Failed to load occupancy report."
+        );
 
-    throw error;
-  } finally {
-    this.loading = false;
-  }
-},
+        throw error;
+      } finally {
+        this.loading = false;
+      }
+    },
 
     /* Helpers */
     clearError() {

@@ -34,7 +34,7 @@
                                 <i class="bi bi-camera-fill"></i>
                             </div>
                         </div>
-                        <h4 class="profile-name mb-1">{{ user.firstName }} {{ user.lastName }}</h4>
+                        <h4 class="profile-name mb-1">{{ user.fullName }}</h4>
                         <div class="profile-role mb-4">{{ user.role }}</div>
                         <hr class="card-divider">
                         <div class="d-flex align-items-center justify-content-center text-muted font-sm mt-3">
@@ -51,13 +51,9 @@
                         <div class="card-subtitle mb-4">Update your account information.</div>
 
                         <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">First Name</label>
-                                <input type="text" class="form-control" v-model="user.firstName">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Last Name</label>
-                                <input type="text" class="form-control" v-model="user.lastName">
+                            <div class="col-md-12">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" v-model="user.fullName">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Email</label>
@@ -122,8 +118,7 @@ const authStore = useAuthStore()
 const adminStore = useAdminStore()
 
 const user = reactive({
-    firstName: '',
-    lastName: '',
+    fullName: '',
     email: '',
     phone: '',
     role: ''
@@ -151,9 +146,7 @@ async function loadUserData() {
     try {
         await authStore.getMe()
         if (authStore.user) {
-            const names = (authStore.user.name || '').trim().split(' ')
-            user.firstName = names[0] || ''
-            user.lastName = names.slice(1).join(' ') || ''
+            user.fullName = authStore.user.name || ''
             user.email = authStore.user.email || ''
             user.phone = authStore.user.phone || ''
             user.role = authStore.user.role === 'admin' ? 'Administrator' : authStore.user.role === 'hotel_manager' ? 'Hotel Manager' : 'User'
@@ -173,7 +166,7 @@ const userAvatar = computed(() => {
 })
 
 const userInitial = computed(() => {
-    return user.firstName ? user.firstName.charAt(0).toUpperCase() : 'A'
+    return user.fullName ? user.fullName.charAt(0).toUpperCase() : 'A'
 })
 
 function triggerFileInput() {
@@ -195,7 +188,7 @@ async function saveProfile() {
 
     try {
         const formData = new FormData()
-        formData.append('name', `${user.firstName} ${user.lastName}`.trim())
+        formData.append('name', user.fullName.trim())
         formData.append('email', user.email)
         formData.append('phone', user.phone || '')
 

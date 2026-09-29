@@ -56,7 +56,8 @@ import ChangePasswordView from "@/views/auth/ChangePasswordView.vue";
 import { useAuthStore } from "@/stores/auth.js";
 import BookingReport from "@/views/manager/BookingReport.vue";
 import RevenueReport from "@/views/manager/RevenueReport.vue";
-import NotificationsView from "@/views/manager/NotificationView.vue";
+import ManagerNotificationsView from "@/views/manager/NotificationView.vue";
+import AdminNotificationsView from "@/views/admin/NotificationsView.vue";
 import Cus_NotificationView from "@/views/customer/NotificationView.vue";
 import WishlistView from "@/views/customer/WishlistView.vue";
 
@@ -321,7 +322,7 @@ const router = createRouter({
         {
           path: "ad-notification",
           name: "ad-notification",
-          component: NotificationsView
+          component: AdminNotificationsView
         }
       ],
     },
@@ -481,7 +482,7 @@ const router = createRouter({
         {
           path: "notifications",
           name: "manager-notifications",
-          component: NotificationsView,
+          component: ManagerNotificationsView,
           meta: {
             requireAuth: true,
             roles: ["hotel_manager"],

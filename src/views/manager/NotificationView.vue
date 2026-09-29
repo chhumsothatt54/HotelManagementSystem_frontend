@@ -351,12 +351,8 @@ const loadNotifications = async () => {
 
     const bookings = managerStore.bookings || [];
 
-    console.log("BOOKINGS FOR NOTIFICATIONS:", bookings);
-
     notifications.value = buildNotifications(bookings);
   } catch (err) {
-    console.error("Failed to load notifications:", err);
-
     error.value =
       err?.response?.data?.message ||
       "Failed to load booking and payment notifications.";

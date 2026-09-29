@@ -109,7 +109,7 @@ const loadBookings = async () => {
     try {
         await adminStore.getBookings();
     } catch (error) {
-        console.error('Failed to load bookings:', error);
+        console.error('Failed to load bookings:');
     } finally {
         loading.value = false;
     }
